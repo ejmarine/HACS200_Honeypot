@@ -1,0 +1,39 @@
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $0 <container_name>"
+  exit 1
+fi
+
+CONTAINER="$1"
+
+# Ensure container is running
+if ! sudo lxc-info -n "$CONTAINER" | grep -q "RUNNING"; then
+  echo "Container $CONTAINER is not running."
+  exit 1
+fi
+
+# Install wget and curl
+sudo lxc-attach -n "$CONTAINER" -- apt update
+sudo lxc-attach -n "$CONTAINER" -- apt install -y wget curl
+
+# Make sure the /var/log/.downloads directory exists
+sudo lxc-attach -n "$CONTAINER" -- mkdir -p /var/log/.downloads
+
+# Correctly write new wget script inside the container
+sudo lxc-attach -n "$CONTAINER" -- bash -c "cat > /usr/local/bin/wget << 'EOF'
+  #!/bin/bash
+  /usr/bin/wget \"\$@\"
+  cp \"\$(basename \${@: -1})\" /var/log/.downloads/ 2>/dev/null
+  EOF
+  chmod +x /usr/local/bin/wget"
+
+# Correctly write new curl script inside the container
+sudo lxc-attach -n "$CONTAINER" -- bash -c "cat > /usr/local/bin/curl << 'EOF'
+  #!/bin/bash
+  /usr/bin/curl \"\$@\"
+  cp \"\$(basename \${@: -1})\" /var/log/.downloads/ 2>/dev/null
+  EOF
+  chmod +x /usr/local/bin/curl"
+
+echo "[+] Setup complete for container '$CONTAINER'"

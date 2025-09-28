@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <container_name> <external_ip>"
+  exit 1
+fi
+
+CONTAINER=$1
+EXTERNAL_IP=$2
+LOGFILE="/home/student/${CONTAINER}.log"
+
+while true; do
+  ./create.sh "$CONTAINER" "$EXTERNAL_IP"
+
+  echo "[*] Monitoring MITM log for attacker interaction..."
+
+  # Watch MITM log from the end only
+  tail -F "$LOGFILE" | while read -r line; do
+    if echo "$line" | grep -q "Opened shell for attacker"; then
+      echo "[!] MITM log shows password activity. Recycling in 10s..."
+      sleep 10
+      break
+    fi
+  done
+
+  ./recycle.sh "$CONTAINER" "$EXTERNAL_IP"
+done

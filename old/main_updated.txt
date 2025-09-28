@@ -1,0 +1,58 @@
+#!/bin/bash
+
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <container_name> <external_ip>"
+  exit 1
+fi
+
+CONTAINER=$1
+EXTERNAL_IP=$2
+LOGFILE="/home/student/${CONTAINER}.log"
+SESSION_FILE="/home/student/session_data.txt"
+
+while true; do
+  ./create.sh "$CONTAINER" "$EXTERNAL_IP"
+
+  echo "[*] Monitoring MITM log for attacker interaction..."
+
+  tail -F "$LOGFILE" | while read -r line; do
+    if echo "$line" | grep -q "Attacker connected:"; then
+      SESSION_START=$(date +%s)
+      ATTACKER_IP=$(echo "$line" | awk '{print $8}')
+      CONNECT_TIME=$(echo "$line" | awk '{print $1, $2}')
+      COMMANDS=()  # reset commands list
+    fi
+
+    if echo "$line" | grep -q "line from reader:"; then
+      COMMAND=$(echo "$line" | cut -d':' -f4- | xargs)
+      COMMANDS+=("$COMMAND")
+    fi
+
+    if echo "$line" | grep -q "Attacker closed connection"; then
+      SESSION_END=$(date +%s)
+      DURATION=$((SESSION_END - SESSION_START))
+
+      {
+        echo "==== Attack ===="
+        echo "Date/Time connected: $CONNECT_TIME"
+        echo "Number of commands: ${#COMMANDS[@]}"
+        echo "List of commands:"
+        for cmd in "${COMMANDS[@]}"; do
+          echo "  $cmd"
+        done
+        echo "Attacker IP: $ATTACKER_IP"
+        echo "Session duration (seconds): $DURATION"
+        echo "================"
+        echo ""
+      } >> "$SESSION_FILE"
+
+      echo "[+] Session data appended to $SESSION_FILE"
+    fi
+
+    if echo "$line" | grep -q "Attacker closed connection"; then
+      ./recycle.sh "$CONTAINER" "$EXTERNAL_IP"
+      sleep 5
+      break
+    fi
+  done
+done

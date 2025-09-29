@@ -1,13 +1,13 @@
 #!/bin/bash
 
-if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <container_name> <external_ip>"
+if [ "$#" -ne 3 ]; then
+  echo "Usage: $0 <container_name> <external_ip> <mitm_port>"
   exit 1
 fi
 
 CONTAINER=$1
 EXTERNAL_IP=$2
-MITM_PORT=6010
+MITM_PORT=$3
 
 # Stop existing MITM process for this container if running
 if forever list | grep -q "honeypot-$CONTAINER"; then
@@ -44,6 +44,20 @@ sudo lxc-attach -n "$CONTAINER" -- apt install -y openssh-server
 # Enable root login in sshd_config
 sudo lxc-attach -n "$CONTAINER" -- sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 sudo lxc-attach -n "$CONTAINER" -- systemctl restart ssh
+
+LANGUAGES=(English Russian Chinese Hebrew Ukrainian French Spanish)
+RANDOM_INDEX=$((RANDOM % ${#LANGUAGES[@]}))
+RANDOM_LANGUAGE=${LANGUAGES[$RANDOM_INDEX]}
+
+files = "../honeypot_files/$RANDOM_LANGUAGE"
+
+if [ -d "$files" ]; then
+  sudo lxc-attach -n "$CONTAINER" -- mkdir -p /root/
+  sudo lxc-file push "$files"/* "$CONTAINER"/root/ 2>/dev/null
+else
+  echo "Error: $files does not exist"
+  exit 1
+fi
 
 # Launch MITM
 echo "[*] Starting MITM server on port $MITM_PORT..."

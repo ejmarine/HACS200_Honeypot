@@ -8,6 +8,7 @@ fi
 CONTAINER=$1
 EXTERNAL_IP=$2
 MITM_PORT=$3
+LANGUAGE=$4
 
 # Stop existing MITM process for this container if running
 if forever list | grep -q "honeypot-$CONTAINER"; then
@@ -45,11 +46,7 @@ sudo lxc-attach -n "$CONTAINER" -- apt install -y openssh-server
 sudo lxc-attach -n "$CONTAINER" -- sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 sudo lxc-attach -n "$CONTAINER" -- systemctl restart ssh
 
-LANGUAGES=(English Russian Chinese Hebrew Ukrainian French Spanish)
-RANDOM_INDEX=$((RANDOM % ${#LANGUAGES[@]}))
-RANDOM_LANGUAGE=${LANGUAGES[$RANDOM_INDEX]}
-
-files = "../honeypot_files/$RANDOM_LANGUAGE"
+files = "../honeypot_files/$LANGUAGE"
 
 if [ -d "$files" ]; then
   sudo lxc-attach -n "$CONTAINER" -- mkdir -p /root/
@@ -58,6 +55,44 @@ else
   echo "Error: $files does not exist"
   exit 1
 fi
+
+# TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT
+
+# TODO IN GENERAL: CHANGE SYSTEM LANGUAGE TO THE LANGUAGE OF THE HONEYPOT
+# Change system language inside the container to the selected language
+
+# Map language names to locale codes
+case "$LANGUAGE" in
+  "English")
+    LOCALE="en_US.UTF-8"
+    ;;
+  "Russian")
+    LOCALE="ru_RU.UTF-8"
+    ;;
+  "Chinese")
+    LOCALE="zh_CN.UTF-8"
+    ;;
+  "Hebrew")
+    LOCALE="he_IL.UTF-8"
+    ;;
+  "Ukrainian")
+    LOCALE="uk_UA.UTF-8"
+    ;;
+  "French")
+    LOCALE="fr_FR.UTF-8"
+    ;;
+  "Spanish")
+    LOCALE="es_ES.UTF-8"
+    ;;
+  *)
+    LOCALE="en_US.UTF-8"
+    ;;
+esac
+
+# Generate and set the locale in the container
+sudo lxc-attach -n "$CONTAINER" -- locale-gen "$LOCALE"
+sudo lxc-attach -n "$CONTAINER" -- update-locale LANG="$LOCALE"
+sudo lxc-attach -n "$CONTAINER" -- bash -c "echo 'LANG=$LOCALE' > /etc/default/locale"
 
 # Launch MITM
 echo "[*] Starting MITM server on port $MITM_PORT..."

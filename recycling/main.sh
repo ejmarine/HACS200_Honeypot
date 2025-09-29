@@ -13,8 +13,15 @@ id=0
 
 LOGFILE="$LOGFILE$id"
 
+LANGUAGES=(English Russian Chinese Hebrew Ukrainian French Spanish)
+
 while true; do
-  ./create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
+  RANDOM_INDEX=$((RANDOM % ${#LANGUAGES[@]}))
+  RANDOM_LANGUAGE=${LANGUAGES[$RANDOM_INDEX]}
+
+  cat RANDOM_LANGUAGE >> "$LOGFILE"
+
+  ./create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT" "$RANDOM_LANGUAGE"
 
   echo "[*] Monitoring MITM log for attacker interaction..."
 

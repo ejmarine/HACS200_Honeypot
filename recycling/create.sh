@@ -49,7 +49,7 @@ sudo lxc-attach -n "$CONTAINER" -- systemctl restart ssh
 files = "../honeypot_files/$LANGUAGE"
 
 if [ -d "$files" ]; then
-  sudo lxc-attach -n "$CONTAINER" -- mkdir -p /root/
+  sudo lxc-attach -n "$CONTAINER" -- mkdir -p /home/
   sudo lxc-file push "$files"/* "$CONTAINER"/root/ 2>/dev/null
 else
   echo "Error: $files does not exist"

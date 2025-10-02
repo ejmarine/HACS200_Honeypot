@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$#" -ne 2 ]; then
+if [ "$#" -ne 1 ]; then
   echo "Usage: $0 <config_file>"
   exit 1
 fi
@@ -11,7 +11,7 @@ source "$CONFIG_FILE"
 
 id=0
 
-LOGFILE="$LOGFILE$id"
+LOGFILEPATH="../logs/$LOGFILE$id"
 
 LANGUAGES=(English Russian Chinese Hebrew Ukrainian French Spanish)
 
@@ -19,14 +19,14 @@ while true; do
   RANDOM_INDEX=$((RANDOM % ${#LANGUAGES[@]}))
   RANDOM_LANGUAGE=${LANGUAGES[$RANDOM_INDEX]}
 
-  cat RANDOM_LANGUAGE >> "$LOGFILE"
+  cat RANDOM_LANGUAGE >> "$LOGFILEPATH"
 
   ./create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT" "$RANDOM_LANGUAGE"
 
   echo "[*] Monitoring MITM log for attacker interaction..."
 
   # Watch MITM log from the end only
-  tail -F "$LOGFILE" | while read -r line; do
+  tail -F "$LOGFILEPATH" | while read -r line; do
     if echo "$line" | grep -q "Opened shell for attacker"; then
     # ADD INACTIVE TIMEOUT
       if timeout 600s grep -q "Attacker closed connection"; then
@@ -38,5 +38,5 @@ while true; do
   ./recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 
   id=$((id+1))
-  LOGFILE="$LOGFILE$id"
+  LOGFILEPATH="../logs/$LOGFILE$id"
 done

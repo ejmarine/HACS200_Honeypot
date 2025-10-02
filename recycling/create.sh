@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$#" -ne 3 ]; then
+if [ "$#" -ne 4 ]; then
   echo "Usage: $0 <container_name> <external_ip> <mitm_port> <language>"
   exit 1
 fi

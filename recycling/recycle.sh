@@ -10,7 +10,7 @@ EXTERNAL_IP=$2
 MITM_PORT=$3
 
 # Get container IP (if it still exists)
-CONTAINER_IP=$(sudo lxc-info -n "$CONTAINER" -iH 2>/dev/null)
+CONTAINER_IP=$(sudo lxc list "$CONTAINER" -c 4 -f csv | awk '{print $1}')
 
 # Stop MITM (forever)
 forever list | grep -q "honeypot-$CONTAINER" && forever stop "honeypot-$CONTAINER"
@@ -26,8 +26,8 @@ fi
 sudo ip addr del "$EXTERNAL_IP"/16 dev eth1 2>/dev/null
 
 # Stop and destroy container
-sudo lxc-stop -n "$CONTAINER" 2>/dev/null
-sudo lxc-destroy -n "$CONTAINER" 2>/dev/null
+sudo lxc stop "$CONTAINER" --force 2>/dev/null
+sudo lxc delete "$CONTAINER" 2>/dev/null
 
 # Stop all forever processes (clean MITM & any leftovers)
 forever stopall

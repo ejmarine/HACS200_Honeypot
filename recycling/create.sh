@@ -21,16 +21,16 @@ if [ -n "$PID" ]; then
   sudo kill -9 "$PID"
 fi
 
-# Create container if needed
-if ! sudo lxc-ls | grep -qw "$CONTAINER"; then
-  sudo lxc-create -n "$CONTAINER" -t download -- -d ubuntu -r focal -a amd64
+# Create container if needed (LXD)
+if ! sudo lxc list -c n --format csv | grep -xq "$CONTAINER"; then
+  sudo lxc launch ubuntu:20.04 "$CONTAINER"
 fi
 
-# Start container
-sudo lxc-start -n "$CONTAINER"
+# Start container (safe if already running)
+sudo lxc start "$CONTAINER" 2>/dev/null
 
 # Wait until container gets an IP
-until CONTAINER_IP=$(sudo lxc-info -n "$CONTAINER" -iH) && [ -n "$CONTAINER_IP" ]; do
+until CONTAINER_IP=$(sudo lxc list "$CONTAINER" -c 4 -f csv | awk '{print $1}') && [ -n "$CONTAINER_IP" ]; do
   sleep 1
 done
 
@@ -39,28 +39,28 @@ sudo ip addr add "$EXTERNAL_IP"/16 brd + dev eth1 2>/dev/null
 sudo sysctl -w net.ipv4.conf.all.route_localnet=1
 
 # Install SSH if need
-sudo lxc-attach -n "$CONTAINER" -- apt update -y
-sudo lxc-attach -n "$CONTAINER" -- apt install -y openssh-server
+sudo lxc exec "$CONTAINER" -- apt update -y
+sudo lxc exec "$CONTAINER" -- apt install -y openssh-server
 
 # Enable root login in sshd_config
-sudo lxc-attach -n "$CONTAINER" -- sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-sudo lxc-attach -n "$CONTAINER" -- systemctl restart ssh
+sudo lxc exec "$CONTAINER" -- sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 
-files = "../honeypot_files/$LANGUAGE"
+files="../honeypot_files/$LANGUAGE"
 
 if [ -d "$files" ]; then
-  sudo lxc-attach -n "$CONTAINER" -- mkdir -p /home/
-  sudo lxc-file push "$files"/* "$CONTAINER"/root/ 2>/dev/null
+  sudo lxc exec "$CONTAINER" -- mkdir -p /home/
+  sudo lxc file push "$files"/* "$CONTAINER"/root/ 2>/dev/null
 else
   echo "Error: $files does not exist"
   exit 1
 fi
 
 # TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT
-banner = "../honeypot_files/banners/$LANGUAGE.txt"
-sudo lxc-attach -n "$CONTAINER" -- sed -i "s/^Banner.*$/Banner \/root\/banner.txt/" /etc/ssh/sshd_config
-sudo lxc-attach -n "$CONTAINER" -- echo "$banner" > /root/banner.txt
-sudo lxc-attach -n "$CONTAINER" -- systemctl restart ssh
+banner="../honeypot_files/banners/$LANGUAGE.txt"
+sudo lxc exec "$CONTAINER" -- sed -i "s/^Banner.*$/Banner \/root\/banner.txt/" /etc/ssh/sshd_config
+sudo lxc exec "$CONTAINER" -- bash -lc "echo \"$banner\" > /root/banner.txt"
+sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 
 # TODO IN GENERAL: CHANGE SYSTEM LANGUAGE TO THE LANGUAGE OF THE HONEYPOT
 # Change system language inside the container to the selected language
@@ -94,9 +94,9 @@ case "$LANGUAGE" in
 esac
 
 # Generate and set the locale in the container
-sudo lxc-attach -n "$CONTAINER" -- locale-gen "$LOCALE"
-sudo lxc-attach -n "$CONTAINER" -- update-locale LANG="$LOCALE"
-sudo lxc-attach -n "$CONTAINER" -- bash -c "echo 'LANG=$LOCALE' > /etc/default/locale"
+sudo lxc exec "$CONTAINER" -- locale-gen "$LOCALE"
+sudo lxc exec "$CONTAINER" -- update-locale LANG="$LOCALE"
+sudo lxc exec "$CONTAINER" -- bash -lc "echo 'LANG=$LOCALE' > /etc/default/locale"
 
 # Launch MITM
 echo "[*] Starting MITM server on port $MITM_PORT..."
@@ -104,7 +104,6 @@ FOREVER_UID="honeypot-$CONTAINER"
 sudo forever --uid "$FOREVER_UID" -a -l ~/"$CONTAINER".log start /home/student/HACS200_Honeypot/MITM/mitm.js \
   -n "$CONTAINER" -i "$CONTAINER_IP" -p "$MITM_PORT" \
   --auto-access --auto-access-fixed 3 --debug
-
 
 # Add iptables rules
 sudo iptables -t nat -I POSTROUTING -s "$CONTAINER_IP" -d 0.0.0.0/0 -j SNAT --to-source "$EXTERNAL_IP"

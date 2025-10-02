@@ -12,19 +12,27 @@ LANGUAGE=$4
 
 # Stop existing MITM process for this container if running
 if forever list | grep -q "honeypot-$CONTAINER"; then
+  echo "[*] Stopping existing MITM process for $CONTAINER"
   forever stop "honeypot-$CONTAINER" 2>/dev/null
 fi
 
 # Kill any process still using our port just in case
 PID=$(sudo lsof -t -i:"$MITM_PORT")
 if [ -n "$PID" ]; then
+  echo "[*] Killing process still using port $MITM_PORT"
   sudo kill -9 "$PID"
 fi
 
-# Create container if needed (LXD)
-if ! sudo lxc list -c n --format csv | grep -xq "$CONTAINER"; then
-  sudo lxc launch ubuntu:20.04 "$CONTAINER"
+echo "[*] Checking if container $CONTAINER exists"
+if sudo lxc list -c n --format csv | grep -xq "$CONTAINER"; then
+  echo "[*] Container $CONTAINER already exists, removing it..."
+  sudo lxc stop "$CONTAINER" --force 2>/dev/null
+  sudo lxc delete "$CONTAINER" 2>/dev/null
 fi
+# Create container if needed (LXD)
+echo "[*] Creating container $CONTAINER"
+sudo lxc launch ubuntu:20.04 "$CONTAINER"
+
 
 # Start container (safe if already running)
 sudo lxc start "$CONTAINER" 2>/dev/null

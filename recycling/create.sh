@@ -70,6 +70,18 @@ sudo lxc exec "$CONTAINER" -- sed -i "s/^Banner.*$/Banner \/root\/banner.txt/" /
 sudo lxc exec "$CONTAINER" -- bash -lc "echo \"$banner\" > /root/banner.txt"
 sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 
+# Correct way to set the banner
+# banner_path="../honeypot_files/banners/$LANGUAGE.txt"
+# if [ -f "$banner_path" ]; then
+#     sudo lxc file push "$banner_path" "$CONTAINER/root/banner.txt"
+#     sudo lxc exec "$CONTAINER" -- sed -i "s/^#\?Banner.*/Banner \/root\/banner.txt/" /etc/ssh/sshd_config
+#     sudo lxc exec "$CONTAINER" -- systemctl restart ssh
+# else
+#     echo "Warning: Banner file not found at $banner_path"
+# fi
+
+
+
 # TODO IN GENERAL: CHANGE SYSTEM LANGUAGE TO THE LANGUAGE OF THE HONEYPOT
 # Change system language inside the container to the selected language
 

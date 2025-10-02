@@ -57,6 +57,10 @@ else
 fi
 
 # TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT
+banner = "../honeypot_files/banners/$LANGUAGE.txt"
+sudo lxc-attach -n "$CONTAINER" -- sed -i "s/^Banner.*$/Banner \/root\/banner.txt/" /etc/ssh/sshd_config
+sudo lxc-attach -n "$CONTAINER" -- echo "$banner" > /root/banner.txt
+sudo lxc-attach -n "$CONTAINER" -- systemctl restart ssh
 
 # TODO IN GENERAL: CHANGE SYSTEM LANGUAGE TO THE LANGUAGE OF THE HONEYPOT
 # Change system language inside the container to the selected language

@@ -101,7 +101,7 @@ sudo lxc-attach -n "$CONTAINER" -- bash -c "echo 'LANG=$LOCALE' > /etc/default/l
 # Launch MITM
 echo "[*] Starting MITM server on port $MITM_PORT..."
 FOREVER_UID="honeypot-$CONTAINER"
-sudo forever --uid "$FOREVER_UID" -a -l ~/"$CONTAINER".log start /home/student/MITM/mitm.js \
+sudo forever --uid "$FOREVER_UID" -a -l ~/"$CONTAINER".log start /home/student/HACS200_Honeypot/MITM/mitm.js \
   -n "$CONTAINER" -i "$CONTAINER_IP" -p "$MITM_PORT" \
   --auto-access --auto-access-fixed 3 --debug
 

@@ -11,13 +11,13 @@ source "$CONFIG_FILE"
 
 id=0
 
-LOGFILEPATH="../logs/$LOGFILE$id"
-
 LANGUAGES=(English Russian Chinese Hebrew Ukrainian French Spanish)
 
 while true; do
   RANDOM_INDEX=$((RANDOM % ${#LANGUAGES[@]}))
   RANDOM_LANGUAGE=${LANGUAGES[$RANDOM_INDEX]}
+
+  LOGFILEPATH="${LOGFILE}_$(date +%Y%m%d_%H%M%S)_${RANDOM_LANGUAGE}.log"
 
   cat RANDOM_LANGUAGE >> "$LOGFILEPATH"
 
@@ -38,5 +38,4 @@ while true; do
   ./recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 
   id=$((id+1))
-  LOGFILEPATH="../logs/$LOGFILE$id"
 done

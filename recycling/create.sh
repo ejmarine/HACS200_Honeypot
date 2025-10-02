@@ -89,27 +89,35 @@ sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 case "$LANGUAGE" in
   "English")
     LOCALE="en_US.UTF-8"
+    TZ="America/New_York"
     ;;
   "Russian")
     LOCALE="ru_RU.UTF-8"
+    TZ="Asia/Tokyo"
     ;;
   "Chinese")
     LOCALE="zh_CN.UTF-8"
+    TZ="Asia/Tokyo"
     ;;
   "Hebrew")
     LOCALE="he_IL.UTF-8"
+    TZ="Asia/Tokyo"
     ;;
   "Ukrainian")
     LOCALE="uk_UA.UTF-8"
+    TZ="Asia/Tokyo"
     ;;
   "French")
     LOCALE="fr_FR.UTF-8"
+    TZ="Asia/Tokyo"
     ;;
   "Spanish")
     LOCALE="es_ES.UTF-8"
+    TZ="Asia/Tokyo"
     ;;
   *)
     LOCALE="en_US.UTF-8"
+    TZ="America/New_York"
     ;;
 esac
 
@@ -117,6 +125,9 @@ esac
 sudo lxc exec "$CONTAINER" -- locale-gen "$LOCALE"
 sudo lxc exec "$CONTAINER" -- update-locale LANG="$LOCALE"
 sudo lxc exec "$CONTAINER" -- bash -lc "echo 'LANG=$LOCALE' > /etc/default/locale"
+# EFREM: TZ setting, could be halucinating - Teddy
+sudo lxc exec "$CONTAINER" -- bash -lc "echo 'TZ=$TZ' > /etc/timezone"
+sudo lxc exec "$CONTAINER" -- bash -lc "ln -sf /usr/share/zoneinfo/$TZ /etc/localtime"
 
 # Launch MITM
 echo "[*] Starting MITM server on port $MITM_PORT..."

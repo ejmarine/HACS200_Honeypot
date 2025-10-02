@@ -1,13 +1,13 @@
 #!/bin/bash
 
-if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <container_name> <external_ip>"
+if [ "$#" -ne 3 ]; then
+  echo "Usage: $0 <container_name> <external_ip> <mitm_port>"
   exit 1
 fi
 
 CONTAINER=$1
 EXTERNAL_IP=$2
-MITM_PORT=6010
+MITM_PORT=$3
 
 # Get container IP (if it still exists)
 CONTAINER_IP=$(sudo lxc-info -n "$CONTAINER" -iH 2>/dev/null)

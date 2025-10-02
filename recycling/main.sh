@@ -13,9 +13,13 @@ id=0
 
 LANGUAGES=(English Russian Chinese Hebrew Ukrainian French Spanish)
 
+if lxc list -c n --format csv | grep -xq "base-container"; then
+  sudo lxc stop "base-container"
+  sudo lxc delete "base-container"
+fi
 
 echo "[*] Creating base container"
-sudo lxc launch ubuntu:20.04 "base container"
+sudo lxc launch ubuntu:20.04 "base-container"
 
 mkdir -p "$LOGS_FOLDER"
 

@@ -2,8 +2,7 @@
 
 if [ -d "MITM" ]; then
     echo "MITM directory already exists, skipping clone."
-else
-if ! git clone https://github.com/UMD-ACES/MITM; then
+elif ! git clone https://github.com/UMD-ACES/MITM; then
     echo "Failed to clone MITM repository"
     exit 1
 fi

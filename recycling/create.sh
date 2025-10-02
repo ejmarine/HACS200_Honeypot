@@ -65,20 +65,20 @@ else
 fi
 
 # TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT
-# banner="../honeypot_files/banners/$LANGUAGE.txt"
-# sudo lxc exec "$CONTAINER" -- sed -i "s/^Banner.*$/Banner \/root\/banner.txt/" /etc/ssh/sshd_config
-# sudo lxc exec "$CONTAINER" -- bash -lc "echo \"$banner\" > /root/banner.txt"
-# sudo lxc exec "$CONTAINER" -- systemctl restart ssh
+banner="../honeypot_files/banners/$LANGUAGE.txt"
+sudo lxc exec "$CONTAINER" -- sed -i "s/^Banner.*$/Banner \/root\/banner.txt/" /etc/ssh/sshd_config
+sudo lxc exec "$CONTAINER" -- bash -lc "echo \"$banner\" > /root/banner.txt"
+sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 
 # Correct way to set the banner
-banner_path="../honeypot_files/banners/$LANGUAGE.txt"
-if [ -f "$banner_path" ]; then
-    sudo lxc file push "$banner_path" "$CONTAINER/root/banner.txt"
-    sudo lxc exec "$CONTAINER" -- sed -i "s/^#\?Banner.*/Banner \/root\/banner.txt/" /etc/ssh/sshd_config
-    sudo lxc exec "$CONTAINER" -- systemctl restart ssh
-else
-    echo "Warning: Banner file not found at $banner_path"
-fi
+# banner_path="../honeypot_files/banners/$LANGUAGE.txt"
+# if [ -f "$banner_path" ]; then
+#     sudo lxc file push "$banner_path" "$CONTAINER/root/banner.txt"
+#     sudo lxc exec "$CONTAINER" -- sed -i "s/^#\?Banner.*/Banner \/root\/banner.txt/" /etc/ssh/sshd_config
+#     sudo lxc exec "$CONTAINER" -- systemctl restart ssh
+# else
+#     echo "Warning: Banner file not found at $banner_path"
+# fi
 
 
 
@@ -121,7 +121,7 @@ sudo lxc exec "$CONTAINER" -- bash -lc "echo 'LANG=$LOCALE' > /etc/default/local
 # Launch MITM
 echo "[*] Starting MITM server on port $MITM_PORT..."
 FOREVER_UID="honeypot-$CONTAINER"
-sudo forever --uid "$FOREVER_UID" -a -l ~/"$CONTAINER".log start ../MITM/mitm.js \
+sudo forever --uid "$FOREVER_UID" -a -l ~/"$CONTAINER".log start /home/student/HACS200_Honeypot/MITM/mitm.js \
   -n "$CONTAINER" -i "$CONTAINER_IP" -p "$MITM_PORT" \
   --auto-access --auto-access-fixed 3 --debug
 

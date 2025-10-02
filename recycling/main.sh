@@ -13,11 +13,13 @@ id=0
 
 LANGUAGES=(English Russian Chinese Hebrew Ukrainian French Spanish)
 
+mkdir -p "$LOGS_FOLDER"
+
 while true; do
   RANDOM_INDEX=$((RANDOM % ${#LANGUAGES[@]}))
   RANDOM_LANGUAGE=${LANGUAGES[$RANDOM_INDEX]}
 
-  LOGFILEPATH="${LOGFILE}_$(date +%Y%m%d_%H%M%S)_${RANDOM_LANGUAGE}.log"
+  LOGFILEPATH="${LOGS_FOLDER}/${CONTAINER}_$(date +%Y%m%d_%H%M%S)_${RANDOM_LANGUAGE}.log"
 
   cat RANDOM_LANGUAGE >> "$LOGFILEPATH"
 

@@ -13,6 +13,10 @@ id=0
 
 LANGUAGES=(English Russian Chinese Hebrew Ukrainian French Spanish)
 
+
+echo "[*] Creating base container"
+sudo lxc launch ubuntu:20.04 "base container"
+
 mkdir -p "$LOGS_FOLDER"
 
 while true; do

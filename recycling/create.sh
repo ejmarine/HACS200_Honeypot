@@ -31,7 +31,7 @@ if sudo lxc list -c n --format csv | grep -xq "$CONTAINER"; then
 fi
 # Create container if needed (LXD)
 echo "[*] Creating container $CONTAINER"
-sudo lxc launch ubuntu:20.04 "$CONTAINER"
+sudo lxc copy -n "base container" -N "$CONTAINER"
 
 
 # Start container (safe if already running)

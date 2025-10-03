@@ -13,6 +13,8 @@ id=0
 
 LANGUAGES=(English Russian Chinese Hebrew Ukrainian French Spanish)
 
+
+# Not currently working, but trying to copy a base container to increase speed
 if lxc list -c n --format csv | grep -xq "base-container"; then
   sudo lxc stop "base-container"
   sudo lxc delete "base-container"
@@ -21,8 +23,10 @@ fi
 echo "[*] Creating base container"
 sudo lxc launch ubuntu:20.04 base-container
 
+
 mkdir -p "$LOGS_FOLDER"
 
+#Start honeypot loop
 while true; do
   RANDOM_INDEX=$((RANDOM % ${#LANGUAGES[@]}))
   RANDOM_LANGUAGE=${LANGUAGES[$RANDOM_INDEX]}

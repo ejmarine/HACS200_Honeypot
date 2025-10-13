@@ -45,8 +45,11 @@ until CONTAINER_IP=$(sudo lxc list "$CONTAINER" -c 4 -f csv | awk '{print $1}') 
   sleep 1
 done
 
+<<<<<<< HEAD
 # Add external IP
 sudo ip addr add "$EXTERNAL_IP"/16 brd + dev eth1
+=======
+>>>>>>> 3e0af8b5e65ba22f34d669fd1fe2b1f971d77a25
 sudo sysctl -w net.ipv4.conf.all.route_localnet=1
 
 # Install SSH if need
@@ -137,15 +140,18 @@ sudo lxc exec "$CONTAINER" -- bash -lc "ln -sf /usr/share/zoneinfo/$TZ /etc/loca
 
 # Launch MITM
 echo "[*] Starting MITM server on port $MITM_PORT..."
-FOREVER_UID="honeypot-$CONTAINER"
-sudo forever --uid "$FOREVER_UID" -a -l ~/"$CONTAINER".log start /root/honeypots/MITM/mitm.js \
-  -n "$CONTAINER" -i "$CONTAINER_IP" -p "$MITM_PORT" \
-  --auto-access --auto-access-fixed 1 --debug
-
-# Add iptables rules
-sudo iptables -t nat -I POSTROUTING -s "$CONTAINER_IP" -d 0.0.0.0/0 -j SNAT --to-source "$EXTERNAL_IP"
-sudo iptables -t nat -I PREROUTING -s 0.0.0.0/0 -d "$EXTERNAL_IP" -j DNAT --to-destination "$CONTAINER_IP"
-sudo iptables -t nat -I PREROUTING -s 0.0.0.0/0 -d "$EXTERNAL_IP" -p tcp --dport 22 -j DNAT --to-destination 127.0.0.1:$MITM_PORT
+SCREEN_NAME="honeypot-$CONTAINER"
+# Kill existing screen session if it exists
+screen -S "$SCREEN_NAME" -X quit 2>/dev/null
+# Start new screen session with MITM
+screen -dmS "$SCREEN_NAME" node /root/honeypots/MITM/mitm.js \
+  --container.ipAddress="$CONTAINER_IP" \
+  --container.name="$CONTAINER" \
+  --server.listenPort="$MITM_PORT" \
+  --autoAccess.enabled=true \
+  --autoAccess.barrier.fixed.enabled=true \
+  --autoAccess.barrier.fixed.attempts=1 \
+  --debug=true
 
 # Calculate and display creation time
 CREATE_END_TIME=$(date +%s)

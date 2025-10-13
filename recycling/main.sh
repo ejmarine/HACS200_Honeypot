@@ -29,7 +29,12 @@ if ! lxc image list | grep -q "base"; then
   sudo lxc delete base-container
 fi
 
-sudo lxc profile copy default $CONTAINER
+if ! lxc profile list | grep -q "$CONTAINER"; then
+  sudo lxc profile copy default $CONTAINER
+else
+  sudo lxc profile delete $CONTAINER
+  sudo lxc profile copy default $CONTAINER
+fi
 lxc profile device set $CONTAINER eth0 ipv4.address=$INTERNAL_IP
 
 

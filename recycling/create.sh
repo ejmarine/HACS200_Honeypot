@@ -139,7 +139,18 @@ SCREEN_NAME="honeypot-$CONTAINER"
 # Kill existing screen session if it exists
 screen -S "$SCREEN_NAME" -X quit 2>/dev/null
 # Start new screen session with MITM
+<<<<<<< HEAD
 screen -dmS $SCREEN_NAME node /root/honeypots/MITM/mitm/index.js config/$CONTAINER.js
+=======
+screen -dmS "$SCREEN_NAME" node /root/honeypots/MITM/mitm/mitm.js \
+  --container.ipAddress="$CONTAINER_IP" \
+  --container.name="$CONTAINER" \
+  --server.listenPort="$MITM_PORT" \
+  --autoAccess.enabled=true \
+  --autoAccess.barrier.fixed.enabled=true \
+  --autoAccess.barrier.fixed.attempts=1 \
+  --debug=true
+>>>>>>> fcb9712806f12b2ae603220eb7255b9fe42c470e
 
 # Calculate and display creation time
 CREATE_END_TIME=$(date +%s)

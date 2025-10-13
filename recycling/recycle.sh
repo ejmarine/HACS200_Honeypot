@@ -19,22 +19,11 @@ CONTAINER_IP=$(sudo lxc list "$CONTAINER" -c 4 -f csv | awk '{print $1}')
 SCREEN_NAME="honeypot-$CONTAINER"
 screen -S "$SCREEN_NAME" -X quit 2>/dev/null
 
-# Remove iptables rules
-if [ -n "$CONTAINER_IP" ]; then
-  sudo iptables -t nat -D PREROUTING -d "$EXTERNAL_IP" -p tcp --dport 22 -j DNAT --to-destination 127.0.0.1:$MITM_PORT
-  sudo iptables -t nat -D PREROUTING -d "$EXTERNAL_IP" -j DNAT --to-destination "$CONTAINER_IP"
-  sudo iptables -t nat -D POSTROUTING -s "$CONTAINER_IP" -j SNAT --to-source "$EXTERNAL_IP"
-fi
-
-# Remove external IP
-sudo ip addr del "$EXTERNAL_IP"/16 dev eth1 2>/dev/null
 
 # Stop and destroy container
 sudo lxc stop "$CONTAINER" --force 2>/dev/null
 sudo lxc delete "$CONTAINER" 2>/dev/null
 
-# Clean up any remaining screen sessions (optional cleanup)
-screen -wipe 2>/dev/null
 
 # Calculate and display recycling time
 RECYCLE_END_TIME=$(date +%s)

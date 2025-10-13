@@ -45,11 +45,6 @@ until CONTAINER_IP=$(sudo lxc list "$CONTAINER" -c 4 -f csv | awk '{print $1}') 
   sleep 1
 done
 
-<<<<<<< HEAD
-# Add external IP
-sudo ip addr add "$EXTERNAL_IP"/16 brd + dev eth1
-=======
->>>>>>> 3e0af8b5e65ba22f34d669fd1fe2b1f971d77a25
 sudo sysctl -w net.ipv4.conf.all.route_localnet=1
 
 # Install SSH if need
@@ -144,14 +139,7 @@ SCREEN_NAME="honeypot-$CONTAINER"
 # Kill existing screen session if it exists
 screen -S "$SCREEN_NAME" -X quit 2>/dev/null
 # Start new screen session with MITM
-screen -dmS "$SCREEN_NAME" node /root/honeypots/MITM/mitm.js \
-  --container.ipAddress="$CONTAINER_IP" \
-  --container.name="$CONTAINER" \
-  --server.listenPort="$MITM_PORT" \
-  --autoAccess.enabled=true \
-  --autoAccess.barrier.fixed.enabled=true \
-  --autoAccess.barrier.fixed.attempts=1 \
-  --debug=true
+screen -dmS $SCREEN_NAME node /root/honeypots/MITM/mitm/index.js config/$CONTAINER.js
 
 # Calculate and display creation time
 CREATE_END_TIME=$(date +%s)

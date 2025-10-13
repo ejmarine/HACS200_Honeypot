@@ -15,6 +15,7 @@ fi
 
 apt install -y lxc lxd
 apt install -y npm
+apt install -y screen
 npm install -g forever
 npm install -g pm2
 chmod -R 755 ./*

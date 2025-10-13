@@ -15,8 +15,9 @@ RECYCLE_START_TIME=$(date +%s)
 # Get container IP (if it still exists)
 CONTAINER_IP=$(sudo lxc list "$CONTAINER" -c 4 -f csv | awk '{print $1}')
 
-# Stop MITM (forever)
-forever list | grep -q "honeypot-$CONTAINER" && forever stop "honeypot-$CONTAINER"
+# Stop MITM (screen)
+SCREEN_NAME="honeypot-$CONTAINER"
+screen -S "$SCREEN_NAME" -X quit 2>/dev/null
 
 # Remove iptables rules
 if [ -n "$CONTAINER_IP" ]; then
@@ -32,8 +33,8 @@ sudo ip addr del "$EXTERNAL_IP"/16 dev eth1 2>/dev/null
 sudo lxc stop "$CONTAINER" --force 2>/dev/null
 sudo lxc delete "$CONTAINER" 2>/dev/null
 
-# Stop all forever processes (clean MITM & any leftovers)
-forever stopall
+# Clean up any remaining screen sessions (optional cleanup)
+screen -wipe 2>/dev/null
 
 # Calculate and display recycling time
 RECYCLE_END_TIME=$(date +%s)

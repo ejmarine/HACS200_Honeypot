@@ -31,7 +31,7 @@ if sudo lxc list -c n --format csv | grep -xq "$CONTAINER"; then
 fi
 # Create container if needed (LXD)
 echo "[*] Creating container $CONTAINER"
-sudo lxc copy base-container $CONTAINER
+sudo lxc launch base $CONTAINER
 
 
 # Start container (safe if already running)
@@ -134,7 +134,7 @@ echo "[*] Starting MITM server on port $MITM_PORT..."
 FOREVER_UID="honeypot-$CONTAINER"
 sudo forever --uid "$FOREVER_UID" -a -l ~/"$CONTAINER".log start /home/aces/HACS200_Honeypot/MITM/mitm.js \
   -n "$CONTAINER" -i "$CONTAINER_IP" -p "$MITM_PORT" \
-  --auto-access --auto-access-fixed 3 --debug
+  --auto-access --auto-access-fixed 1 --debug
 
 # Add iptables rules
 sudo iptables -t nat -I POSTROUTING -s "$CONTAINER_IP" -d 0.0.0.0/0 -j SNAT --to-source "$EXTERNAL_IP"

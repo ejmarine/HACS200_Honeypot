@@ -45,8 +45,6 @@ until CONTAINER_IP=$(sudo lxc list "$CONTAINER" -c 4 -f csv | awk '{print $1}') 
   sleep 1
 done
 
-# Add external IP
-sudo ip addr add "$EXTERNAL_IP"/16 brd + dev eth1 2>/dev/null
 sudo sysctl -w net.ipv4.conf.all.route_localnet=1
 
 # Install SSH if need
@@ -141,11 +139,6 @@ FOREVER_UID="honeypot-$CONTAINER"
 sudo forever --uid "$FOREVER_UID" -a -l ~/"$CONTAINER".log start /root/honeypots/MITM/mitm.js \
   -n "$CONTAINER" -i "$CONTAINER_IP" -p "$MITM_PORT" \
   --auto-access --auto-access-fixed 1 --debug
-
-# Add iptables rules
-sudo iptables -t nat -I POSTROUTING -s "$CONTAINER_IP" -d 0.0.0.0/0 -j SNAT --to-source "$EXTERNAL_IP"
-sudo iptables -t nat -I PREROUTING -s 0.0.0.0/0 -d "$EXTERNAL_IP" -j DNAT --to-destination "$CONTAINER_IP"
-sudo iptables -t nat -I PREROUTING -s 0.0.0.0/0 -d "$EXTERNAL_IP" -p tcp --dport 22 -j DNAT --to-destination 127.0.0.1:$MITM_PORT
 
 # Calculate and display creation time
 CREATE_END_TIME=$(date +%s)

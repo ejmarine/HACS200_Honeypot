@@ -144,7 +144,7 @@ SCREEN_NAME="honeypot-$CONTAINER"
 # Kill existing screen session if it exists
 screen -S "$SCREEN_NAME" -X quit 2>/dev/null
 # Start new screen session with MITM
-screen -dmS "$SCREEN_NAME" node /root/honeypots/MITM/mitm.js \
+screen -dmS "$SCREEN_NAME" node /root/honeypots/MITM/mitm/mitm.js \
   --container.ipAddress="$CONTAINER_IP" \
   --container.name="$CONTAINER" \
   --server.listenPort="$MITM_PORT" \

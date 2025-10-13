@@ -50,9 +50,8 @@ sudo ip addr add "$EXTERNAL_IP"/16 brd + dev eth1 2>/dev/null
 sudo sysctl -w net.ipv4.conf.all.route_localnet=1
 
 # Install SSH if need
-
-sudo lxc exec "$CONTAINER" -- apt update -y
-sudo lxc exec "$CONTAINER" -- apt install -y openssh-server
+echo "[*] Configuring SSH in $CONTAINER"
+sudo lxc exec "$CONTAINER" -- apt install -y openssh-server >/dev/null 2>&1
 
 # Enable root login in sshd_config
 sudo lxc exec "$CONTAINER" -- sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -60,6 +59,7 @@ sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 
 files="../honeypot_files/$LANGUAGE"
 
+echo "[*] Copying honeypot files to $CONTAINER"
 if [ -d "$files" ]; then
   sudo lxc exec "$CONTAINER" -- mkdir -p /home/
   sudo lxc file push "$files"/* "$CONTAINER"/root/ 2>/dev/null
@@ -70,6 +70,7 @@ fi
 
 # TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT
 banner="../honeypot_files/banners/$LANGUAGE.txt"
+echo "[*] Setting banner in $CONTAINER"
 sudo lxc exec "$CONTAINER" -- sed -i "s/^Banner.*$/Banner \/root\/banner.txt/" /etc/ssh/sshd_config
 sudo lxc exec "$CONTAINER" -- bash -lc "echo \"$banner\" > /root/banner.txt"
 sudo lxc exec "$CONTAINER" -- systemctl restart ssh
@@ -124,7 +125,8 @@ case "$LANGUAGE" in
     TZ="America/New_York"
     ;;
 esac
-
+  
+echo "[*] Setting locale in $CONTAINER"
 # Generate and set the locale in the container
 sudo lxc exec "$CONTAINER" -- locale-gen "$LOCALE"
 sudo lxc exec "$CONTAINER" -- update-locale LANG="$LOCALE"

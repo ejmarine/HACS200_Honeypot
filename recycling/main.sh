@@ -15,7 +15,7 @@ LANGUAGES=(English Russian Chinese Hebrew Ukrainian French Spanish)
 
 
 # Not currently working, but trying to copy a base container to increase speed
-if lxc list -c n --format csv | grep -xq "base-container"; then
+if lxc list -c n --format csv | grep -q "base-container"; then
   sudo lxc stop "base-container"
   sudo lxc delete "base-container"
 fi
@@ -25,6 +25,9 @@ sudo lxc launch ubuntu:20.04 base-container
 sudo lxc publish base-container --alias base
 sudo lxc stop base-container
 sudo lxc delete base-container
+
+sudo lxc profile copy default $CONTAINER
+lxc profile device set $CONTAINER eth0 ipv4.address=$INTERNAL_IP
 
 
 mkdir -p "$LOGS_FOLDER"

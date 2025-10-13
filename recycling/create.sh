@@ -24,7 +24,7 @@ if [ -n "$PID" ]; then
 fi
 
 echo "[*] Checking if container $CONTAINER exists"
-if sudo lxc list -c n --format csv | grep -xq "$CONTAINER"; then
+if sudo lxc list -c n --format csv | grep -q "$CONTAINER"; then
   echo "[*] Container $CONTAINER already exists, removing it..."
   sudo lxc stop "$CONTAINER" --force 2>/dev/null
   sudo lxc delete "$CONTAINER" 2>/dev/null

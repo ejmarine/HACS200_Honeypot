@@ -22,6 +22,9 @@ fi
 
 echo "[*] Creating base container"
 sudo lxc launch ubuntu:20.04 base-container
+sudo lxc publish base-container --alias base
+sudo lxc stop base-container
+sudo lxc delete base-container
 
 
 mkdir -p "$LOGS_FOLDER"

@@ -13,6 +13,7 @@ elif ! git clone https://github.com/UMD-ACES/MITM; then
     exit 1
 fi
 
+apt install -y lxc lxd
 apt install -y npm
 npm install -g forever
 npm install -g pm2

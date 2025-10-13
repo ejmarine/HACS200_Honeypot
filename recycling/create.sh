@@ -132,7 +132,7 @@ sudo lxc exec "$CONTAINER" -- bash -lc "ln -sf /usr/share/zoneinfo/$TZ /etc/loca
 # Launch MITM
 echo "[*] Starting MITM server on port $MITM_PORT..."
 FOREVER_UID="honeypot-$CONTAINER"
-sudo forever --uid "$FOREVER_UID" -a -l ~/"$CONTAINER".log start /home/student/HACS200_Honeypot/MITM/mitm.js \
+sudo forever --uid "$FOREVER_UID" -a -l ~/"$CONTAINER".log start /home/aces/HACS200_Honeypot/MITM/mitm.js \
   -n "$CONTAINER" -i "$CONTAINER_IP" -p "$MITM_PORT" \
   --auto-access --auto-access-fixed 3 --debug
 

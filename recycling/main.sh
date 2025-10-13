@@ -20,11 +20,14 @@ if lxc list -c n --format csv | grep -q "base-container"; then
   sudo lxc delete "base-container"
 fi
 
-echo "[*] Creating base container"
-sudo lxc launch ubuntu:20.04 base-container
-sudo lxc publish base-container --alias base
-sudo lxc stop base-container
-sudo lxc delete base-container
+# Check if the 'base' image exists; if not, create and publish it
+if ! lxc image list | grep -q "base"; then
+  echo "[*] Creating base container"
+  sudo lxc launch ubuntu:20.04 base-container
+  sudo lxc publish base-container --alias base --force
+  sudo lxc stop base-container
+  sudo lxc delete base-container
+fi
 
 sudo lxc profile copy default $CONTAINER
 lxc profile device set $CONTAINER eth0 ipv4.address=$INTERNAL_IP

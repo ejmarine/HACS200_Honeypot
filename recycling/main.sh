@@ -7,7 +7,7 @@ fi
 
 CONFIG_FILE=$1
 
-source "config/$CONFIG_FILE"
+source "$CONFIG_FILE"
 
 id=0
 

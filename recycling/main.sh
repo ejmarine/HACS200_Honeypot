@@ -58,7 +58,7 @@ while true; do
       
     #fi
     echo "[*] Testing the recycle.sh script after 1 minute..."
-    sleep 20
+    sleep 120
     break
   done
 

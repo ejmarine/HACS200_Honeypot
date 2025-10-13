@@ -46,7 +46,7 @@ until CONTAINER_IP=$(sudo lxc list "$CONTAINER" -c 4 -f csv | awk '{print $1}') 
 done
 
 # Add external IP
-sudo ip addr add "$EXTERNAL_IP"/16 brd + dev eth1 2>/dev/null
+sudo ip addr add "$EXTERNAL_IP"/16 brd + dev eth1
 sudo sysctl -w net.ipv4.conf.all.route_localnet=1
 
 # Install SSH if need

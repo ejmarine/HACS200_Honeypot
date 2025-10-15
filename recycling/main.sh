@@ -53,8 +53,50 @@ while true; do
 
   echo "[*] Monitoring MITM log for attacker interaction..."
 
+  echo "[*] Starting MITM server on port $MITM_PORT..."
+  # Kill any processes running on mitm port
+  MITM_PIDS=$(lsof -ti tcp:"$MITM_PORT")
+  if [ -n "$MITM_PIDS" ]; then
+    echo "[*] Killing processes on port $MITM_PORT: $MITM_PIDS"
+    kill -9 $MITM_PIDS
+  fi
+  # Start new screen session with MITM
+  node /root/honeypots/MITM/mitm/index.js $CONTAINER >> "../logs/$CONTAINER.out" 2>&1
+
   # Watch MITM log from the end only
-  tail -F "$LOGFILEPATH" | while read -r line; do
+
+  COMMANDS=()
+  NUM_COMMANDS=0
+  ATTACKER_IP=""
+  CONNECT_TIME=""
+  DISCONNECT_TIME=""
+  DURATION=""
+
+  tail -F "../logs/$CONTAINER.out" | while read -r line; do
+    # Wait until "[LXC-Auth] Attacker authenticated and is inside container" is read
+    if echo "$line" | grep -q "Attempting to connect to honeypot:"; then
+      ATTACKER_IP=$(echo "$line" | cut -':' -f4)
+    elif echo "$line" | grep -q "\[LXC-Auth\] Attacker authenticated and is inside container"; then
+      echo "[*] Attacker has authenticated and is inside the container"
+      CONNECT_TIME=$(date +%s)
+    elif echo "$line" | grep -q "line from reader:"; then
+        COMMAND=$(echo "$line" | cut -d':' -f4)
+        echo "[*] Command: $COMMAND"
+        COMMANDS+=("$COMMAND")
+        NUM_COMMANDS=$((NUM_COMMANDS+1))
+    elif echo "$line" | grep -q "Attacker closed the connection"; then
+        DISCONNECT_TIME=$(date +%s)
+        DURATION=$((DISCONNECT_TIME - CONNECT_TIME))
+        echo "[*] Number of commands: $NUM_COMMANDS"
+        echo "[*] Commands: ${COMMANDS[@]}"
+        echo "[*] Attacker IP: $ATTACKER_IP"
+        echo "[*] Connect time: $CONNECT_TIME"
+        echo "[*] Disconnect time: $DISCONNECT_TIME"
+        echo "[*] Duration: $DURATION"
+        break
+    fi
+
+    if echo "$line" | grep -q "\[LXC-Auth\] Attacker closed connection"; then
     #if echo "$line" | grep -q "Opened shell for attacker"; then
     # ADD INACTIVE TIMEOUT
       #if timeout 600s grep -q "Attacker closed connection"; then

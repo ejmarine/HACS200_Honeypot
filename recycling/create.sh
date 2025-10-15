@@ -133,14 +133,6 @@ sudo lxc exec "$CONTAINER" -- bash -lc "echo 'LANG=$LOCALE' > /etc/default/local
 sudo lxc exec "$CONTAINER" -- bash -lc "echo 'TZ=$TZ' > /etc/timezone"
 sudo lxc exec "$CONTAINER" -- bash -lc "ln -sf /usr/share/zoneinfo/$TZ /etc/localtime"
 
-# Launch MITM
-echo "[*] Starting MITM server on port $MITM_PORT..."
-SCREEN_NAME="honeypot-$CONTAINER"
-# Kill existing screen session if it exists
-screen -S "$SCREEN_NAME" -X quit 2>/dev/null
-# Start new screen session with MITM
-screen -dmS $SCREEN_NAME node /root/honeypots/MITM/mitm/index.js $CONTAINER
-
 # Calculate and display creation time
 CREATE_END_TIME=$(date +%s)
 CREATE_DURATION=$((CREATE_END_TIME - CREATE_START_TIME))

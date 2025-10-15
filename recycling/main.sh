@@ -51,8 +51,6 @@ while true; do
 
   LOGFILEPATH="${LOGS_FOLDER}/${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.log"
 
-  echo "$RANDOM_LANGUAGE" >> "$LOGFILEPATH"
-
   ./create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT" "$RANDOM_LANGUAGE"
 
   echo "[*] Monitoring MITM log for attacker interaction..."
@@ -82,6 +80,7 @@ while true; do
   DURATION=""
 
   tail -F "../logs/$CONTAINER.out" | while read -r line; do
+    echo "[DEBUG] $line"
     # Wait until "[LXC-Auth] Attacker authenticated and is inside container" is read
     if echo "$line" | grep -q "Attacker connected:"; then
       ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
@@ -105,12 +104,11 @@ while true; do
         echo "[*] Disconnect time: $DISCONNECT_TIME"
         echo "[*] Duration: $DURATION"
         echo "#########################################" >> "../logs/$CONTAINER.out"
-        line = "";
         break
     fi
   done
 
-    line = "";
+  ./jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "${COMMANDS[@]}" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP"
 
   ./recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 

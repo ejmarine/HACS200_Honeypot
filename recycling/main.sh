@@ -105,9 +105,12 @@ while true; do
         echo "[*] Disconnect time: $DISCONNECT_TIME"
         echo "[*] Duration: $DURATION"
         echo "#########################################" >> "../logs/$CONTAINER.out"
+        line = "";
         break
     fi
   done
+
+    line = "";
 
   ./recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 

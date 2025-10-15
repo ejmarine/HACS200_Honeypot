@@ -50,6 +50,7 @@ while true; do
   RANDOM_LANGUAGE=${LANGUAGES[$RANDOM_INDEX]}
 
   LOGFILEPATH="${LOGS_FOLDER}/${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.log"
+  OUTFILE="${LOGS_FOLDER}/${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.out"
 
   ./create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT" "$RANDOM_LANGUAGE"
 
@@ -66,7 +67,7 @@ while true; do
 
   screen -S "$CONTAINER" -X quit 2>/dev/null
 
-  screen -dmS "$CONTAINER" sh -c "node /root/honeypots/MITM/mitm/index.js $CONTAINER >> ../logs/$CONTAINER.out 2>&1"
+  screen -dmS "$CONTAINER" sh -c "node /root/honeypots/MITM/mitm/index.js $CONTAINER >> $OUTFILE 2>&1"
 
   echo "[*] MITM server started"
 
@@ -80,7 +81,7 @@ while true; do
   DURATION=""
   
   unset line;
-  tail -F "../logs/$CONTAINER.out" | while read -r line; do
+  tail -F "$OUTFILE" | while read -r line; do
     echo "[DEBUG] $line"
     # Wait until "[LXC-Auth] Attacker authenticated and is inside container" is read
     if echo "$line" | grep -q "Attacker connected:"; then
@@ -105,7 +106,7 @@ while true; do
         echo "[*] Connect time: $CONNECT_TIME"
         echo "[*] Disconnect time: $DISCONNECT_TIME"
         echo "[*] Duration: $DURATION"
-        echo "#########################################" >> "../logs/$CONTAINER.out"
+        echo "#########################################" >> "$OUTFILE"
         break
     fi
   done

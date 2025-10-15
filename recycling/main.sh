@@ -72,7 +72,7 @@ while true; do
 
   # Watch MITM log from the end only
 
-  COMMANDS=()
+  COMMANDS="["
   NUM_COMMANDS=0
   ATTACKER_IP=""
   CONNECT_TIME=""
@@ -92,13 +92,14 @@ while true; do
     elif echo "$line" | grep -q "line from reader:"; then
         COMMAND=$(echo "$line" | cut -d':' -f4)
         echo "[*] Command: $COMMAND"
-        COMMANDS+=("$COMMAND")
+        COMMANDS+="$COMMAND,"
         NUM_COMMANDS=$((NUM_COMMANDS+1))
     elif echo "$line" | grep -q "Attacker ended the shell"; then
         DISCONNECT_TIME=$(date)
         DURATION=$(( $(date +%s) - DURATION ))
+        COMMANDS+="]"
         echo "[*] Number of commands: $NUM_COMMANDS"
-        echo "[*] Commands: ${COMMANDS[@]}"
+        echo "[*] Commands: ${COMMANDS}"
         echo "[*] Attacker IP: $ATTACKER_IP"
         echo "[*] Connect time: $CONNECT_TIME"
         echo "[*] Disconnect time: $DISCONNECT_TIME"
@@ -108,7 +109,7 @@ while true; do
     fi
   done
 
-  ./jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "${COMMANDS[@]}" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP"
+  ./jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP"
 
   ./recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 

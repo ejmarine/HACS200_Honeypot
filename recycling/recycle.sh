@@ -16,7 +16,7 @@ RECYCLE_START_TIME=$(date +%s)
 CONTAINER_IP=$(sudo lxc list "$CONTAINER" -c 4 -f csv | awk '{print $1}')
 
 # Stop MITM (screen)
-SCREEN_NAME="honeypot-$CONTAINER"
+SCREEN_NAME="$CONTAINER"
 screen -S "$SCREEN_NAME" -X quit 2>/dev/null
 
 

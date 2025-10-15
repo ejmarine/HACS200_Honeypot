@@ -23,7 +23,7 @@ PUBLIC_IP="${10}"
 LOGIN="${11}"
 # Create JSON file if it doesn't exist
 if [ ! -f "$JSON_FILE" ]; then
-    echo "[]" > "$JSON_FILE"
+    touch "$JSON_FILE"
 fi
 
 # Create the JSON entry
@@ -45,3 +45,5 @@ EOF
 )
 
 echo "$JSON_ENTRY" >> "$JSON_FILE"
+
+echo "[*] JSON entry added to $JSON_FILE"

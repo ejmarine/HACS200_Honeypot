@@ -83,26 +83,28 @@ while true; do
 
   tail -F "../logs/$CONTAINER.out" | while read -r line; do
     # Wait until "[LXC-Auth] Attacker authenticated and is inside container" is read
-    if echo "$line" | grep -q "Attempting to connect to honeypot:"; then
-      ATTACKER_IP=$(echo "$line" | cut -':' -f4)
+    if echo "$line" | grep -q "Attacker connected:"; then
+      ATTACKER_IP=$(echo "$line" | cut -':' -f4 | cut -d' ' -f2)
       echo "[*] Attacker IP: $ATTACKER_IP"
     elif echo "$line" | grep -q "\[LXC-Auth\] Attacker authenticated and is inside container"; then
       echo "[*] Attacker has authenticated and is inside the container"
-      CONNECT_TIME=$(date +%s)
+      CONNECT_TIME=$(date)
+      DURATION=$(date +%s)
     elif echo "$line" | grep -q "line from reader:"; then
         COMMAND=$(echo "$line" | cut -d':' -f4)
         echo "[*] Command: $COMMAND"
         COMMANDS+=("$COMMAND")
         NUM_COMMANDS=$((NUM_COMMANDS+1))
     elif echo "$line" | grep -q "Attacker ended the shell"; then
-        DISCONNECT_TIME=$(date +%s)
-        DURATION=$((DISCONNECT_TIME - CONNECT_TIME))
+        DISCONNECT_TIME=$(date)
+        DURATION=$((date +%s) - DURATION)
         echo "[*] Number of commands: $NUM_COMMANDS"
         echo "[*] Commands: ${COMMANDS[@]}"
         echo "[*] Attacker IP: $ATTACKER_IP"
         echo "[*] Connect time: $CONNECT_TIME"
         echo "[*] Disconnect time: $DISCONNECT_TIME"
         echo "[*] Duration: $DURATION"
+        echo "#########################################" >> "../logs/$CONTAINER.out"
         break
     fi
   done

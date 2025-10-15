@@ -43,28 +43,4 @@ JSON_ENTRY=$(cat <<EOF
 EOF
 )
 
-# Use jq to append the new entry to the JSON array
-if command -v jq >/dev/null 2>&1; then
-    # Use jq to append the entry
-    jq ". += [$JSON_ENTRY]" "$JSON_FILE" > "${JSON_FILE}.tmp" && mv "${JSON_FILE}.tmp" "$JSON_FILE"
-    echo "Successfully added entry to $JSON_FILE"
-else
-    # Fallback method without jq (less robust)
-    echo "Warning: jq not found. Using basic JSON manipulation (may not be as reliable)"
-    
-    # Remove the last ']' from the file
-    sed -i '$ s/]$//' "$JSON_FILE"
-    
-    # Add comma if file is not empty
-    if [ -s "$JSON_FILE" ] && [ "$(wc -c < "$JSON_FILE")" -gt 1 ]; then
-        echo "," >> "$JSON_FILE"
-    fi
-    
-    # Add the new entry
-    echo "$JSON_ENTRY" >> "$JSON_FILE"
-    
-    # Close the array
-    echo "]" >> "$JSON_FILE"
-    
-    echo "Successfully added entry to $JSON_FILE (using fallback method)"
-fi
+echo "$JSON_ENTRY" >> "$JSON_FILE"

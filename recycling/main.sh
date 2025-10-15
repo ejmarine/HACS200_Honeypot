@@ -50,7 +50,7 @@ while true; do
   RANDOM_LANGUAGE=${LANGUAGES[$RANDOM_INDEX]}
 
   LOGFILEPATH="${LOGS_FOLDER}/${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.log"
-  OUTFILE="${LOGS_FOLDER}/${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.out"
+  OUTFILE="${LOGS_FOLDER}${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.out"
 
   ./create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT" "$RANDOM_LANGUAGE"
 

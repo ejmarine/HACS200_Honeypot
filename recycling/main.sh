@@ -78,7 +78,8 @@ while true; do
   CONNECT_TIME=""
   DISCONNECT_TIME=""
   DURATION=""
-
+  
+  unset line;
   tail -F "../logs/$CONTAINER.out" | while read -r line; do
     echo "[DEBUG] $line"
     # Wait until "[LXC-Auth] Attacker authenticated and is inside container" is read

@@ -63,6 +63,8 @@ while true; do
   # Start new screen session with MITM
   node /root/honeypots/MITM/mitm/index.js $CONTAINER >> "../logs/$CONTAINER.out" 2>&1
 
+  echo "[*] MITM server started"
+
   # Watch MITM log from the end only
 
   COMMANDS=()
@@ -76,6 +78,7 @@ while true; do
     # Wait until "[LXC-Auth] Attacker authenticated and is inside container" is read
     if echo "$line" | grep -q "Attempting to connect to honeypot:"; then
       ATTACKER_IP=$(echo "$line" | cut -':' -f4)
+      echo "[*] Attacker IP: $ATTACKER_IP"
     elif echo "$line" | grep -q "\[LXC-Auth\] Attacker authenticated and is inside container"; then
       echo "[*] Attacker has authenticated and is inside the container"
       CONNECT_TIME=$(date +%s)
@@ -84,7 +87,7 @@ while true; do
         echo "[*] Command: $COMMAND"
         COMMANDS+=("$COMMAND")
         NUM_COMMANDS=$((NUM_COMMANDS+1))
-    elif echo "$line" | grep -q "Attacker closed the connection"; then
+    elif echo "$line" | grep -q "Attacker ended the shell"; then
         DISCONNECT_TIME=$(date +%s)
         DURATION=$((DISCONNECT_TIME - CONNECT_TIME))
         echo "[*] Number of commands: $NUM_COMMANDS"
@@ -95,18 +98,6 @@ while true; do
         echo "[*] Duration: $DURATION"
         break
     fi
-
-    if echo "$line" | grep -q "\[LXC-Auth\] Attacker closed connection"; then
-    #if echo "$line" | grep -q "Opened shell for attacker"; then
-    # ADD INACTIVE TIMEOUT
-      #if timeout 600s grep -q "Attacker closed connection"; then
-      #  break
-      #fi
-      
-    #fi
-    echo "[*] Testing the recycle.sh script after 1 minute..."
-    sleep 120
-    break
   done
 
   ./recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"

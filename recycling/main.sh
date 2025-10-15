@@ -97,7 +97,7 @@ while true; do
         COMMANDS+="$COMMAND,"
         NUM_COMMANDS=$((NUM_COMMANDS+1))
     elif echo "$line" | grep -q "Adding the following credentials:"; then
-      LOGIN=$(echo "$line" | cut -d':' -f4)
+      LOGIN=$(echo "$line" | cut -d':' -f4,5)
       echo "[*] Login: $LOGIN"
     elif echo "$line" | grep -q "Attacker ended the shell"; then
         DISCONNECT_TIME=$(date)
@@ -111,7 +111,7 @@ while true; do
         echo "[*] Duration: $DURATION"
         echo "[*] Login: $LOGIN"
         echo "#########################################" >> "$OUTFILE"
-        ./jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP"
+        ./jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN"
         break
     fi
   done

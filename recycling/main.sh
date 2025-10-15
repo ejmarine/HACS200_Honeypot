@@ -79,10 +79,10 @@ while true; do
   CONNECT_TIME=""
   DISCONNECT_TIME=""
   DURATION=""
+  LOGIN=""
   
   unset line;
   tail -F "$OUTFILE" | while read -r line; do
-    echo "[DEBUG] $line"
     # Wait until "[LXC-Auth] Attacker authenticated and is inside container" is read
     if echo "$line" | grep -q "Attacker connected:"; then
       ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
@@ -96,6 +96,9 @@ while true; do
         echo "[*] Command: $COMMAND"
         COMMANDS+="$COMMAND,"
         NUM_COMMANDS=$((NUM_COMMANDS+1))
+    elif echo "$line" | grep -q "Adding the following credentials:"; then
+      LOGIN=$(echo "$line" | cut -d':' -f4)
+      echo "[*] Login: $LOGIN"
     elif echo "$line" | grep -q "Attacker ended the shell"; then
         DISCONNECT_TIME=$(date)
         DURATION=$(( $(date +%s) - DURATION ))
@@ -106,12 +109,12 @@ while true; do
         echo "[*] Connect time: $CONNECT_TIME"
         echo "[*] Disconnect time: $DISCONNECT_TIME"
         echo "[*] Duration: $DURATION"
+        echo "[*] Login: $LOGIN"
         echo "#########################################" >> "$OUTFILE"
+        ./jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP"
         break
     fi
   done
-
-  ./jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP"
 
   ./recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 

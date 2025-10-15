@@ -4,8 +4,8 @@
 # Usage: ./jsonify.sh <json_file_path> <language> <num_commands> <commands_array> <attacker_ip> <connect_time> <disconnect_time> <duration> <honeypot_name> <public_ip>
 
 # Check if minimum required arguments are provided
-if [ $# -lt 10 ]; then
-    echo "Usage: $0 <json_file_path> <language> <num_commands> <commands_array> <attacker_ip> <connect_time> <disconnect_time> <duration> <honeypot_name> <public_ip>"
+if [ $# -lt 11 ]; then
+    echo "Usage: $0 <json_file_path> <language> <num_commands> <commands_array> <attacker_ip> <connect_time> <disconnect_time> <duration> <honeypot_name> <public_ip> <login>"
     echo "Example: $0 data.json 'English' 3 '[\"ls\",\"pwd\",\"whoami\"]' '192.168.1.100' '2024-01-01T10:00:00Z' '2024-01-01T10:05:00Z' '5m' 'honeypot-01' '203.0.113.42'"
     exit 1
 fi
@@ -20,7 +20,7 @@ DISCONNECT_TIME="$7"
 DURATION="$8"
 HONEYPOT_NAME="$9"
 PUBLIC_IP="${10}"
-
+LOGIN="${11}"
 # Create JSON file if it doesn't exist
 if [ ! -f "$JSON_FILE" ]; then
     echo "[]" > "$JSON_FILE"
@@ -38,6 +38,7 @@ JSON_ENTRY=$(cat <<EOF
   "duration": "$DURATION",
   "honeypot_name": "$HONEYPOT_NAME",
   "public_ip": "$PUBLIC_IP",
+  "login": "$LOGIN",
   "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 }
 EOF

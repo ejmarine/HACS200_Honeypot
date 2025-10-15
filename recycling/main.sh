@@ -5,6 +5,10 @@ if [ "$#" -ne 1 ]; then
   exit 1
 fi
 
+# Gain run access to scripts
+
+chmod 766 *
+
 CONFIG_FILE=$1
 
 source "$CONFIG_FILE"
@@ -61,7 +65,10 @@ while true; do
     kill -9 $MITM_PIDS
   fi
   # Start new screen session with MITM
-  node /root/honeypots/MITM/mitm/index.js $CONTAINER >> "../logs/$CONTAINER.out" 2>&1
+
+  screen -S $CONTAINER -X quit 2>/dev/null
+
+  screen -dmS $CONTAINER node /root/honeypots/MITM/mitm/index.js $CONTAINER >> "../logs/$CONTAINER.out" 2>&1
 
   echo "[*] MITM server started"
 

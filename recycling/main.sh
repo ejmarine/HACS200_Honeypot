@@ -68,7 +68,7 @@ while true; do
 
   screen -S $CONTAINER -X quit 2>/dev/null
 
-  screen -dmS $CONTAINER node /root/honeypots/MITM/mitm/index.js $CONTAINER >> "../logs/$CONTAINER.out"
+  screen -dmS "$CONTAINER" sh -c "node /root/honeypots/MITM/mitm/index.js $CONTAINER >> /var/log/mitm-$CONTAINER.log 2>&1"
 
   echo "[*] MITM server started"
 

@@ -7,6 +7,10 @@ fi
 
 message=$1
 
+# Sanitize message to remove quotes
+message=$(echo "$message" | tr -d '"' | tr -d "'")
+
+
 echo "[*] Sending message to Slack: $message"
 
 token=$(cat token.env)

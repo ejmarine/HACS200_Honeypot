@@ -85,24 +85,35 @@ while true; do
   tail -F "$OUTFILE" | while read -r line; do
     # Wait until "[LXC-Auth] Attacker authenticated and is inside container" is read
     if echo "$line" | grep -q "Attacker connected:"; then
-      ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
-      echo "[*] Attacker IP: $ATTACKER_IP"
+        ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
+        echo "[*] Attacker IP: $ATTACKER_IP"
+
     elif echo "$line" | grep -q "\[LXC-Auth\] Attacker authenticated and is inside container"; then
-      echo "[*] Attacker has authenticated and is inside the container"
-      CONNECT_TIME=$(date)
-      DURATION=$(date +%s)
+        CONNECT_TIME=$(date)
+        DURATION=$(date +%s)
+        echo "[*] Attacker has authenticated and is inside the container"
+
+        ./slack.sh "$CONTAINER: Attacker $ATTACKER_IP connected with $LOGIN"
+
     elif echo "$line" | grep -q "line from reader:"; then
+
         COMMAND=$(echo "$line" | cut -d':' -f4)
         echo "[*] Command: $COMMAND"
         COMMANDS+="$COMMAND,"
         NUM_COMMANDS=$((NUM_COMMANDS+1))
+
     elif echo "$line" | grep -q "Adding the following credentials:"; then
-      LOGIN=$(echo "$line" | cut -d':' -f4,5)
-      echo "[*] Login: $LOGIN"
+        LOGIN=$(echo "$line" | cut -d':' -f4,5)
+        echo "[*] Login: $LOGIN"
+
+
     elif echo "$line" | grep -q "Attacker ended the shell"; then
+
         DISCONNECT_TIME=$(date)
         DURATION=$(( $(date +%s) - DURATION ))
         COMMANDS+="]"
+        ./slack.sh "$CONTAINER: Attacker $ATTACKER_IP disconnected after $DURATION s"
+        ./slack.sh "$CONTAINER: Attacker ran: $COMMANDS"
         echo "[*] Number of commands: $NUM_COMMANDS"
         echo "[*] Commands: ${COMMANDS}"
         echo "[*] Attacker IP: $ATTACKER_IP"

@@ -52,7 +52,7 @@ while true; do
   LOGFILEPATH="${LOGS_FOLDER}/${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.log"
   OUTFILE="${LOGS_FOLDER}${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.out"
 
-  ./create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT" "$RANDOM_LANGUAGE"
+  ./helpers/create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT" "$RANDOM_LANGUAGE"
 
   echo "[*] Monitoring MITM log for attacker interaction..."
 
@@ -93,7 +93,7 @@ while true; do
         DURATION=$(date +%s)
         echo "[*] Attacker has authenticated and is inside the container"
 
-        ./slack.sh "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
+        ./helpers/slack.sh "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
 
     elif echo "$line" | grep -q "line from reader:"; then
 
@@ -112,8 +112,8 @@ while true; do
         DISCONNECT_TIME=$(date)
         DURATION=$(( $(date +%s) - DURATION ))
         COMMANDS+="]"
-        ./slack.sh "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
-        ./slack.sh "$CONTAINER - Attacker ran: $COMMANDS" &
+        ./helpers/slack.sh "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
+        ./helpers/slack.sh "$CONTAINER - Attacker ran: $COMMANDS" &
         echo "[*] Number of commands: $NUM_COMMANDS"
         echo "[*] Commands: ${COMMANDS}"
         echo "[*] Attacker IP: $ATTACKER_IP"
@@ -122,12 +122,13 @@ while true; do
         echo "[*] Duration: $DURATION"
         echo "[*] Login: $LOGIN"
         echo "#########################################" >> "$OUTFILE"
-        ./jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN"
+        
+        ./helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN"
         break
     fi
   done
 
-  ./recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
+  ./helpers/recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 
   id=$((id+1))
 done

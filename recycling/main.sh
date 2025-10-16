@@ -103,7 +103,7 @@ while true; do
         NUM_COMMANDS=$((NUM_COMMANDS+1))
 
     elif echo "$line" | grep -q "Adding the following credentials:"; then
-        LOGIN=$(echo "$line" | cut -d':' -f4,5)
+        LOGIN=$(echo "$line" | cut -d':' -f4,5 | tr -d '"')
         echo "[*] Login: $LOGIN"
 
 

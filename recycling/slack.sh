@@ -13,9 +13,11 @@ token=$(cat token.env)
 
 channel="C09LR132PA7"
 
+data='{ "channel": "'$channel'", "icon_emoji": ":bot:", "text": "'$message'" }'
+
 curl -X POST \
     -H 'Content-type: application/json; charset=utf-8' \
-    --data '{ "channel": "'$channel'", "icon_emoji": ":bot:", "text": '$message' }' \
+    --data $data \
     $token
 
 echo "Message sent to Slack"

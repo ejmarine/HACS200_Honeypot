@@ -3,7 +3,7 @@
 # Quick wrapper to generate synthetic honey using Google Gemini API
 
 # Set your Gemini API key
-export GEMINI_API_KEY='AIzaSyDCPHTFpKLciqs-MHkzzbVZ4xutBJYF0zs'
+export GEMINI_API_KEY='your key'
 
 # Activate virtual environment
 source "$(dirname "$0")/honey_env/bin/activate"

@@ -1,0 +1,47 @@
+CONFIDENCIAL
+Documento Interno de Investigación
+ID: QCSec-2024-001 Rev. 1.0
+
+---
+
+## Análisis de Vulnerabilidades de Seguridad en la Era de la Computación Cuántica
+
+**Autores:**
+Dr. Elena Rodríguez, Investigadora Principal
+Ing. Miguel Sotomayor, Especialista en Criptografía Cuántica
+
+Centro de Investigación en Tecnologías Cuánticas (CITC)
+Departamento de Seguridad de la Información
+Fecha: 15 de abril de 2024
+
+---
+
+### Resumen
+
+El advenimiento de la computación cuántica representa un cambio de paradigma con profundas implicaciones para la seguridad de la información global. Este documento confidencial evalúa las vulnerabilidades críticas que los algoritmos cuánticos plantean a los esquemas criptográficos actuales, que son la base de la seguridad digital moderna. Se analizan los impactos del algoritmo de Shor y el algoritmo de Grover en la criptografía de clave pública y simétrica, respectivamente, así como las ramificaciones para la infraestructura de clave pública (PKI). Los hallazgos subrayan la urgencia de una transición coordinada y proactiva hacia la criptografía post-cuántica para salvaguardar la confidencialidad, integridad y autenticidad de los datos a nivel mundial.
+
+### Introducción
+
+La computación cuántica, impulsada por los principios de la mecánica cuántica, ha pasado de ser una promesa teórica a una realidad en desarrollo activo con inversiones significativas a nivel global. Aunque las máquinas cuánticas actuales aún no poseen la escala o estabilidad necesarias para romper la criptografía moderna de forma práctica, su progreso exponencial anticipa un futuro cercano donde la mayoría de los algoritmos de seguridad ampliamente utilizados serán trivialmente descifrables. Esta amenaza inminente pone en riesgo la infraestructura digital global, desde las comunicaciones gubernamentales y militares hasta las transacciones financieras, la privacidad personal y los sistemas críticos de control.
+
+El objetivo de este informe es proporcionar un análisis detallado de las principales vulnerabilidades que surgirán con la madurez de la computación cuántica. Se busca identificar los vectores de ataque más críticos y esbozar la magnitud del desafío que enfrenta la comunidad de seguridad en la protección de los activos digitales en la era post-cuántica, enfatizando la necesidad de una estrategia de mitigación antes de que la amenaza sea práctica y generalizada.
+
+### Hallazgos Clave
+
+1.  **Compromiso Fundamental de la Criptografía de Clave Pública (Asimétrica):**
+    El algoritmo de Shor, desarrollado por Peter Shor, es capaz de resolver eficientemente los problemas matemáticos fundamentales en los que se basan la mayoría de los algoritmos de clave pública actuales: la factorización de números enteros (base de RSA) y el problema del logaritmo discreto (base de ECC). Un ordenador cuántico suficientemente potente podría descifrar la vasta mayoría de las comunicaciones cifradas que utilizan estos estándares (como TLS/SSL), falsificar firmas digitales y comprometer la autenticación en sistemas críticos. Esto anularía la confidencialidad y la integridad de datos almacenados y en tránsito cifrados con estos métodos.
+
+2.  **Debilitamiento de la Criptografía Simétrica:**
+    El algoritmo de Grover ofrece una aceleración cuadrática para buscar elementos en una base de datos no estructurada, lo que se traduce en una reducción de la seguridad efectiva de los cifrados simétricos como AES. Específicamente, el tiempo necesario para realizar un ataque de fuerza bruta contra una clave de $N$ bits se reduce de $2^N$ a aproximadamente $2^{N/2}$. Para mantener un nivel de seguridad comparable al actual, las longitudes de clave para cifrados simétricos tendrían que duplicarse (por ejemplo, de AES-128 a AES-256, o de AES-256 a AES-512, si existiese). Aunque menos catastrófico que el impacto de Shor, esta reducción efectiva de la seguridad requiere una revisión de los estándares actuales y una mayor demanda computacional para el cifrado y descifrado.
+
+3.  **Vulnerabilidad Masiva de la Infraestructura de Clave Pública (PKI):**
+    La PKI global, pilar fundamental de la confianza digital en Internet, depende enteramente de la robustez de los algoritmos asimétricos. Los certificados digitales, utilizados para autenticar sitios web, identidades, dispositivos y firmar documentos, serían fácilmente falsificables o comprometidos por ataques cuánticos mediante el algoritmo de Shor. Esto tendría consecuencias devastadoras para la confianza en Internet, la seguridad del comercio electrónico, la integridad de los sistemas de identificación y acceso, y la verificación de identidad en general. Una PKI comprometida permitiría ataques de suplantación de identidad a escala masiva, con implicaciones incalculables para la seguridad nacional y la estabilidad económica.
+
+4.  **Desafíos en la Transición a la Criptografía Post-Cuántica (PQC):**
+    La migración hacia algoritmos criptográficos resistentes a los ataques cuánticos presenta desafíos significativos y multidimensionales. Los candidatos a PQC actualmente en estandarización tienen características diferentes a las de los algoritmos clásicos, como tamaños de clave y firmas digitales considerablemente más grandes, y, en algunos casos, un rendimiento computacional más lento. La transición requerirá una inversión masiva en investigación, desarrollo, y un reemplazo generalizado de hardware y software en sistemas legados y de nueva implementación. Además, la coexistencia de sistemas pre-cuánticos y post-cuánticos durante la fase de migración introduce una complejidad adicional y posibles vectores de vulnerabilidad si no se gestiona adecuadamente.
+
+### Conclusión
+
+La amenaza de la computación cuántica a la seguridad criptográfica no es una cuestión de si ocurrirá, sino de cuándo. Las vulnerabilidades identificadas en este informe, que afectan desde la criptografía asimétrica y simétrica hasta la integridad de la PKI, demandan una respuesta inmediata y coordinada. Es imperativo que las organizaciones gubernamentales, la industria, la academia y los organismos de estandarización colaboren activamente en la investigación, el desarrollo, la estandarización y la implementación de la criptografía post-cuántica. Ignorar esta amenaza pondría en riesgo la confidencialidad y la integridad de la información a escala global, con repercusiones económicas, sociales y de seguridad nacional incalculables. La preparación proactiva y la inversión estratégica en soluciones resistentes al cuántico son esenciales para garantizar un futuro digital seguro y resiliente.
+
+---

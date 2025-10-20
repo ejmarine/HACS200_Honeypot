@@ -1,0 +1,132 @@
+CONFIDENTIAL SOFTWARE LICENSING AGREEMENT
+
+Document ID: SLA-2025-10-847-CONF
+Date: October 16, 2025
+Classification: Confidential - Attorney-Client Privileged
+
+This Software Licensing Agreement ("Agreement") is entered into as of October 16, 2025 ("Effective Date"), by and between:
+
+PARTY A: TechCorp Innovations LLC
+Address: 1847 Silicon Valley Boulevard, Suite 400, San Jose, CA 95110
+Representative: Michael J. Harrison, Chief Executive Officer
+
+AND
+
+PARTY B: DataSystems International Inc.
+Address: 892 Enterprise Drive, Austin, TX 78701
+Representative: Jennifer L. Chen, Vice President of Technology
+
+(Collectively referred to as "the Parties")
+
+RECITALS
+
+WHEREAS, TechCorp Innovations LLC ("Licensor") has developed proprietary software technology known as "QuantumSecure Enterprise Suite v4.7" including all source code, documentation, and associated intellectual property;
+
+WHEREAS, DataSystems International Inc. ("Licensee") desires to obtain an exclusive license to utilize, modify, and distribute said software technology within the financial services sector;
+
+WHEREAS, both Parties wish to establish the terms and conditions governing this licensing arrangement;
+
+NOW, THEREFORE, in consideration of the mutual covenants and agreements contained herein, the Parties agree as follows:
+
+TERMS AND CONDITIONS
+
+1. GRANT OF LICENSE
+   
+   1.1 Licensor hereby grants to Licensee an exclusive, worldwide, perpetual license to use, modify, reproduce, and distribute the QuantumSecure Enterprise Suite v4.7 software ("Licensed Software") exclusively within the financial services industry vertical.
+   
+   1.2 This license includes full access to source code, technical documentation, API specifications, and all future updates and patches developed during the term of this Agreement.
+   
+   1.3 Licensee may create derivative works based on the Licensed Software, provided that all such derivative works remain subject to the terms of this Agreement.
+
+2. EXCLUSIVITY AND TERRITORIAL RIGHTS
+   
+   2.1 Licensor agrees not to license the Software to any other entity operating within the financial services sector globally for a period of seven (7) years from the Effective Date.
+   
+   2.2 Licensor retains the right to license the Software to entities in other industry verticals including, but not limited to, healthcare, manufacturing, and government sectors.
+
+3. FINANCIAL CONSIDERATION
+   
+   3.1 Initial License Fee: Licensee shall pay Licensor a one-time initial license fee of Twelve Million Five Hundred Thousand Dollars ($12,500,000 USD) within thirty (30) days of the Effective Date.
+   
+   3.2 Royalty Payments: Licensee shall pay Licensor royalties equal to 7.5% of gross revenues derived from products incorporating the Licensed Software, payable quarterly within fifteen (15) days of quarter end.
+   
+   3.3 Minimum Annual Royalty: Notwithstanding Section 3.2, Licensee shall pay a minimum annual royalty of Two Million Dollars ($2,000,000 USD) regardless of actual sales performance.
+   
+   3.4 Payment Method: All payments shall be made via wire transfer to the account specified in Exhibit A (Bank Account Information - Confidential).
+
+4. CONFIDENTIALITY AND TRADE SECRETS
+   
+   4.1 Both Parties acknowledge that the Licensed Software contains valuable trade secrets and confidential information.
+   
+   4.2 Licensee shall implement and maintain industry-standard security measures to protect the source code and documentation from unauthorized access or disclosure.
+   
+   4.3 Licensee shall limit access to the Licensed Software to only those employees and contractors with a legitimate business need and who have executed appropriate confidentiality agreements.
+   
+   4.4 The obligations under this Section shall survive termination of this Agreement for a period of fifteen (15) years.
+
+5. INTELLECTUAL PROPERTY RIGHTS
+   
+   5.1 Licensor retains all right, title, and interest in and to the Licensed Software, including all patents, copyrights, trade secrets, and other intellectual property rights.
+   
+   5.2 Any derivative works created by Licensee shall be jointly owned by both Parties, with Licensor retaining the right to use such derivative works in non-financial services applications.
+   
+   5.3 Licensee agrees to assign to Licensor all improvements, enhancements, and bug fixes developed during the term of this Agreement.
+
+6. WARRANTIES AND REPRESENTATIONS
+   
+   6.1 Licensor warrants that it has full right and authority to grant the license contemplated herein and that the Licensed Software does not infringe upon any third-party intellectual property rights.
+   
+   6.2 Licensee warrants that it shall use the Licensed Software only for lawful purposes and in compliance with all applicable laws and regulations.
+   
+   6.3 EXCEPT AS EXPRESSLY PROVIDED HEREIN, THE LICENSED SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.
+
+7. INDEMNIFICATION
+   
+   7.1 Licensor shall indemnify and hold harmless Licensee from any claims arising from alleged infringement of third-party intellectual property rights by the Licensed Software.
+   
+   7.2 Licensee shall indemnify and hold harmless Licensor from any claims arising from Licensee's use, modification, or distribution of the Licensed Software.
+
+8. TERM AND TERMINATION
+   
+   8.1 This Agreement shall commence on the Effective Date and continue for an initial term of seven (7) years, automatically renewing for successive three (3) year periods unless terminated as provided herein.
+   
+   8.2 Either Party may terminate this Agreement upon ninety (90) days written notice if the other Party materially breaches any provision and fails to cure such breach within the notice period.
+   
+   8.3 Upon termination, Licensee shall cease all use of the Licensed Software and return or destroy all copies of source code and documentation.
+
+9. GOVERNING LAW AND DISPUTE RESOLUTION
+   
+   9.1 This Agreement shall be governed by the laws of the State of Delaware, without regard to conflict of laws principles.
+   
+   9.2 Any disputes arising under this Agreement shall be resolved through binding arbitration administered by the American Arbitration Association in Wilmington, Delaware.
+
+10. MISCELLANEOUS
+    
+    10.1 This Agreement constitutes the entire agreement between the Parties and supersedes all prior negotiations and understandings.
+    
+    10.2 No modification of this Agreement shall be valid unless made in writing and signed by both Parties.
+    
+    10.3 If any provision of this Agreement is held invalid or unenforceable, the remaining provisions shall continue in full force and effect.
+
+IN WITNESS WHEREOF, the Parties have executed this Agreement as of the Effective Date.
+
+PARTY A: TechCorp Innovations LLC
+
+By: _________________________________
+Name: Michael J. Harrison
+Title: Chief Executive Officer
+Date: October 16, 2025
+
+
+PARTY B: DataSystems International Inc.
+
+By: _________________________________
+Name: Jennifer L. Chen
+Title: Vice President of Technology
+Date: October 16, 2025
+
+
+CONFIDENTIAL - DO NOT COPY OR DISTRIBUTE
+Attorney-Client Privileged Communication
+
+

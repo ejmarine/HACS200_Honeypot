@@ -1,0 +1,89 @@
+# CONFIDENTIAL NON-DISCLOSURE AGREEMENT
+
+**Document ID: NDA-R&D-ARC-SDI-20240718**
+
+This CONFIDENTIAL NON-DISCLOSURE AGREEMENT (the “Agreement”) is made and entered into as of July 18, 2024 (the “Effective Date”)
+
+**BETWEEN:**
+
+**Aetherium Research Corporation**, a corporation duly organized and existing under the laws of the State of Delaware, with its principal place of business located at 123 Quantum Drive, Techville, CA 90210, USA (hereinafter referred to as "Disclosing Party");
+
+**AND**
+
+**Synapse Dynamics Inc.**, a corporation duly organized and existing under the laws of the State of New York, with its principal place of business located at 456 Innovation Blvd, Metropoli, NY 10001, USA (hereinafter referred to as "Receiving Party").
+
+WHEREAS, the Disclosing Party and the Receiving Party (collectively, the "Parties" and individually, a "Party") desire to explore a potential collaborative research and development project concerning advanced opto-electronic interconnects for high-performance computing (the "Purpose");
+
+WHEREAS, in connection with the Purpose, the Disclosing Party may disclose certain confidential and proprietary information to the Receiving Party; and
+
+WHEREAS, the Parties wish to define their respective rights and obligations with respect to such confidential information;
+
+NOW, THEREFORE, in consideration of the mutual promises and covenants contained herein, the receipt and sufficiency of which are hereby acknowledged, the Parties agree as follows:
+
+---
+
+### TERMS AND CONDITIONS
+
+**1. Definition of Confidential Information**
+"Confidential Information" shall mean any and all information, whether oral, written, electronic, visual, or in any other form, disclosed by the Disclosing Party to the Receiving Party in connection with the Purpose, including but not limited to:
+    a.  Technical and scientific data, research plans, designs, specifications, methodologies, prototypes, formulas, compounds, materials, processes, algorithms, software, hardware configurations, experimental results, and intellectual property.
+    b.  Business, financial, and marketing information, including strategic plans, client lists, cost data, pricing strategies, and projections.
+    c.  Any information marked as "Confidential," "Proprietary," or with a similar legend. Oral disclosures shall be considered Confidential Information if identified as confidential at the time of disclosure and summarized in writing by the Disclosing Party within thirty (30) days thereafter.
+
+**2. Purpose of Disclosure**
+The Confidential Information is disclosed solely for the Receiving Party's evaluation of a potential collaborative research and development project regarding "Project Chimera: Next-Generation Opto-Electronic Interconnects," and for no other purpose.
+
+**3. Obligations of the Receiving Party**
+The Receiving Party agrees to:
+    a.  Hold all Confidential Information in strict confidence and not disclose it to any third party without the prior written consent of the Disclosing Party.
+    b.  Not use the Confidential Information for any purpose other than the Purpose.
+    c.  Limit access to Confidential Information to only those of its employees, consultants, or contractors who have a strict "need to know" for the Purpose and who are bound by confidentiality obligations at least as stringent as those set forth in this Agreement. The Receiving Party shall be responsible for any breach of this Agreement by any such individuals.
+    d.  Exercise at least the same degree of care in protecting the Confidential Information as it uses to protect its own confidential and proprietary information, but in no event less than a reasonable degree of care.
+
+**4. Exclusions from Confidential Information**
+The obligations of non-disclosure and non-use set forth herein shall not apply to information that the Receiving Party can demonstrate:
+    a.  Is or becomes publicly available through no fault or breach of this Agreement by the Receiving Party.
+    b.  Was rightfully known by the Receiving Party prior to its disclosure by the Disclosing Party, without breach of any confidentiality obligation.
+    c.  Is independently developed by the Receiving Party without reference to or reliance on the Disclosing Party's Confidential Information.
+    d.  Is rightfully received by the Receiving Party from a third party without restriction on disclosure and without breach of any confidentiality obligation.
+    e.  Is required to be disclosed by law or court order, provided that the Receiving Party gives prompt written notice to the Disclosing Party to allow the Disclosing Party to seek a protective order or other appropriate remedy.
+
+**5. Term of Confidentiality**
+The obligations of confidentiality and non-use under this Agreement shall remain in effect for a period of five (5) years from the Effective Date, or for as long as the information qualifies as a trade secret under applicable law, whichever is longer. The Agreement itself shall remain in effect until the confidentiality obligations for all Confidential Information disclosed have expired.
+
+**6. Return or Destruction of Confidential Information**
+Upon the Disclosing Party's written request, or upon the termination of discussions concerning the Purpose, the Receiving Party shall promptly return to the Disclosing Party or, at the Disclosing Party’s option, destroy all copies of Confidential Information (including all notes, summaries, analyses, and derivatives thereof) received from the Disclosing Party. The Receiving Party shall provide written certification of such destruction upon request. Notwithstanding the foregoing, the Receiving Party may retain one archival copy of the Confidential Information solely for the purpose of demonstrating compliance with legal or regulatory requirements.
+
+**7. No License or Warranty**
+No license or right, express or implied, is granted by the Disclosing Party to the Receiving Party under any patents, copyrights, trademarks, or trade secrets, other than the limited right to use the Confidential Information for the Purpose. All Confidential Information is provided "AS IS," and the Disclosing Party makes no warranties, express or implied, regarding its accuracy, completeness, or fitness for a particular purpose.
+
+**8. Remedies**
+The Receiving Party acknowledges that unauthorized disclosure or use of Confidential Information would cause irreparable harm to the Disclosing Party for which monetary damages would be an inadequate remedy. Therefore, the Disclosing Party shall be entitled to seek injunctive relief, in addition to any other remedies available at law or in equity, to prevent any actual or threatened breach of this Agreement.
+
+**9. Governing Law**
+This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware, USA, without regard to its conflict of law principles. The Parties agree that the federal and state courts located in Delaware shall have exclusive jurisdiction over any disputes arising under this Agreement.
+
+**10. Entire Agreement**
+This Agreement constitutes the entire agreement between the Parties concerning the subject matter hereof and supersedes all prior agreements, understandings, negotiations, and discussions, whether oral or written, between the Parties.
+
+---
+
+**IN WITNESS WHEREOF**, the Parties hereto have executed this Confidential Non-Disclosure Agreement as of the Effective Date.
+
+**Aetherium Research Corporation**
+(Disclosing Party)
+
+By: ______________________________
+Name: Dr. Eleanor Vance
+Title: Chief Technology Officer
+Date: July 18, 2024
+
+---
+
+**Synapse Dynamics Inc.**
+(Receiving Party)
+
+By: ______________________________
+Name: Mr. Julian Croft
+Title: Head of Advanced R&D
+Date: July 18, 2024

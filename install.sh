@@ -19,3 +19,45 @@ apt install -y screen
 npm install -g forever
 npm install -g pm2
 chmod -R 755 ./*
+
+create_services_for_confs() {
+  local conf_files
+  conf_files=$(find . -type f -name "*.conf")
+  for conf in $conf_files; do
+    # Extract honeypot name: assume filename is like "potNAME.conf"
+    conf_filename=$(basename "$conf")
+    honeypot_name="${conf_filename%.conf}"
+
+    service_name="honeypot-${honeypot_name}.service"
+    service_path="/etc/systemd/system/${service_name}"
+
+    if [ -f "$service_path" ]; then
+      echo "Service $service_name already exists, skipping."
+      continue
+    fi
+
+    # Example: edit ExecStart as needed for your application
+    cat <<EOF > "$service_path"
+[Unit]
+Description=Honeypot $honeypot_name Service
+
+[Service]
+Type=simple
+WorkingDirectory=$(pwd)
+ExecStart=$(pwd)/main.sh $conf
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+    echo "Created service: $service_name"
+    systemctl daemon-reload
+    systemctl enable "$service_name"
+    systemctl start "$service_name"
+    echo "Started and enabled $service_name"
+  done
+}
+
+# Call the function
+create_services_for_confs

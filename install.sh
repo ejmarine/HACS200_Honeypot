@@ -43,8 +43,9 @@ Description=Honeypot $honeypot_name Service
 
 [Service]
 Type=simple
-WorkingDirectory=$(pwd)
-ExecStart=$(pwd)/main.sh $conf
+WorkingDirectory=$(pwd)/recycling
+ExecStart=$(pwd)/recycling/main.sh $conf
+ExecStopPost=$(pwd)/recycling/helpers/slack.sh
 Restart=on-failure
 
 [Install]

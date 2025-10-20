@@ -18,11 +18,11 @@ apt install -y npm
 apt install -y screen
 npm install -g forever
 npm install -g pm2
-chmod -R 755 ./*
+chmod -R 755 /home/aces/HACS200_Honeypot/*
 
 create_services_for_confs() {
   local conf_files
-  conf_files=$(find . -type f -name "*.conf")
+    conf_files=$(find /home/aces/HACS200_Honeypot -type f -name "*.conf")
   for conf in $conf_files; do
     # Extract honeypot name: assume filename is like "potNAME.conf"
     conf_filename=$(basename "$conf")
@@ -48,9 +48,9 @@ Description=Honeypot $honeypot_name Service
 
 [Service]
 Type=simple
-WorkingDirectory=$(pwd)/recycling
-ExecStart=$(pwd)/recycling/main.sh $(pwd)/recycling/config/$honeypot_name.conf
-ExecStopPost=$(pwd)/recycling/helpers/slack.sh
+WorkingDirectory=/home/aces/HACS200_Honeypot/recycling
+ExecStart=/home/aces/HACS200_Honeypot/recycling/main.sh /home/aces/HACS200_Honeypot/recycling/config/$honeypot_name.conf
+ExecStopPost=/home/aces/HACS200_Honeypot/recycling/helpers/slack.sh
 Restart=on-failure
 
 [Install]

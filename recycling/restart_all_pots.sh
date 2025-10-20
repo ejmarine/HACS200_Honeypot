@@ -38,7 +38,7 @@ start_pot() {
     echo "[*] Starting $container_name..."
     
     # Start the main script in background
-    nohup ./main.sh "$config_file" > "../logs/${container_name}/restart_$(date +%Y%m%d_%H%M%S).log" 2>&1 &
+    nohup /home/aces/HACS200_Honeypot/recycling/main.sh "$config_file" > "/home/aces/HACS200_Honeypot/logs/${container_name}/restart_$(date +%Y%m%d_%H%M%S).log" 2>&1 &
     
     echo "[*] $container_name started (PID: $!)"
 }
@@ -99,6 +99,6 @@ else
 fi
 
 echo "[*] All pot services restart completed!"
-echo "[*] Check logs in ../logs/ directory for individual pot logs"
+echo "[*] Check logs in /home/aces/HACS200_Honeypot/logs/ directory for individual pot logs"
 echo "[*] Use 'screen -ls' to see running screen sessions"
 echo "[*] Use 'lsof -i :6010-6013' to check MITM ports"

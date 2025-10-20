@@ -55,7 +55,7 @@ sudo lxc exec "$CONTAINER" -- apt install -y openssh-server >/dev/null 2>&1
 sudo lxc exec "$CONTAINER" -- sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
 sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 
-files="../honeypot_files/$LANGUAGE"
+files="/home/aces/HACS200_Honeypot/honeypot_files/$LANGUAGE"
 
 echo "[*] Copying honeypot files to $CONTAINER"
 if [ -d "$files" ]; then
@@ -67,8 +67,8 @@ else
 fi
 
 # TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT
-banner="../honeypot_files/banners/$LANGUAGE.txt"
-cp "$banner" "../honeypot_files/banners/$CONTAINER.txt"
+banner="/home/aces/HACS200_Honeypot/honeypot_files/banners/$LANGUAGE.txt"
+cp "$banner" "/home/aces/HACS200_Honeypot/honeypot_files/banners/$CONTAINER.txt"
 
 
 # TODO IN GENERAL: CHANGE SYSTEM LANGUAGE TO THE LANGUAGE OF THE HONEYPOT

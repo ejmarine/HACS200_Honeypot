@@ -68,21 +68,7 @@ fi
 
 # TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT
 banner="../honeypot_files/banners/$LANGUAGE.txt"
-echo "[*] Setting banner in $CONTAINER"
-sudo lxc exec "$CONTAINER" -- sed -i "s/^Banner.*$/Banner \/root\/banner.txt/" /etc/ssh/sshd_config
-sudo lxc exec "$CONTAINER" -- bash -lc "echo \"$banner\" > /root/banner.txt"
-sudo lxc exec "$CONTAINER" -- systemctl restart ssh
-
-# Correct way to set the banner
-# banner_path="../honeypot_files/banners/$LANGUAGE.txt"
-# if [ -f "$banner_path" ]; then
-#     sudo lxc file push "$banner_path" "$CONTAINER/root/banner.txt"
-#     sudo lxc exec "$CONTAINER" -- sed -i "s/^#\?Banner.*/Banner \/root\/banner.txt/" /etc/ssh/sshd_config
-#     sudo lxc exec "$CONTAINER" -- systemctl restart ssh
-# else
-#     echo "Warning: Banner file not found at $banner_path"
-# fi
-
+cp "$banner" "../honeypot_files/banners/$CONTAINER.txt"
 
 
 # TODO IN GENERAL: CHANGE SYSTEM LANGUAGE TO THE LANGUAGE OF THE HONEYPOT

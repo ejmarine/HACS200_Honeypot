@@ -52,7 +52,7 @@ while true; do
   LOGFILEPATH="${LOGS_FOLDER}/${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.log"
   OUTFILE="${LOGS_FOLDER}${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.out"
 
-  ./helpers/create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT" "$RANDOM_LANGUAGE"
+  ./create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT" "$RANDOM_LANGUAGE"
 
   echo "[*] Monitoring MITM log for attacker interaction..."
 
@@ -81,52 +81,90 @@ while true; do
   DURATION=""
   LOGIN=""
   
+  # Initialize timeout tracking
+  LOOP_START_TIME=$(date +%s)
+  LAST_ACTIVITY_TIME=$(date +%s)
+  
+  # Start tail in background and capture PID for cleanup
+  tail -F "$OUTFILE" 2>/dev/null &
+  TAIL_PID=$!
+  
   unset line;
-  tail -F "$OUTFILE" | while read -r line; do
-    # Wait until "[LXC-Auth] Attacker authenticated and is inside container" is read
-    if echo "$line" | grep -q "Attacker connected:"; then
-        ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
-        echo "[*] Attacker IP: $ATTACKER_IP"
+  while true; do
+    # Read with 1-second timeout
+    if read -r -t 1 line <&3; then
+      # Update last activity time when we get a line
+      LAST_ACTIVITY_TIME=$(date +%s)
+      
+      if echo "$line" | grep -q "Attacker connected:"; then
+      
+          ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
+          echo "[*] Attacker IP: $ATTACKER_IP"
 
-    elif echo "$line" | grep -q "\[LXC-Auth\] Attacker authenticated and is inside container"; then
-        CONNECT_TIME=$(date)
-        DURATION=$(date +%s)
-        echo "[*] Attacker has authenticated and is inside the container"
+      elif echo "$line" | grep -q "\[LXC-Auth\] Attacker authenticated and is inside container"; then
 
-        ./helpers/slack.sh "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
+          CONNECT_TIME=$(date)
+          DURATION=$(date +%s)
+          echo "[*] Attacker has authenticated and is inside the container"
 
-    elif echo "$line" | grep -q "line from reader:"; then
+          ./helpers/slack.sh "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
 
-        COMMAND=$(echo "$line" | cut -d':' -f4)
-        echo "[*] Command: $COMMAND"
-        COMMANDS+="$COMMAND,"
-        NUM_COMMANDS=$((NUM_COMMANDS+1))
+      elif echo "$line" | grep -q "line from reader:"; then
 
-    elif echo "$line" | grep -q "Adding the following credentials:"; then
-        LOGIN=$(echo "$line" | cut -d':' -f4,5 | tr -d '"')
-        echo "[*] Login: $LOGIN"
+          COMMAND=$(echo "$line" | cut -d':' -f4)
+          echo "[*] Command: $COMMAND"
+          COMMANDS+="$COMMAND,"
+          NUM_COMMANDS=$((NUM_COMMANDS+1))
+
+      elif echo "$line" | grep -q "Adding the following credentials:"; then
+
+          LOGIN=$(echo "$line" | cut -d':' -f4,5 | tr -d '"')
+          echo "[*] Login: $LOGIN"
 
 
-    elif echo "$line" | grep -q "Attacker ended the shell"; then
+      elif echo "$line" | grep -q "Attacker ended the shell"; then
 
-        DISCONNECT_TIME=$(date)
-        DURATION=$(( $(date +%s) - DURATION ))
-        COMMANDS+="]"
-        ./helpers/slack.sh "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
-        ./helpers/slack.sh "$CONTAINER - Attacker ran: $COMMANDS" &
-        echo "[*] Number of commands: $NUM_COMMANDS"
-        echo "[*] Commands: ${COMMANDS}"
-        echo "[*] Attacker IP: $ATTACKER_IP"
-        echo "[*] Connect time: $CONNECT_TIME"
-        echo "[*] Disconnect time: $DISCONNECT_TIME"
-        echo "[*] Duration: $DURATION"
-        echo "[*] Login: $LOGIN"
-        echo "#########################################" >> "$OUTFILE"
-        
-        ./helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN"
-        break
+          DISCONNECT_TIME=$(date)
+          DURATION=$(( $(date +%s) - DURATION ))
+          COMMANDS+="]"
+
+          ./helpers/slack.sh "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
+          ./helpers/slack.sh "$CONTAINER - Attacker ran: $COMMANDS" &
+
+          echo "[*] Number of commands: $NUM_COMMANDS"
+          echo "[*] Commands: ${COMMANDS}"
+          echo "[*] Attacker IP: $ATTACKER_IP"
+          echo "[*] Connect time: $CONNECT_TIME"
+          echo "[*] Disconnect time: $DISCONNECT_TIME"
+          echo "[*] Duration: $DURATION"
+          echo "[*] Login: $LOGIN"
+          echo "#########################################" >> "$OUTFILE"
+          
+          ./helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN"
+          break
+      fi
     fi
-  done
+    
+    # Check timeout conditions on every iteration
+    CURRENT_TIME=$(date +%s)
+    TIME_SINCE_ACTIVITY=$((CURRENT_TIME - LAST_ACTIVITY_TIME))
+    TOTAL_TIME=$((CURRENT_TIME - LOOP_START_TIME))
+    
+    # Check inactivity timeout (3 minutes = 180 seconds)
+    if [ $TIME_SINCE_ACTIVITY -ge 180 ]; then
+      echo "[*] Inactivity timeout reached (3 minutes) - breaking loop"
+      break
+    fi
+    
+    # Check total timeout (10 minutes = 600 seconds)
+    if [ $TOTAL_TIME -ge 600 ]; then
+      echo "[*] Total timeout reached (10 minutes) - breaking loop"
+      break
+    fi
+  done 3< <(tail -F "$OUTFILE" 2>/dev/null)
+  
+  # Clean up background tail process
+  kill $TAIL_PID 2>/dev/null
 
   ./helpers/recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 

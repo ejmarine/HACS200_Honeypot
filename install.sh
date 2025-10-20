@@ -37,7 +37,7 @@ create_services_for_confs() {
       systemctl stop "$service_name"
       systemctl disable "$service_name"
       rm -f "$service_path"
-      echo "Service $service_name already exists, skipping."
+      echo "Service $service_name removed."
       continue
     fi
 
@@ -49,7 +49,7 @@ Description=Honeypot $honeypot_name Service
 [Service]
 Type=simple
 WorkingDirectory=$(pwd)/recycling
-ExecStart=$(pwd)/recycling/main.sh $conf
+ExecStart=$(pwd)/recycling/main.sh $(pwd)/recycling/config/$honeypot_name.conf
 ExecStopPost=$(pwd)/recycling/helpers/slack.sh
 Restart=on-failure
 

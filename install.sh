@@ -32,6 +32,11 @@ create_services_for_confs() {
     service_path="/etc/systemd/system/${service_name}"
 
     if [ -f "$service_path" ]; then
+      # Remove (stop and disable) existing service before (re)creating
+      echo "Service $service_name already exists, removing..."
+      systemctl stop "$service_name"
+      systemctl disable "$service_name"
+      rm -f "$service_path"
       echo "Service $service_name already exists, skipping."
       continue
     fi

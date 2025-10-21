@@ -53,6 +53,7 @@ sudo lxc exec "$CONTAINER" -- apt install -y openssh-server >/dev/null 2>&1
 
 # Enable root login in sshd_config
 sudo lxc exec "$CONTAINER" -- sed -i 's/^#\?PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+sudo lxc exec "$CONTAINER" -- sed -i 's/^#\?PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
 sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 
 files="/home/aces/HACS200_Honeypot/honeypot_files/$LANGUAGE"

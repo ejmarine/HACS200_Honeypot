@@ -59,19 +59,8 @@ sudo lxc exec "$CONTAINER" -- bash -c 'echo "PermitRootLogin yes" >> /etc/ssh/ss
 sudo lxc exec "$CONTAINER" -- bash -c 'echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
 sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 
-files="/home/aces/HACS200_Honeypot/honeypot_files/$LANGUAGE"
-
-echo "[*] Copying honeypot files to $CONTAINER"
-if [ -d "$files" ]; then
-  sudo lxc exec "$CONTAINER" -- mkdir -p /home/
-  sudo lxc file push "$files"/* "$CONTAINER"/root/ 2>/dev/null
-else
-  echo "Error: $files does not exist"
-  exit 1
-fi
-
 # TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT
-banner="/home/aces/HACS200_Honeypot/honeypot_files/banners/$LANGUAGE"
+banner="/home/aces/HACS200_Honeypot/honeypot_files/banners/$LANGUAGE.txt"
 cp "$banner" "/home/aces/HACS200_Honeypot/recycling/config/$CONTAINER.txt"
 
 

@@ -1,2 +1,4 @@
 MITM
 token.env
+logs/*/*.log
+logs/*/*.out

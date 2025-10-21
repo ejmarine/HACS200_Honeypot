@@ -79,6 +79,9 @@ while true; do
   DISCONNECT_TIME=""
   DURATION=""
   LOGIN=""
+  FIRST_COMMAND_TIME=""
+  LAST_COMMAND_TIME=""
+  IS_BOT="false"
   
   # Start tail in background and capture PID for cleanup
   tail -F "$OUTFILE" 2>/dev/null &
@@ -96,7 +99,20 @@ while true; do
           echo "[*] Attacker IP: $ATTACKER_IP"
 
       elif echo "$line" | grep -q "Adding the following credentials:"; then
+
           LOGIN=$(echo "$line" | cut -d':' -f4,5 | tr -d '"')
+          
+          files="/home/aces/HACS200_Honeypot/honeypot_files/$LANGUAGE"
+
+          echo "[*] Copying honeypot files to $CONTAINER"
+          if [ -d "$files" ]; then
+            sudo lxc exec "$CONTAINER" -- mkdir -p /home/$LOGIN/
+            sudo lxc file push "$files"/* pot1/home/$LOGIN/ 2>/dev/null
+          else
+            echo "Error: $files does not exist"
+            exit 1
+          fi
+
           echo "[*] Login: $LOGIN"
 
       elif echo "$line" | grep -q "\[LXC-Auth\] Attacker authenticated and is inside container"; then
@@ -127,27 +143,17 @@ while true; do
           echo "[*] Command: $COMMAND"
           COMMANDS+="$COMMAND,"
           NUM_COMMANDS=$((NUM_COMMANDS+1))
+          
+          # Track timing for first and last commands
+          if [ -z "$FIRST_COMMAND_TIME" ]; then
+              FIRST_COMMAND_TIME=$(date +%s)
+          fi
+          LAST_COMMAND_TIME=$(date +%s)
 
       elif echo "$line" | grep -q "Attacker ended the shell"; then
-      
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
           COMMANDS+="]"
-
-          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
-          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
-          
-
-          echo "[*] Number of commands: $NUM_COMMANDS"
-          echo "[*] Commands: ${COMMANDS}"
-          echo "[*] Attacker IP: $ATTACKER_IP"
-          echo "[*] Connect time: $CONNECT_TIME"
-          echo "[*] Disconnect time: $DISCONNECT_TIME"
-          echo "[*] Duration: $DURATION"
-          echo "[*] Login: $LOGIN"
-          echo "#########################################" >> "$OUTFILE"
-          
-          /home/aces/HACS200_Honeypot/recycling/helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN"
           break
       fi
     fi
@@ -160,25 +166,9 @@ while true; do
     # Check inactivity timeout (3 minutes = 180 seconds)
     if [ $TIME_SINCE_ACTIVITY -ge 180 ]; then
       echo "[*] Inactivity timeout reached (3 minutes) - breaking loop"
-      
       DISCONNECT_TIME=$(date)
       DURATION=$(( $(date +%s) - DURATION ))
       COMMANDS+="]"
-
-      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
-      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected due to inactivity (3min)" &
-
-
-      echo "[*] Number of commands: $NUM_COMMANDS"
-      echo "[*] Commands: ${COMMANDS}"
-      echo "[*] Attacker IP: $ATTACKER_IP"
-      echo "[*] Connect time: $CONNECT_TIME"
-      echo "[*] Disconnect time: $DISCONNECT_TIME"
-      echo "[*] Duration: $DURATION"
-      echo "[*] Login: $LOGIN"
-      echo "#########################################" >> "$OUTFILE"
-      
-      /home/aces/HACS200_Honeypot/recycling/helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN"
       break
     fi
     
@@ -188,27 +178,48 @@ while true; do
       DISCONNECT_TIME=$(date)
       DURATION=$(( $(date +%s) - DURATION ))
       COMMANDS+="]"
-
-      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
-      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected due to timeout (10min)" &
-      
-
-      echo "[*] Number of commands: $NUM_COMMANDS"
-      echo "[*] Commands: ${COMMANDS}"
-      echo "[*] Attacker IP: $ATTACKER_IP"
-      echo "[*] Connect time: $CONNECT_TIME"
-      echo "[*] Disconnect time: $DISCONNECT_TIME"
-      echo "[*] Duration: $DURATION"
-      echo "[*] Login: $LOGIN"
-      echo "#########################################" >> "$OUTFILE"
-      
-      /home/aces/HACS200_Honeypot/recycling/helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN"
       break
     fi
   done 3< <(tail -F "$OUTFILE" 2>/dev/null)
   
   # Clean up background tail process
   kill $TAIL_PID 2>/dev/null
+
+  # Calculate average time between commands if there are 2+ commands
+  if [ $NUM_COMMANDS -ge 2 ]; then
+      TOTAL_TIME_BETWEEN=$((LAST_COMMAND_TIME - FIRST_COMMAND_TIME))
+      AVG_TIME=$(echo "scale=2; $TOTAL_TIME_BETWEEN / ($NUM_COMMANDS - 1)" | bc)
+      
+      # Flag as bot if average < 1 second
+      if [ $(echo "$AVG_TIME < 1" | bc) -eq 1 ]; then
+          IS_BOT="true"
+      fi
+  else
+      AVG_TIME="N/A"
+  fi
+
+  # Send Slack notifications
+  /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
+  /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
+  
+  if [ "$IS_BOT" = "true" ]; then
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - ⚠️ BOT DETECTED: Avg time between commands: ${AVG_TIME}s" &
+  fi
+
+  # Output session summary
+  echo "[*] Number of commands: $NUM_COMMANDS"
+  echo "[*] Commands: ${COMMANDS}"
+  echo "[*] Attacker IP: $ATTACKER_IP"
+  echo "[*] Connect time: $CONNECT_TIME"
+  echo "[*] Disconnect time: $DISCONNECT_TIME"
+  echo "[*] Duration: $DURATION"
+  echo "[*] Login: $LOGIN"
+  echo "[*] Average time between commands: $AVG_TIME seconds"
+  echo "[*] Bot detected: $IS_BOT"
+  echo "#########################################" >> "$OUTFILE"
+  
+  # Log to JSON
+  /home/aces/HACS200_Honeypot/recycling/helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "$COMMANDS" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN" "$AVG_TIME" "$IS_BOT"
 
   /home/aces/HACS200_Honeypot/recycling/recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 

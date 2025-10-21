@@ -1,6 +1,4 @@
-# Leaked Database Passwords - Russian
-# Generated: 2025-10-16 14:58:58
-# WARNING: CONFIDENTIAL DATA
+# ВНИМАНИЕ: КОНФИДЕНЦИАЛЬНЫЕ ДАННЫЕ
 
 ivan:123456
 masha:password

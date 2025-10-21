@@ -1,5 +1,0 @@
-# Requirements for Honey Generator
-google-generativeai>=0.3.0
-openai>=1.0.0  # Optional: for OpenAI API alternative
-anthropic>=0.7.0  # Optional: for Claude API alternative
-

@@ -1,8 +1,19 @@
 #!/bin/bash
 
+# Optional flag: "1" means update npm and install packages
+UPDATE_NPM_FLAG="$1"
+
 if [ "$EUID" -ne 0 ]; then
   echo "Please run as root (use sudo)"
   exit 1
+fi
+
+# Check if update flag is set to "1"
+if [ "$UPDATE_NPM_FLAG" = "1" ]; then
+  echo "Updating npm and installing packages..."
+  npm update -g npm
+  npm install
+  echo "npm update and package installation completed."
 fi
 
 
@@ -12,6 +23,7 @@ elif ! git clone https://github.com/UMD-ACES/MITM; then
     echo "Failed to clone MITM repository"
     exit 1
 fi
+
 
 apt install -y lxc lxd
 apt install -y npm

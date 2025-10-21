@@ -67,7 +67,7 @@ else
 fi
 
 # TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT
-banner="/home/aces/HACS200_Honeypot/honeypot_files/banners/$LANGUAGE.txt"
+banner="/home/aces/HACS200_Honeypot/honeypot_files/banners/$LANGUAGE"
 cp "$banner" "/home/aces/HACS200_Honeypot/recycling/config/$CONTAINER.txt"
 
 

@@ -158,12 +158,14 @@ while true; do
     # Check inactivity timeout (3 minutes = 180 seconds)
     if [ $TIME_SINCE_ACTIVITY -ge 180 ]; then
       echo "[*] Inactivity timeout reached (3 minutes) - breaking loop"
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Inactivity timeout reached (3 minutes) - breaking loop" &
       break
     fi
     
     # Check total timeout (10 minutes = 600 seconds)
     if [ $TOTAL_TIME -ge 600 ]; then
       echo "[*] Total timeout reached (10 minutes) - breaking loop"
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Total timeout reached (10 minutes) - breaking loop" &
       break
     fi
   done 3< <(tail -F "$OUTFILE" 2>/dev/null)

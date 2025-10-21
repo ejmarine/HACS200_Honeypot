@@ -1,0 +1,89 @@
+# ACUERDO DE CONFIDENCIALIDAD Y NO DIVULGACIÓN
+
+**Identificación del documento: NDA-R&D-ARC-SDI-20240718**
+
+El presente ACUERDO DE CONFIDENCIALIDAD Y NO DIVULGACIÓN (el «Acuerdo») se celebra y entra en vigor el 18 de julio de 2024 (la «Fecha de entrada en vigor»).
+
+**ENTRE:**
+
+**Aetherium Research Corporation**, una sociedad debidamente constituida y existente bajo las leyes del estado de Delaware, con sede social en 123 Quantum Drive, Techville, CA 90210, EE. UU. (en lo sucesivo, la «Parte reveladora»);
+
+**Y**
+
+**Synapse Dynamics Inc.**, una sociedad debidamente constituida y existente bajo las leyes del Estado de Nueva York, con sede social en 456 Innovation Blvd, Metropoli, NY 10001, EE. UU. (en lo sucesivo, la «Parte receptora»).
+
+CONSIDERANDO QUE la Parte reveladora y la Parte receptora (en conjunto, las «Partes» y, individualmente, una «Parte») desean explorar un posible proyecto de investigación y desarrollo colaborativo relativo a interconexiones optoelectrónicas avanzadas para la informática de alto rendimiento (el «Objetivo»);
+
+CONSIDERANDO QUE, en relación con el Propósito, la Parte Reveladora puede revelar cierta información confidencial y privada a la Parte Receptora; y
+
+CONSIDERANDO QUE las Partes desean definir sus respectivos derechos y obligaciones con respecto a dicha información confidencial;
+
+POR LO TANTO, en consideración de las promesas y pactos mutuos contenidos en el presente documento, cuya recepción y suficiencia se reconocen por la presente, las Partes acuerdan lo siguiente:
+
+---
+
+### TÉRMINOS Y CONDICIONES
+
+**1. Definición de información confidencial**
+Por «información confidencial» se entenderá toda la información, ya sea oral, escrita, electrónica, visual o en cualquier otro formato, revelada por la parte reveladora a la parte receptora en relación con la finalidad, incluyendo, entre otros:
+    a.  Datos técnicos y científicos, planes de investigación, diseños, especificaciones, metodologías, prototipos, fórmulas, compuestos, materiales, procesos, algoritmos, software, configuraciones de hardware, resultados experimentales y propiedad intelectual.
+    b.  Información comercial, financiera y de marketing, incluidos planes estratégicos, listas de clientes, datos de costes, estrategias de precios y proyecciones.
+    c.  Cualquier información marcada como «Confidencial», «Privada» o con una leyenda similar. Las divulgaciones orales se considerarán Información Confidencial si se identifican como confidenciales en el momento de la divulgación y se resumen por escrito por la Parte Divulgadora en un plazo de treinta (30) días a partir de entonces.
+
+**2. Finalidad de la divulgación**
+La información confidencial se divulga únicamente para que la parte receptora evalúe un posible proyecto de investigación y desarrollo colaborativo relacionado con el «Proyecto Quimera: Interconexiones optoelectrónicas de próxima generación», y para ningún otro fin.
+
+**3. Obligaciones de la Parte receptora**
+La Parte receptora se compromete a:
+    a.  Mantener toda la información confidencial en estricta confidencialidad y no revelarla a terceros sin el consentimiento previo por escrito de la parte reveladora.
+    b.  No utilizar la Información Confidencial para ningún fin que no sea el Propósito.
+    c. Limitar el acceso a la Información Confidencial únicamente a aquellos de sus empleados, consultores o contratistas que tengan una estricta «necesidad de conocerla» para el Propósito y que estén sujetos a obligaciones de confidencialidad al menos tan estrictas como las establecidas en el presente Acuerdo. La Parte Receptora será responsable de cualquier incumplimiento del presente Acuerdo por parte de cualquiera de dichas personas.
+    d.  Ejercer al menos el mismo grado de cuidado en la protección de la Información Confidencial que el que utiliza para proteger su propia información confidencial y privada, pero en ningún caso menos que un grado razonable de cuidado.
+
+**4. Exclusiones de la Información Confidencial**
+Las obligaciones de no divulgación y no uso establecidas en el presente documento no se aplicarán a la información que la Parte receptora pueda demostrar:
+    a.  Es o pasa a ser de dominio público sin culpa ni incumplimiento del presente Acuerdo por parte de la Parte receptora.
+    b.  Era legítimamente conocida por la Parte receptora antes de su divulgación por parte de la Parte divulgadora, sin incumplimiento de ninguna obligación de confidencialidad.
+    c.  Ha sido desarrollada de forma independiente por la Parte receptora sin hacer referencia ni basarse en la información confidencial de la Parte reveladora.
+    d.  Ha sido legítimamente recibida por la Parte receptora de un tercero sin restricción de divulgación y sin incumplimiento de ninguna obligación de confidencialidad.
+    e.  Debe ser divulgada por ley o por orden judicial, siempre que la Parte receptora lo notifique por escrito y sin demora a la Parte divulgadora para que esta pueda solicitar una orden de protección u otra medida correctiva adecuada.
+
+**5. Plazo de confidencialidad**
+Las obligaciones de confidencialidad y no uso en virtud del presente Acuerdo permanecerán en vigor durante un período de cinco (5) años a partir de la Fecha de entrada en vigor, o mientras la información se considere secreto comercial en virtud de la legislación aplicable, lo que sea más largo. El Acuerdo en sí permanecerá en vigor hasta que hayan expirado las obligaciones de confidencialidad de toda la Información confidencial divulgada.
+
+**6. Devolución o destrucción de la información confidencial**
+Previa solicitud por escrito de la Parte reveladora, o tras la finalización de las conversaciones relativas al Propósito, la Parte receptora devolverá sin demora a la Parte reveladora o, a elección de esta, destruirá todas las copias de la Información confidencial (incluidas todas las notas, resúmenes, análisis y derivados de la misma) recibidas de la Parte reveladora. La Parte receptora deberá proporcionar una certificación por escrito de dicha destrucción cuando se le solicite. No obstante lo anterior, la Parte receptora podrá conservar una copia de archivo de la Información confidencial con el único fin de demostrar el cumplimiento de los requisitos legales o reglamentarios.
+
+**7. Ausencia de licencia o garantía**
+La Parte reveladora no concede a la Parte receptora ninguna licencia o derecho, expreso o implícito, en virtud de ninguna patente, derecho de autor, marca comercial o secreto comercial, salvo el derecho limitado a utilizar la Información confidencial para el Propósito. Toda la Información confidencial se proporciona «TAL CUAL», y la Parte reveladora no ofrece ninguna garantía, expresa o implícita, en cuanto a su exactitud, integridad o idoneidad para un fin determinado.
+
+**8. Recursos**
+La Parte receptora reconoce que la divulgación o el uso no autorizados de la Información confidencial causarían un daño irreparable a la Parte reveladora, para lo cual una indemnización monetaria sería una reparación inadecuada. Por lo tanto, la Parte reveladora tendrá derecho a solicitar medidas cautelares, además de cualquier otra reparación disponible en derecho o en equidad, para evitar cualquier incumplimiento real o potencial del presente Acuerdo.
+
+**9. Legislación aplicable**
+El presente Acuerdo se regirá e interpretará de conformidad con las leyes del estado de Delaware (EE. UU.), sin tener en cuenta sus principios sobre conflicto de leyes. Las Partes acuerdan que los tribunales federales y estatales ubicados en Delaware tendrán jurisdicción exclusiva sobre cualquier controversia que surja en relación con el presente Acuerdo.
+
+**10. Acuerdo completo**
+El presente Acuerdo constituye el acuerdo completo entre las Partes en relación con el objeto del mismo y sustituye a todos los acuerdos, entendimientos, negociaciones y discusiones anteriores, ya sean verbales o escritos, entre las Partes.
+
+---
+
+**EN FE DE LO CUAL**, las Partes han firmado el presente Acuerdo de confidencialidad y no divulgación en la Fecha de entrada en vigor.
+
+**Aetherium Research Corporation**
+(Parte reveladora)
+
+By: ______________________________
+Nombre: Dra. Eleanor Vance
+Cargo: Directora de Tecnología
+Fecha: 18 de julio de 2024
+
+---
+
+**Synapse Dynamics Inc.**
+(Parte receptora)
+
+By: ______________________________
+Nombre: Sr. Julian Croft
+Cargo: Director de I+D Avanzado
+Fecha: 18 de julio de 2024

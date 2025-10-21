@@ -1,0 +1,37 @@
+```
+CONFIDENTIEL
+CODE DU PROJET : CRYPTO-GEN-2024-ALPHA
+DATE : 26 octobre 2024
+VERSION : 1.0
+
+------------------------------------------------------------------------------------------------------
+
+**DOCUMENT DE RECHERCHE SUR LES MÉTHODES DE CHIFFREMENT DE NOUVELLE GÉNÉRATION POUR UNE MEILLEURE RÉSILIENCE CYBERNÉTIQUE**
+
+**AUTEURS :**
+Dr Evelyn Reed, cryptographe en chef, division Technologies avancées
+Dr Kenji Tanaka, chercheur scientifique principal, Laboratoire de sécurité des données
+M. Liam O'Connell, spécialiste en algorithmes quantiques, groupe Systèmes futurs
+
+**RÉSUMÉ :**
+Ce document présente les principales conclusions de nos recherches en cours sur les méthodes de chiffrement de nouvelle génération conçues pour contrer les menaces émergentes, en particulier celles liées aux progrès de l'informatique quantique et aux attaques classiques de plus en plus sophistiquées. Nous explorons l'état actuel et le potentiel futur de plusieurs paradigmes cryptographiques avancés, notamment la cryptographie post-quantique (PQC), le chiffrement homomorphe (HE) et le calcul multipartite (MPC), en soulignant leur rôle essentiel dans la mise en place de capacités de calcul garantissant la sécurité et la confidentialité des données à long terme. L'objectif est d'orienter les investissements stratégiques et les voies de développement vers des architectures de sécurité robustes et pérennes.
+
+**1. INTRODUCTION**
+Le paysage de la sécurité numérique évolue rapidement. Les algorithmes cryptographiques à clé publique traditionnels, qui constituent le fondement des communications et du stockage de données sécurisés modernes, sont de plus en plus vulnérables aux attaques quantiques théoriques. En outre, la demande croissante en matière de confidentialité des données et de calcul sécurisé sur des ensembles de données sensibles nécessite des solutions cryptographiques qui vont au-delà du simple chiffrement des données au repos ou en transit. Cette recherche aborde de manière proactive ces défis en évaluant des méthodologies qui promettent de protéger les informations contre les menaces actuelles et anticipées, garantissant ainsi l'intégrité et la confidentialité des actifs critiques jusqu'à la prochaine décennie.
+
+**2. PRINCIPALES CONCLUSIONS**
+
+**2.1. Développement accéléré de la cryptographie post-quantique (PQC)**
+Nos recherches confirment que la PQC reste le domaine le plus urgent et le plus critique pour le chiffrement de nouvelle génération. Des progrès significatifs ont été réalisés dans la normalisation et la mise en œuvre d'algorithmes résistants à la cryptographie quantique. Nous observons un intérêt marqué pour la cryptographie basée sur les réseaux (par exemple, CRYSTALS-Kyber, CRYSTALS-Dilithium) et les signatures basées sur le hachage (par exemple, SPHINCS+), qui offrent une sécurité robuste contre les algorithmes quantiques connus tels que ceux de Shor et Grover. Un déploiement précoce dans des systèmes non critiques et une planification continue de la migration sont essentiels pour atteindre une « agilité cryptographique » avant que les adversaires quantiques ne deviennent une menace réelle. Le principal défi consiste désormais à intégrer de manière efficace, sécurisée et performante ces technologies dans les infrastructures existantes.
+
+**2.2. Progrès dans la praticité du chiffrement entièrement homomorphe (FHE)**
+Le chiffrement homomorphe complet (FHE), qui permet de calculer des données chiffrées sans les déchiffrer au préalable, a connu des progrès théoriques et pratiques considérables. Bien qu'il reste très gourmand en ressources informatiques, les avancées en matière de techniques de bootstrapping et d'accélération matérielle (par exemple, le déchargement GPU/FPGA) commencent à rendre le FHE viable pour des cas d'utilisation spécifiques à forte valeur ajoutée. Nos modèles indiquent que le FHE, en particulier celui basé sur les problèmes Ring-LWE ou d'apprentissage avec erreurs (LWE), jouera un rôle déterminant dans le cloud computing sécurisé, l'analyse préservant la confidentialité et les applications sensibles d'apprentissage automatique, offrant une confidentialité des données inégalée pendant le calcul. La phase suivante se concentre sur l'optimisation des performances pour les opérations complexes sur des données réelles.
+
+**2.3. Maturation du calcul multipartite (MPC) pour la sécurité collaborative**
+Les protocoles de calcul multipartite (MPC) mûrissent rapidement, fournissant un cadre robuste permettant à plusieurs parties de calculer conjointement une fonction sur leurs entrées privées sans se révéler ces entrées les unes aux autres. Nous constatons que le MPC, qui exploite des techniques telles que le partage secret et les circuits brouillés, est de plus en plus applicable au partage de données entre organisations, aux enchères sécurisées, à l'analyse financière conjointe et à l'agrégation de renseignements sur les menaces. Les récentes optimisations des protocoles ont considérablement réduit la charge de communication et la complexité informatique, faisant du MPC une solution pratique pour les scénarios nécessitant une prise de décision collective ou des informations dérivées de sources de données sensibles distribuées sans compromettre la confidentialité individuelle.
+
+**3. CONCLUSION**
+Le passage au chiffrement de nouvelle génération n'est pas seulement une étape évolutive, mais une refonte fondamentale de nos paradigmes de sécurité numérique. La cryptographie post-quantique est indispensable pour la sécurité fondamentale, tandis que le chiffrement homomorphe et le calcul multipartite offrent des capacités transformatrices pour le calcul préservant la confidentialité. La poursuite de la recherche, du développement et des investissements stratégiques dans ces domaines est essentielle pour contrer de manière préventive les menaces émergentes et ouvrir de nouvelles possibilités pour une utilisation sécurisée des données. Les travaux futurs doivent se concentrer sur l'intégration transparente, l'optimisation des performances et le développement de cadres cryptographiques agiles afin de mener à bien cette transition.
+
+------------------------------------------------------------------------------------------------------
+CONFIDENTIEL

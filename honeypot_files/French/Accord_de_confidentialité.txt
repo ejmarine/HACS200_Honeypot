@@ -1,0 +1,89 @@
+# ACCORD DE CONFIDENTIALITÉ ET DE NON-DIVULGATION
+
+**Identifiant du document : NDA-R&D-ARC-SDI-20240718**
+
+Le présent ACCORD DE CONFIDENTIALITÉ ET DE NON-DIVULGATION (l'« Accord ») est conclu et entre en vigueur le 18 juillet 2024 (la « Date d'entrée en vigueur »).
+
+**ENTRE :**
+
+**Aetherium Research Corporation**, société dûment constituée et existant en vertu des lois de l'État du Delaware, dont le siège social est situé au 123 Quantum Drive, Techville, CA 90210, États-Unis (ci-après dénommée « Partie divulgatrice ») ;
+
+**ET**
+
+**Synapse Dynamics Inc.**, société dûment constituée et existant en vertu des lois de l'État de New York, dont le siège social est situé au 456 Innovation Blvd, Metropoli, NY 10001, États-Unis (ci-après dénommée « Partie destinataire »).
+
+ATTENDU QUE la Partie divulgatrice et la Partie destinataire (collectivement, les « Parties » et individuellement, une « Partie ») souhaitent explorer un projet potentiel de recherche et développement collaboratif concernant des interconnexions optoélectroniques avancées pour le calcul haute performance (l'« Objet ») ;
+
+ATTENDU QUE, dans le cadre de l'Objet, la Partie divulgatrice peut divulguer certaines informations confidentielles et exclusives à la Partie destinataire ; et
+
+ATTENDU QUE les parties souhaitent définir leurs droits et obligations respectifs en ce qui concerne ces informations confidentielles ;
+
+PAR CONSÉQUENT, compte tenu des promesses et engagements mutuels contenus dans les présentes, dont la réception et la suffisance sont reconnues par les présentes, les parties conviennent de ce qui suit :
+
+---
+
+### CONDITIONS GÉNÉRALES
+
+**1. Définition des informations confidentielles**
+Le terme « informations confidentielles » désigne toutes les informations, qu'elles soient orales, écrites, électroniques, visuelles ou sous toute autre forme, divulguées par la partie divulgatrice à la partie destinataire dans le cadre de l'objet du présent accord, y compris, mais sans s'y limiter :
+    a.  Les données techniques et scientifiques, les plans de recherche, les conceptions, les spécifications, les méthodologies, les prototypes, les formules, les composés, les matériaux, les processus, les algorithmes, les logiciels, les configurations matérielles, les résultats expérimentaux et la propriété intellectuelle.
+    b.  Les informations commerciales, financières et marketing, y compris les plans stratégiques, les listes de clients, les données sur les coûts, les stratégies de prix et les projections.
+    c.  Toute information marquée comme « confidentielle », « exclusive » ou portant une mention similaire. Les divulgations orales sont considérées comme des informations confidentielles si elles sont identifiées comme telles au moment de leur divulgation et résumées par écrit par la partie divulgatrice dans les trente (30) jours qui suivent.
+
+**2. Objectif de la divulgation**
+Les informations confidentielles sont divulguées uniquement pour permettre à la partie destinataire d'évaluer un projet potentiel de recherche et développement collaboratif concernant le « Projet Chimera : interconnexions optoélectroniques de nouvelle génération », et à aucune autre fin.
+
+**3. Obligations de la partie destinataire**
+La partie destinataire s'engage à :
+    a.  Conserver toutes les informations confidentielles dans la plus stricte confidentialité et ne les divulguer à aucun tiers sans le consentement écrit préalable de la partie divulgatrice.
+    b.  Ne pas utiliser les informations confidentielles à d'autres fins que celles prévues.
+    c.  Limiter l'accès aux informations confidentielles à ses employés, consultants ou sous-traitants qui ont strictement « besoin de les connaître » pour atteindre l'objectif et qui sont liés par des obligations de confidentialité au moins aussi strictes que celles énoncées dans le présent accord. La partie destinataire sera responsable de toute violation du présent accord par l'une de ces personnes.
+    d.  Faire preuve d'au moins le même degré de diligence dans la protection des Informations confidentielles que celui dont elle fait preuve pour protéger ses propres informations confidentielles et exclusives, mais en aucun cas moins qu'un degré de diligence raisonnable.
+
+**4. Exclusions des informations confidentielles**
+Les obligations de non-divulgation et de non-utilisation énoncées dans le présent accord ne s'appliquent pas aux informations dont la partie destinataire peut démontrer qu'elles :
+    a.  Sont ou deviennent accessibles au public sans faute ni violation du présent accord de la part de la partie destinataire.
+    b.  étaient légitimement connues de la partie destinataire avant leur divulgation par la partie divulgatrice, sans violation d'aucune obligation de confidentialité.
+    c.  ont été développées de manière indépendante par la partie destinataire sans référence ni recours aux informations confidentielles de la partie divulgatrice.
+    d.  ont été légitimement reçues par la partie destinataire d'un tiers sans restriction de divulgation et sans violation d'aucune obligation de confidentialité.
+    e.  Doivent être divulguées en vertu de la loi ou d'une décision de justice, à condition que la partie destinataire en informe rapidement par écrit la partie divulgatrice afin de lui permettre de demander une ordonnance de protection ou tout autre recours approprié.
+
+**5. Durée de la confidentialité**
+Les obligations de confidentialité et de non-utilisation prévues par le présent accord resteront en vigueur pendant une période de cinq (5) ans à compter de la date d'entrée en vigueur, ou aussi longtemps que les informations seront considérées comme des secrets commerciaux en vertu de la loi applicable, la période la plus longue étant retenue. L'accord lui-même restera en vigueur jusqu'à l'expiration des obligations de confidentialité pour toutes les informations confidentielles divulguées.
+
+**6. Restitution ou destruction des informations confidentielles**
+À la demande écrite de la partie divulgatrice ou à la fin des discussions concernant l'objet, la partie destinataire doit rapidement restituer à la partie divulgatrice ou, au choix de cette dernière, détruire toutes les copies des informations confidentielles (y compris toutes les notes, résumés, analyses et dérivés de celles-ci) reçues de la partie divulgatrice. La partie destinataire fournira une attestation écrite de cette destruction sur demande. Nonobstant ce qui précède, la partie destinataire peut conserver une copie d'archive des informations confidentielles uniquement dans le but de démontrer sa conformité aux exigences légales ou réglementaires.
+
+**7. Absence de licence ou de garantie**
+Aucune licence ou droit, explicite ou implicite, n'est accordé par la partie divulgatrice à la partie destinataire au titre de brevets, droits d'auteur, marques commerciales ou secrets commerciaux, à l'exception du droit limité d'utiliser les informations confidentielles aux fins prévues. Toutes les informations confidentielles sont fournies « telles quelles » et la partie divulgatrice n'offre aucune garantie, explicite ou implicite, quant à leur exactitude, leur exhaustivité ou leur adéquation à un usage particulier.
+
+**8. Recours**
+La Partie destinataire reconnaît que la divulgation ou l'utilisation non autorisée des Informations confidentielles causerait un préjudice irréparable à la Partie divulgatrice, pour lequel des dommages-intérêts pécuniaires constitueraient un recours insuffisant. Par conséquent, la Partie divulgatrice est en droit de demander une mesure injonctive, en plus de tout autre recours disponible en droit ou en équité, afin d'empêcher toute violation réelle ou potentielle du présent Contrat.
+
+**9. Droit applicable**
+Le présent accord est régi et interprété conformément aux lois de l'État du Delaware, aux États-Unis, sans égard à ses principes de conflit de lois. Les parties conviennent que les tribunaux fédéraux et étatiques situés dans le Delaware auront compétence exclusive pour tout litige découlant du présent accord.
+
+**10. Intégralité de l'accord**
+Le présent accord constitue l'intégralité de l'accord entre les parties concernant l'objet des présentes et remplace tous les accords, ententes, négociations et discussions antérieurs, qu'ils soient oraux ou écrits, entre les parties.
+
+---
+
+**EN FOI DE QUOI**, les parties aux présentes ont signé le présent accord de confidentialité à compter de la date d'entrée en vigueur.
+
+**Aetherium Research Corporation**
+(Partie divulgatrice)
+
+By: ______________________________
+Nom : Dr Eleanor Vance
+Titre : Directrice de la technologie
+Date : 18 juillet 2024
+
+---
+
+**Synapse Dynamics Inc.**
+(Partie destinataire)
+
+By: ______________________________
+Nom : M. Julian Croft
+Titre : Responsable de la R&D avancée
+Date : 18 juillet 2024

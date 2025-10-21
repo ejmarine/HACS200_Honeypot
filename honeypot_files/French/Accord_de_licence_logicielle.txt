@@ -1,0 +1,86 @@
+## CONFIDENTIEL
+
+### CONTRAT DE LICENCE LOGICIELLE ET DE CONFIDENTIALITÉ
+
+**Identifiant du document :** SLC-2023-10-001
+**Date d'entrée en vigueur :** 26 octobre 2023
+
+Le présent contrat de licence logicielle et de confidentialité (le « Contrat ») est conclu à compter de la Date d'entrée en vigueur entre :
+
+**Partie A (concédant) :**
+**Innovatech Solutions Inc.**
+Société dûment constituée et existant en vertu des lois de l'État du Delaware, dont le siège social est situé au 123 Tech Drive, Silicon Valley, CA 95000, États-Unis
+(ci-après dénommée « le Concédant »)
+
+ET
+
+**Partie B (titulaire de la licence) :**
+**Global Dynamics Corp.**
+Société dûment constituée et existant en vertu des lois de l'État de New York, dont le siège social est situé au 456 Enterprise Way, Metro City, NY 10001, États-Unis
+(ci-après dénommée « le Licencié »)
+
+**ATTENDU QUE** le Concédant est le propriétaire unique et exclusif d'un certain logiciel propriétaire connu sous le nom de « Plateforme AetherOS » (ci-après dénommé le « Logiciel »), y compris toute la documentation, le code et les droits de propriété intellectuelle associés ;
+
+**ATTENDU QUE** le Concédant est le propriétaire unique et exclusif de certains logiciels propriétaires connus sous le nom de « Plateforme AetherOS » (ci-après dénommés « le Logiciel »), y compris toute la documentation, le code et les droits de propriété intellectuelle associés ;
+
+**ATTENDU QUE** le Licencié souhaite obtenir une licence non exclusive pour utiliser le Logiciel dans le cadre de ses activités commerciales internes ;
+
+**ATTENDU QUE** les deux parties reconnaissent la nature confidentielle et exclusive du logiciel et des conditions du présent contrat ;
+
+**PAR CONSÉQUENT,** compte tenu des engagements et promesses mutuels contenus dans les présentes, les parties conviennent de ce qui suit :
+
+---
+
+**1. Octroi de licence**
+
+1.1. **Octroi de licence :** Sous réserve des conditions générales du présent Contrat, le Concédant accorde par la présente au Licencié une licence non exclusive, non transférable, révocable et limitée lui permettant d'installer, d'accéder et d'utiliser la version en code objet du Logiciel de la plateforme AetherOS, y compris toute documentation associée, uniquement pour les opérations commerciales internes du Licencié et non au profit d'un tiers. Cette licence est accordée pour un maximum de cinquante (50) utilisateurs simultanés au sein de l'organisation du Licencié.
+
+1.2. **Pas de sous-licence :** Le Licencié ne peut sous-licencier, louer, donner en location ou distribuer de quelque manière que ce soit le Logiciel ou tout droit accordé en vertu des présentes à un tiers sans le consentement écrit préalable du Concédant.
+
+**2. Restrictions d'utilisation**
+
+2.1. **Actions interdites :** Le titulaire de la licence ne doit pas, et ne doit permettre à aucun tiers de : (a) modifier, adapter, altérer, traduire ou créer des œuvres dérivées à partir du logiciel ; (b) procéder à une ingénierie inverse, décompiler, désassembler ou tenter de toute autre manière de dériver le code source du logiciel ; (c) supprimer, modifier ou masquer les mentions de propriété (y compris les mentions de copyright et de marque déposée) figurant sur le Logiciel ou sa documentation ; (d) utiliser le Logiciel à des fins autres que celles prévues pour les opérations commerciales internes, y compris, mais sans s'y limiter, la fourniture de services commerciaux à des tiers (par exemple, SaaS, bureau de services) ; ou (e) publier des tests ou des analyses de performance ou de référence relatifs au Logiciel sans l'accord écrit préalable du Concédant.
+
+**3. Paiement et contrepartie**
+
+3.1. **Redevance :** En contrepartie de la licence accordée dans les présentes, le Licencié versera au Concédant une redevance unique et payable d'avance de **cinquante mille dollars américains (50 000,00 USD)**, exigible et payable à la date d'entrée en vigueur du présent Contrat.
+
+3.2. **Maintenance et assistance annuelles :** Le Licencié versera également une redevance annuelle de **dix mille dollars américains (10 000,00 USD)** pour les services de maintenance et d'assistance standard, y compris les mises à jour et l'assistance technique. Le premier paiement annuel est dû à la date d'entrée en vigueur, les paiements suivants étant dus chaque année à l'avance à la date anniversaire de la date d'entrée en vigueur.
+
+3.3. **Taxes :** Tous les paiements spécifiés dans le présent Contrat s'entendent hors taxes de vente, d'utilisation, d'accise, de valeur ajoutée ou autres taxes, droits ou prélèvements similaires, qui sont à la charge exclusive du Licencié.
+
+**4. Confidentialité**
+
+4.1. **Définition :** « Informations confidentielles » désigne toutes les informations non publiques, qu'elles soient écrites, orales ou visuelles, divulguées par une partie (la « partie divulgatrice ») à l'autre partie (la « partie destinataire ») dans le cadre du présent accord, y compris, sans s'y limiter, le logiciel, son code source, la documentation, les tarifs, les plans d'affaires et les conditions du présent accord.
+
+4.2. **Obligation :** La Partie destinataire s'engage à : (a) préserver la confidentialité de toutes les Informations confidentielles ; (b) utiliser les Informations confidentielles uniquement dans le but d'exercer ses droits et d'exécuter ses obligations en vertu du présent Contrat ; et (c) ne pas divulguer ni mettre à la disposition de tiers les Informations confidentielles sans le consentement écrit préalable de la Partie divulgatrice, sauf à ses employés et sous-traitants qui ont « besoin de savoir » et sont liés par des obligations de confidentialité similaires.
+
+4.3. **Exceptions :** Les obligations de confidentialité ne s'appliquent pas aux informations qui : (a) sont ou deviennent accessibles au public sans faute de la partie destinataire ; (b) étaient connues de la partie destinataire avant leur divulgation par la partie divulgatrice ; (c) sont obtenues légalement par la Partie réceptrice auprès d'un tiers sans violation de la confidentialité ; ou (d) sont développées de manière indépendante par la Partie réceptrice sans utiliser ou se référer aux Informations confidentielles de la Partie divulgatrice.
+
+**5. Exclusion de garantie et limitation de responsabilité**
+
+5.1. **Absence de garantie :** LE LOGICIEL EST FOURNI « TEL QUEL », SANS GARANTIE D'AUCUNE SORTE, EXPRESSE OU IMPLICITE, Y COMPRIS, MAIS SANS S'Y LIMITER, LES GARANTIES DE QUALITÉ MARCHANDE, D'ADÉQUATION À UN USAGE PARTICULIER ET DE NON-CONTREFAÇON. LE CONCÉDANT DE LICENCE NE GARANTIT PAS QUE LE LOGICIEL FONCTIONNERA SANS INTERRUPTION OU SANS ERREUR.
+
+5.2. **Limitation de responsabilité :** DANS LA MESURE MAXIMALE PERMISE PAR LA LOI APPLICABLE, LE CONCÉDANT NE PEUT EN AUCUN CAS ÊTRE TENU RESPONSABLE DE DOMMAGES INDIRECTS, ACCESSOIRES, SPÉCIAUX, CONSÉCUTIFS OU PUNITIFS, NI DE PERTES DE BÉNÉFICES OU DE REVENUS, QU'ILS SOIENT DIRECTS OU INDIRECTS, NI DE PERTES DE DONNÉES, UTILISATION, GOODWILL OU AUTRES PERTES INTANGIBLES, RÉSULTANT (A) DE VOTRE ACCÈS OU UTILISATION OU DE VOTRE INCAPACITÉ À ACCÉDER OU À UTILISER LE LOGICIEL ; (B) DE TOUT COMPORTEMENT OU CONTENU DE TIERS SUR LE LOGICIEL ; OU (C) DE L'ACCÈS, DE L'UTILISATION OU DE LA MODIFICATION NON AUTORISÉS DE VOS TRANSMISSIONS OU CONTENUS. NONOBSTANT LES DOMMAGES QUE LE TITULAIRE DE LA LICENCE POURRAIT SUBIR, LA RESPONSABILITÉ TOTALE DU CONCÉDANT DE LICENCE EN VERTU DU PRÉSENT CONTRAT SERA LIMITÉE AU MONTANT RÉELLEMENT VERSÉ PAR LE TITULAIRE DE LA LICENCE AU CONCÉDANT DE LICENCE CONFORMÉMENT À LA SECTION 3.1 DU PRÉSENT CONTRAT.
+
+---
+
+**Loi applicable :** Le présent Contrat est régi et interprété conformément aux lois de l'État du Delaware, sans égard à ses principes de conflit de lois.
+
+**Intégralité de l'accord :** Le présent accord constitue l'intégralité de l'accord entre les parties concernant l'objet des présentes et remplace tous les accords, propositions ou déclarations antérieurs et contemporains, écrits ou oraux.
+
+**EN FOI DE QUOI,** les parties aux présentes ont signé le présent contrat de licence et de confidentialité du logiciel à la date d'entrée en vigueur indiquée ci-dessus.
+
+**INNOVATECH SOLUTIONS INC. (Concédant)**
+
+By: ____________________________________
+Nom : [Nom du signataire autorisé]
+Titre : Président-directeur général
+Date : 26 octobre 2023
+
+**GLOBAL DYNAMICS CORP. (Titulaire de la licence)**
+
+By: ____________________________________
+Nom : [Nom du signataire autorisé]
+Titre : Directeur technique
+Date : 26 octobre 2023

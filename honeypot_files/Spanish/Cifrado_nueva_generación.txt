@@ -1,0 +1,37 @@
+```
+CONFIDENCIAL
+CÓDIGO DEL PROYECTO: CRYPTO-GEN-2024-ALPHA
+FECHA: 26 de octubre de 2024
+VERSIÓN: 1.0
+
+------------------------------------------------------------------------------------------------------
+
+**DOCUMENTO DE INVESTIGACIÓN SOBRE MÉTODOS DE CIFRADO DE ÚLTIMA GENERACIÓN PARA MEJORAR LA RESILIENCIA CIBERNÉTICA**
+
+**AUTORES:**
+Dra. Evelyn Reed, criptógrafa jefe, División de Tecnologías Avanzadas
+Dr. Kenji Tanaka, investigador científico sénior, Laboratorio de Seguridad de Datos
+Sr. Liam O'Connell, especialista en algoritmos cuánticos, Grupo de Sistemas Futuros
+
+**RESUMEN:**
+Este documento presenta las conclusiones principales de nuestra investigación en curso sobre metodologías de cifrado de última generación diseñadas para contrarrestar las amenazas emergentes, en particular las derivadas de los avances en la computación cuántica y los ataques clásicos cada vez más sofisticados. Exploramos el estado actual y el potencial futuro de varios paradigmas criptográficos avanzados, entre los que se incluyen la criptografía poscuántica (PQC), el cifrado homomórfico (HE) y la computación multipartita (MPC), destacando su papel fundamental en el establecimiento de la seguridad de los datos a largo plazo y las capacidades computacionales que preservan la privacidad. El objetivo es informar sobre las vías de inversión y desarrollo estratégicas para arquitecturas de seguridad robustas y preparadas para el futuro.
+
+**1. INTRODUCCIÓN**
+El panorama de la seguridad digital está evolucionando rápidamente. Los algoritmos criptográficos tradicionales de clave pública, fundamentales para la comunicación segura y el almacenamiento de datos modernos, son cada vez más vulnerables a los ataques cuánticos teóricos. Además, la creciente demanda de privacidad de los datos y de computación segura en conjuntos de datos sensibles requiere soluciones criptográficas que vayan más allá del simple cifrado de datos en reposo o en tránsito. Esta investigación aborda de forma proactiva estos retos mediante la evaluación de metodologías que prometen proteger la información contra las amenazas actuales y previstas, garantizando la integridad y la confidencialidad de los activos críticos hasta bien entrada la próxima década.
+
+**2. PRINCIPALES CONCLUSIONES**
+
+**2.1. Desarrollo acelerado de la criptografía poscuántica (PQC)**
+Nuestra investigación confirma que la PQC sigue siendo el área más inmediata y crítica para el cifrado de próxima generación. Se han logrado avances significativos en la estandarización e implementación de algoritmos resistentes a la cuántica. Observamos un fuerte interés por la criptografía basada en redes (por ejemplo, CRYSTALS-Kyber, CRYSTALS-Dilithium) y las firmas basadas en hash (por ejemplo, SPHINCS+), que ofrecen una seguridad robusta frente a algoritmos cuánticos conocidos como los de Shor y Grover. La implementación temprana en sistemas no críticos y la planificación continua de la migración son esenciales para lograr la «agilidad criptográfica» antes de que los adversarios cuánticos se conviertan en una amenaza real. El principal reto ahora pasa a ser la integración eficiente, segura y eficaz en la infraestructura existente.
+
+**2.2. Avances en la practicidad del cifrado totalmente homomórfico (FHE)**
+El cifrado totalmente homomórfico (FHE), que permite realizar cálculos sobre datos cifrados sin necesidad de descifrarlos previamente, ha experimentado importantes avances teóricos y prácticos. Aunque sigue siendo computacionalmente intensivo, los avances en las técnicas de arranque y la aceleración por hardware (por ejemplo, la descarga de GPU/FPGA) están empezando a hacer que el FHE sea viable para casos de uso específicos de alto valor. Nuestros modelos indican que el FHE, basado especialmente en problemas Ring-LWE o de aprendizaje con errores (LWE), será fundamental para la computación segura en la nube, el análisis con preservación de la privacidad y las aplicaciones sensibles de aprendizaje automático, ya que ofrece una privacidad de datos sin precedentes durante el cálculo. La siguiente fase se centra en optimizar el rendimiento para operaciones de datos complejas del mundo real.
+
+**2.3. Maduración de la computación multipartita (MPC) para la seguridad colaborativa**
+Los protocolos de computación multipartita (MPC) están madurando rápidamente, proporcionando un marco robusto para que múltiples partes calculen conjuntamente una función sobre sus entradas privadas sin revelarse esas entradas entre sí. Hemos descubierto que la MPC, que aprovecha técnicas como el intercambio de secretos y los circuitos codificados, es cada vez más aplicable al intercambio de datos entre organizaciones, las subastas seguras, el análisis financiero conjunto y la inteligencia agregada sobre amenazas. Las recientes optimizaciones del protocolo han reducido significativamente la sobrecarga de comunicación y la complejidad computacional, lo que convierte a la MPC en una solución práctica para escenarios que requieren la toma de decisiones colectivas o conocimientos derivados de fuentes de datos distribuidas y sensibles sin comprometer la privacidad individual.
+
+**3. CONCLUSIÓN**
+El cambio hacia el cifrado de próxima generación no es solo un paso evolutivo, sino una reestructuración fundamental de nuestros paradigmas de seguridad digital. La criptografía poscuántica es imprescindible para la seguridad fundamental, mientras que el cifrado homomórfico y la computación multipartita ofrecen capacidades transformadoras para la computación que preserva la privacidad. La investigación, el desarrollo y la inversión estratégica continuos y agresivos en estas áreas son fundamentales para contrarrestar de forma preventiva las amenazas emergentes y abrir nuevas posibilidades para la utilización segura de los datos. El trabajo futuro debe centrarse en la integración perfecta, la optimización del rendimiento y el desarrollo de marcos de agilidad criptográfica para gestionar la transición de forma eficaz.
+
+------------------------------------------------------------------------------------------------------
+CONFIDENCIAL

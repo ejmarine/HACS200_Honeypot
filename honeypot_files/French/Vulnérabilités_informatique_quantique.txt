@@ -1,0 +1,59 @@
+```
+CLASSIFICATION DU DOCUMENT : TRÈS SECRET // SENSIBLE AU NIVEAU QUANTIQUE
+***CONFIDENTIEL***
+
+---
+
+**ID DU RAPPORT :** QTA-2023-011-ALPHA
+**DATE :** 26 octobre 2023
+**VERSION :** 1.1
+
+**TITRE :** **INFRASTRUCTURE INFORMATIQUE QUANTIQUE : vulnérabilités intrinsèques émergentes en matière de sécurité et impératifs stratégiques d'atténuation**
+
+**AUTEURS :**
+*   **Dr Elara Vance**, analyste principale des menaces quantiques, projet Nightingale
+*   **Dr Kian Chen**, chercheur principal en sécurité cryptographique, projet Nightingale
+*   *Direction des technologies avancées, Bureau national de l'informatique stratégique (NSCB)*
+
+---
+
+### **RÉSUMÉ**
+
+Ce rapport confidentiel présente une analyse critique des vulnérabilités intrinsèques en matière de sécurité au sein de l'infrastructure informatique quantique (QC) en cours de développement, allant au-delà de la menace couramment évoquée des algorithmes quantiques (par exemple, ceux de Shor et Grover) pour la cryptographie classique existante. Nos conclusions indiquent que les propriétés physiques et architecturales uniques des systèmes quantiques introduisent de nouveaux vecteurs d'attaque qui pourraient compromettre l'intégrité informatique, la confidentialité des données et la disponibilité du système. Ces vulnérabilités découlent des imperfections matérielles, des mécanismes de contrôle complexes et de la nature délicate des états quantiques. Nous identifions quatre domaines clés préoccupants : la manipulation de la fidélité des qubits, l'interdiction de la chaîne d'approvisionnement du matériel quantique, les nouvelles fuites de canaux auxiliaires quantiques et l'exploitation de l'interface classique-quantique. Des stratégies de sécurité proactives et complètes sont nécessaires de toute urgence pour garantir l'intégrité et la fiabilité à long terme des actifs informatiques quantiques, indépendamment des progrès de la cryptographie post-quantique.
+
+### **1. INTRODUCTION**
+
+L'avènement de l'informatique quantique pratique promet des avancées sans précédent dans de nombreux secteurs, de la science des matériaux à la découverte de médicaments. Cependant, la communauté de la sécurité s'est principalement concentrée sur la menace existentielle que représentent les ordinateurs quantiques pour les normes cryptographiques à clé publique actuelles. Ce rapport affirme qu'une menace tout aussi insidieuse, sinon plus, réside dans la sécurité *interne* des plateformes informatiques quantiques elles-mêmes. À mesure que le matériel quantique évolue et se rapproche des régimes tolérants aux pannes, il devient primordial de comprendre et d'atténuer les vulnérabilités inhérentes à leur conception et à leur fonctionnement. Cette analyse sert de cadre initial pour identifier et classer ces faiblesses intrinsèques, mettre en évidence les voies d'exploitation potentielles et définir les impératifs stratégiques pour des architectures de sécurité quantique robustes.
+
+### **2. PRINCIPALES CONCLUSIONS**
+
+Nos recherches ont permis d'identifier plusieurs domaines critiques de vulnérabilité intrinsèque dans les paradigmes actuels et futurs de l'informatique quantique :
+
+1.  **Manipulation de la fidélité des qubits et décohérence ciblée :**
+    L'extrême sensibilité des qubits au bruit environnemental (température, champs électromagnétiques, vibrations) constitue un défi fondamental. Notre analyse suggère qu'un adversaire sophistiqué pourrait *induire de manière malveillante* des profils de bruit spécifiques ou des erreurs cohérentes, entraînant une décohérence ciblée des qubits, une corruption de l'état ou des résultats de mesure biaisés. De telles attaques, qui nécessitent une connaissance approfondie de la physique quantique et des spécificités du système, pourraient modifier subtilement les résultats des calculs (par exemple, simulations de découverte de médicaments, modèles financiers) sans entraîner de défaillance totale du système, ce qui rendrait leur détection extrêmement difficile. Cela va au-delà du bruit aléatoire ; cela implique l'introduction *délibérée* de conditions environnementales quantiques néfastes.
+
+2.  **Interdiction de la chaîne d'approvisionnement en matériel quantique :**
+    Les composants nécessaires à la construction d'ordinateurs quantiques sont hautement spécialisés et souvent achetés à l'échelle mondiale (par exemple, circuits supraconducteurs, isolants topologiques, systèmes cryogéniques, unités de contrôle micro-ondes). Cette chaîne d'approvisionnement complexe offre de nombreuses possibilités aux menaces persistantes avancées (APT) ou parrainées par des États d'introduire des portes dérobées matérielles, des qubits « trojanisés » ou des composants électroniques de contrôle compromis au stade de la fabrication ou de l'intégration. Ces vulnérabilités intégrées pourraient permettre l'exfiltration de données à distance, la manipulation des calculs, voire la désactivation du système, en opérant en dessous des seuils de surveillance de sécurité conventionnels.
+
+3.  **Nouveaux vecteurs d'attaque par canal auxiliaire quantique :**
+    Les opérations de calcul quantique génèrent des émanations physiques uniques, distinctes de celles des processeurs classiques. Il s'agit notamment de fluctuations précises de la puissance des systèmes cryogéniques, de caractéristiques spécifiques des impulsions micro-ondes, d'émissions magnétiques faibles pendant la manipulation des qubits et de gradients thermiques subtils à travers la puce quantique. Nos simulations indiquent qu'une surveillance sophistiquée de ces canaux secondaires pourrait potentiellement divulguer des informations sur les états quantiques en cours de traitement, les portes spécifiques appliquées, voire des résultats partiels, en particulier pendant les opérations critiques des portes. Les contre-mesures traditionnelles de blindage électromagnétique et d'analyse de puissance peuvent s'avérer insuffisantes contre ces signatures spécifiques au quantique.
+
+4.  **Exploitation de l'interface classique-quantique :**
+    Tous les ordinateurs quantiques actuels dépendent fortement des systèmes de contrôle classiques pour préparer les qubits, exécuter les séquences de portes, effectuer des mesures et post-traiter les résultats. Cette interface classique-quantique, qui comprend le micrologiciel, les systèmes d'exploitation, les protocoles réseau et les unités de traitement classiques, représente une surface d'attaque importante. Les vulnérabilités de cette couche (par exemple, les débordements de tampon, les exploits réseau, les logiciels de contrôle compromis) pourraient permettre à un adversaire de prendre le contrôle des opérations de l'ordinateur quantique, d'injecter des séquences de portes malveillantes, d'exfiltrer des données de mesure ou de refuser l'accès aux ressources quantiques à des utilisateurs légitimes. Ces attaques exploitent les faiblesses bien connues de la cybersécurité classique, mais ont un impact au niveau quantique.
+
+### **3. CONCLUSION**
+
+Le paysage émergent de la sécurité informatique quantique va bien au-delà de la menace qui pèse sur la cryptographie classique. Les vulnérabilités intrinsèques abordées dans ce rapport, qu'il s'agisse de la physique délicate des qubits, des chaînes d'approvisionnement mondiales complexes ou des systèmes de contrôle classiques, exigent une attention urgente et ciblée. Une stratégie holistique de « défense en profondeur » est essentielle, englobant non seulement la cryptographie post-quantique, mais aussi :
+
+* Une validation rigoureuse du matériel quantique et la détection des altérations.
+* Des principes de sécurité dès la conception pour les architectures quantiques et les systèmes de contrôle.
+* Le développement de nouveaux systèmes de détection d'intrusion spécifiques au domaine quantique.
+* Protocoles améliorés d'intégrité de la chaîne d'approvisionnement pour les composants quantiques.
+* Collaboration interdisciplinaire entre physiciens quantiques, informaticiens et experts en cybersécurité.
+
+Si ces vulnérabilités intrinsèques ne sont pas traitées dès maintenant, cela risque de compromettre la confiance fondamentale et la sécurité des futures capacités de calcul quantique, exposant potentiellement les données sensibles et les infrastructures critiques à des formes d'attaques nouvelles et sans précédent. Il est urgent de mettre en place un développement proactif et complet de la sécurité quantique.
+
+---
+***CONFIDENTIEL***
+CLASSIFICATION DU DOCUMENT : TRÈS SECRET // SENSIBLE AU NIVEAU QUANTIQUE
+```

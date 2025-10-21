@@ -1,0 +1,59 @@
+```
+CLASIFICACIÓN DEL DOCUMENTO: ALTO SECRETO // SENSIBLE A CUANTUM
+***CONFIDENCIAL***
+
+---
+
+**ID DEL INFORME:** QTA-2023-011-ALPHA
+**FECHA:** 26 de octubre de 2023
+**VERSIÓN:** 1.1
+
+**TÍTULO:** **INFRAESTRUCTURA DE COMPUTACIÓN CUÁNTICA: Vulnerabilidades de seguridad intrínsecas emergentes y medidas estratégicas de mitigación imprescindibles**
+
+**AUTORES:**
+*   **Dra. Elara Vance**, analista jefe de amenazas cuánticas, Proyecto Nightingale
+*   **Dr. Kian Chen**, investigador sénior de seguridad criptográfica, Proyecto Nightingale
+*   *Dirección de Tecnologías Avanzadas, Oficina Nacional de Informática Estratégica (NSCB)*
+
+---
+
+### **RESUMEN**
+
+Este informe confidencial detalla un análisis crítico de las vulnerabilidades de seguridad intrínsecas de la infraestructura de computación cuántica (QC) en desarrollo, y va más allá de la amenaza comúnmente discutida de los algoritmos cuánticos (por ejemplo, los de Shor y Grover) a la criptografía clásica existente. Nuestros hallazgos indican que las propiedades físicas y arquitectónicas únicas de los sistemas cuánticos introducen nuevos vectores de ataque que podrían comprometer la integridad computacional, la confidencialidad de los datos y la disponibilidad del sistema. Estas vulnerabilidades se derivan de las imperfecciones del hardware, los complejos mecanismos de control y la delicada naturaleza de los estados cuánticos. Identificamos cuatro áreas clave de preocupación: manipulación de la fidelidad de los qubits, interrupción de la cadena de suministro de hardware cuántico, nuevas fugas de canal lateral cuántico y explotación de la interfaz clásica-cuántica. Se requieren con urgencia estrategias de seguridad proactivas y exhaustivas para garantizar la integridad y la fiabilidad a largo plazo de los activos computacionales cuánticos, independientemente de los avances en la criptografía poscuántica.
+
+### **1. INTRODUCCIÓN**
+
+La llegada de la computación cuántica práctica promete avances sin precedentes en numerosos sectores, desde la ciencia de los materiales hasta el descubrimiento de fármacos. Sin embargo, la comunidad dedicada a la seguridad se ha centrado principalmente en la amenaza existencial que suponen los ordenadores cuánticos para los estándares criptográficos de clave pública actuales. Este informe afirma que existe una amenaza igualmente insidiosa, si no más, en la seguridad *interna* de las propias plataformas de computación cuántica. A medida que el hardware cuántico escala y se acerca a regímenes tolerantes a fallos, comprender y mitigar las vulnerabilidades inherentes a su diseño y funcionamiento se convierte en algo primordial. Este análisis sirve como marco inicial para identificar y categorizar estas debilidades intrínsecas, destacando las posibles vías de explotación y esbozando los imperativos estratégicos para unas arquitecturas de seguridad cuántica robustas.
+
+### **2. CONCLUSIONES PRINCIPALES**
+
+Nuestra investigación ha identificado varias áreas críticas de vulnerabilidad intrínseca dentro de los paradigmas actuales y futuros de la computación cuántica:
+
+1.  **Manipulación de la fidelidad de los qubits y decoherencia selectiva:**
+    La extrema sensibilidad de los qubits al ruido ambiental (temperatura, campos electromagnéticos, vibraciones) es un desafío fundamental. Nuestro análisis sugiere que un adversario sofisticado podría *inducir maliciosamente* perfiles de ruido específicos o errores coherentes, lo que provocaría la decoherencia selectiva de los qubits, la corrupción del estado o resultados de medición sesgados. Estos ataques, que requieren un profundo conocimiento de la física cuántica y de las características específicas del sistema, podrían alterar sutilmente los resultados computacionales (por ejemplo, simulaciones de descubrimiento de fármacos, modelos financieros) sin provocar un fallo total del sistema, lo que dificultaría enormemente su detección. Esto va más allá del ruido aleatorio; implica la introducción *deliberada* de condiciones ambientales cuánticas perjudiciales.
+
+2.  **Interdicción de la cadena de suministro de hardware cuántico:**
+    Los componentes necesarios para construir ordenadores cuánticos son muy especializados y a menudo se obtienen a nivel mundial (por ejemplo, circuitos superconductores, aislantes topológicos, sistemas criogénicos, unidades de control de microondas). Esta compleja cadena de suministro presenta numerosas oportunidades para que amenazas persistentes avanzadas (APT) o patrocinadas por el Estado introduzcan puertas traseras en el hardware, qubits «troyano» o componentes electrónicos de control comprometidos en las fases de fabricación o integración. Estas vulnerabilidades integradas podrían permitir la filtración remota de datos, la manipulación de cálculos o incluso la desactivación del sistema, operando por debajo de los umbrales de supervisión de seguridad convencionales.
+
+3.  **Nuevos vectores de ataque de canal lateral cuántico:**
+    Las operaciones de computación cuántica generan emanaciones físicas únicas, distintas de las de los procesadores clásicos. Entre ellas se incluyen fluctuaciones precisas de la potencia del sistema criogénico, características específicas de los pulsos de microondas, emisiones débiles de campos magnéticos durante la manipulación de qubits y sutiles gradientes térmicos a través del chip cuántico. Nuestras simulaciones indican que una supervisión sofisticada de estos canales laterales podría filtrar información sobre los estados cuánticos que se están procesando, las puertas específicas que se están aplicando o incluso resultados parciales, especialmente durante operaciones críticas de las puertas. Las contramedidas tradicionales de blindaje electromagnético y análisis de potencia pueden ser insuficientes contra estas firmas específicas de la cuántica.
+
+4.  **Explotación de la interfaz clásica-cuántica:**
+    Todos los ordenadores cuánticos actuales dependen en gran medida de los sistemas de control clásicos para preparar los qubits, ejecutar secuencias de puertas, realizar mediciones y procesar los resultados. Esta interfaz clásica-cuántica, que comprende firmware, sistemas operativos, protocolos de red y unidades de procesamiento clásicas, representa una superficie de ataque significativa. Las vulnerabilidades en esta capa (por ejemplo, desbordamientos de búfer, exploits de red, software de control comprometido) podrían permitir a un adversario obtener el control sobre las operaciones del ordenador cuántico, inyectar secuencias de puertas maliciosas, filtrar datos de medición o denegar a los usuarios legítimos el acceso a los recursos cuánticos. Estos ataques aprovechan las debilidades bien conocidas de la ciberseguridad clásica, pero obtienen un impacto a nivel cuántico.
+
+### **3. CONCLUSIÓN**
+
+El panorama emergente de la seguridad de la computación cuántica va mucho más allá de la amenaza a la criptografía clásica. Las vulnerabilidades intrínsecas que se analizan en este informe, desde la delicada física de los qubits hasta las intrincadas cadenas de suministro globales y los sistemas de control clásicos, exigen una atención urgente y específica. Es fundamental adoptar una estrategia holística de «defensa en profundidad» que abarque no solo la criptografía poscuántica, sino también:
+
+* Una rigurosa validación del hardware cuántico y detección de manipulaciones.
+* Principios de seguridad por diseño para arquitecturas cuánticas y sistemas de control.
+* El desarrollo de nuevos sistemas de detección de intrusiones específicos para la computación cuántica.
+* Protocolos mejorados de integridad de la cadena de suministro para componentes cuánticos.
+* Colaboración interdisciplinaria entre físicos cuánticos, informáticos y expertos en ciberseguridad.
+
+Si no se abordan ahora estas vulnerabilidades intrínsecas, se corre el riesgo de socavar la confianza y la seguridad fundamentales de las futuras capacidades computacionales cuánticas, lo que podría exponer datos sensibles e infraestructuras críticas a formas de ataque novedosas y sin precedentes. Es urgente desarrollar de forma proactiva y exhaustiva la seguridad cuántica.
+
+---
+***CONFIDENCIAL***
+CLASIFICACIÓN DEL DOCUMENTO: ALTO SECRETO // SENSIBLE A CUANTUM
+```

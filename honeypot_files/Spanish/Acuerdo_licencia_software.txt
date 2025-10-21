@@ -1,0 +1,84 @@
+## CONFIDENCIAL
+
+### ACUERDO DE LICENCIA DE SOFTWARE Y CONFIDENCIALIDAD
+
+**Identificación del documento:** SLC-2023-10-001
+**Fecha de entrada en vigor:** 26 de octubre de 2023
+
+El presente Acuerdo de licencia de software y confidencialidad (el «Acuerdo») se celebra y entra en vigor en la Fecha de entrada en vigor entre:
+
+**Parte A (Licenciante):**
+**Innovatech Solutions Inc.**
+Una sociedad debidamente constituida y existente bajo las leyes del estado de Delaware, con domicilio social en 123 Tech Drive, Silicon Valley, CA 95000, EE. UU.
+(en lo sucesivo, «el Licenciante»)
+
+Y
+
+**Parte B (licenciatario):**
+**Global Dynamics Corp.**
+Sociedad debidamente constituida y existente con arreglo a las leyes del estado de Nueva York, con domicilio social en 456 Enterprise Way, Metro City, NY 10001, EE. UU.
+(en lo sucesivo, «el Licenciatario»).
+
+**CONSIDERANDO QUE** el Licenciante es el único y exclusivo propietario de cierto software propietario conocido como «Plataforma AetherOS» (en lo sucesivo, el «Software»), incluyendo toda la documentación, el código y los derechos de propiedad intelectual asociados;
+
+**CONSIDERANDO QUE,** el Licenciatario desea obtener una licencia no exclusiva para utilizar el Software en sus operaciones comerciales internas;
+
+**CONSIDERANDO QUE** ambas Partes reconocen la naturaleza confidencial y privada del Software y los términos del presente Acuerdo;
+
+**POR LO TANTO,** en consideración de los pactos y promesas mutuos contenidos en el presente documento, las Partes acuerdan lo siguiente:
+
+---
+
+**1. Concesión de licencia**
+
+1.1. **Concesión de licencia:** Sujeto a los términos y condiciones del presente Acuerdo, el Licenciante concede al Licenciatario una licencia no exclusiva, intransferible, revocable y limitada para instalar, acceder y utilizar la versión del código objeto del Software de la Plataforma AetherOS, incluida cualquier documentación asociada, únicamente para las operaciones comerciales internas del Licenciatario y no en beneficio de terceros. Esta licencia se concede para un máximo de cincuenta (50) usuarios simultáneos dentro de la organización del Licenciatario.
+
+1.2. **Prohibición de sublicencias:** El Licenciatario no podrá sublicenciar, alquilar, arrendar ni distribuir de ningún otro modo el Software ni ninguno de los derechos otorgados en virtud del presente a terceros sin el consentimiento previo por escrito del Licenciante.
+
+**2. Restricciones de uso**
+
+2.1. **Acciones prohibidas:** El licenciatario no podrá, ni permitirá que ningún tercero: (a) modifique, adapte, altere, traduzca o cree obras derivadas del Software; (b) realice ingeniería inversa, descompile, desensamble o intente de cualquier otra forma obtener el código fuente del Software; (c) eliminar, alterar u ocultar cualquier aviso de propiedad (incluidos los avisos de derechos de autor y marcas comerciales) del Software o su documentación; (d) utilizar el Software para cualquier fin distinto de las operaciones comerciales internas previstas, incluyendo, entre otros, la prestación de servicios comerciales a terceros (por ejemplo, SaaS, oficina de servicios); o (e) publicar cualquier prueba o análisis de rendimiento o referencia relacionados con el Software sin el consentimiento previo por escrito del Licenciante.
+
+**3. Pago y contraprestación**
+
+3.1. **Cuota de licencia:** Como contraprestación por la licencia otorgada en el presente documento, el Licenciatario pagará al Licenciante una cuota de licencia única y por adelantado de **cincuenta mil dólares estadounidenses (50 000,00 USD)**, que vencerá y será pagadera en la Fecha de entrada en vigor del presente Acuerdo.
+
+3.2. **Mantenimiento y asistencia técnica anuales:** El Licenciatario también pagará una cuota anual de **diez mil dólares estadounidenses (10 000,00 USD)** por los servicios estándar de mantenimiento y asistencia técnica, incluidas las actualizaciones y la asistencia técnica. El primer pago anual vencerá en la Fecha de entrada en vigor, y los pagos posteriores vencerán anualmente por adelantado en el aniversario de la Fecha de entrada en vigor.
+
+3.3. **Impuestos:** Todos los pagos especificados en el presente Contrato no incluyen ningún impuesto sobre ventas, uso, consumo, valor añadido o similares, ni aranceles o gravámenes, que serán responsabilidad exclusiva del Licenciatario.
+
+**4. Confidencialidad**
+
+4.1. **Definición:** «Información confidencial» se refiere a toda la información no pública, ya sea escrita, oral o visual, revelada por una de las partes (la «Parte reveladora») a la otra parte (la «Parte receptora») en relación con el presente Acuerdo, incluyendo, sin limitación, el Software, su código fuente, documentación, precios, planes de negocio y los términos del presente Acuerdo.
+
+4.2. **Obligación:** La Parte receptora se compromete a: (a) mantener toda la Información confidencial en estricta confidencialidad; (b) utilizar la Información confidencial únicamente con el fin de ejercer sus derechos y cumplir con sus obligaciones en virtud del presente Acuerdo; y (c) no divulgar ni poner a disposición de terceros la Información confidencial sin el consentimiento previo por escrito de la Parte reveladora, salvo a sus empleados y contratistas que tengan «necesidad de conocerla» y estén sujetos a obligaciones de confidencialidad similares.
+
+4.3. **Excepciones:** Las obligaciones de confidencialidad no se aplicarán a la información que: (a) sea o pase a ser de dominio público sin culpa de la Parte receptora; (b) fuera conocida por la Parte receptora antes de su divulgación por parte de la Parte divulgadora; (c) haya sido obtenida legalmente por la Parte receptora de un tercero sin incumplir la confidencialidad; o (d) haya sido desarrollada de forma independiente por la Parte receptora sin utilizar ni hacer referencia a la Información confidencial de la Parte reveladora.
+
+**5. Exención de responsabilidad y limitación de responsabilidad**
+
+5.1. **Ausencia de garantías:** EL SOFTWARE SE PROPORCIONA «TAL CUAL», SIN GARANTÍA DE NINGÚN TIPO, EXPRESA O IMPLÍCITA, INCLUIDAS, ENTRE OTRAS, LAS GARANTÍAS DE COMERCIABILIDAD, IDONEIDAD PARA UN FIN DETERMINADO Y NO INFRACCIÓN. EL LICENCIANTE NO GARANTIZA QUE EL SOFTWARE FUNCIONE DE FORMA ININTERRUMPIDA O SIN ERRORES.
+
+5.2. **Limitación de responsabilidad:** EN LA MEDIDA MÁXIMA PERMITIDA POR LA LEY APLICABLE, EN NINGÚN CASO EL LICENCIANTE SERÁ RESPONSABLE DE NINGÚN DAÑO INDIRECTO, INCIDENTAL, ESPECIAL, CONSECUENCIAL O PUNITIVO, NI DE NINGUNA PÉRDIDA DE BENEFICIOS O INGRESOS, YA SEA DIRECTA O INDIRECTAMENTE, NI DE NINGUNA PÉRDIDA DE DATOS, USO, FONDOS DE COMERCIO U OTRAS PÉRDIDAS INTANGIBLES, QUE RESULTEN DE (A) SU ACCESO O USO O IMPOSIBILIDAD DE ACCEDER O UTILIZAR EL SOFTWARE; (B) CUALQUIER CONDUCTA O CONTENIDO DE TERCEROS EN EL SOFTWARE; O (C) EL ACCESO, USO O ALTERACIÓN NO AUTORIZADOS DE SUS TRANSMISIONES O CONTENIDOS. SIN PERJUICIO DE LOS DAÑOS Y PERJUICIOS EN QUE PUEDA INCURRIR EL LICENCIATARIO, LA RESPONSABILIDAD TOTAL DEL LICENCIANTE EN VIRTUD DEL PRESENTE ACUERDO SE LIMITARÁ AL IMPORTE REALMENTE PAGADO POR EL LICENCIATARIO AL LICENCIANTE DE CONFORMIDAD CON LA SECCIÓN 3.1 DEL PRESENTE ACUERDO.
+
+---
+
+**Legislación aplicable:** El presente Acuerdo se regirá e interpretará de conformidad con las leyes del estado de Delaware, sin tener en cuenta sus principios sobre conflicto de leyes.
+
+**Acuerdo completo:** El presente Acuerdo constituye el acuerdo completo entre las Partes en relación con el objeto del mismo y sustituye a todos los acuerdos, propuestas o declaraciones anteriores y contemporáneos, tanto escritos como verbales.
+
+**EN FE DE LO CUAL,** las Partes han firmado el presente Acuerdo de licencia de software y confidencialidad en la fecha de entrada en vigor indicada anteriormente.
+
+**INNOVATECH SOLUTIONS INC. (Licenciante)**
+
+By: ____________________________________
+Nombre: [Nombre del firmante autorizado]
+Cargo: Director ejecutivo
+Fecha: 26 de octubre de 2023
+
+**GLOBAL DYNAMICS CORP. (Licenciatario)**
+
+By: ____________________________________
+Nombre: [Nombre del firmante autorizado]
+Cargo: Director de Tecnología
+Fecha: 26 de octubre de 2023

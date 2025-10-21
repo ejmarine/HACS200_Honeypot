@@ -13,6 +13,11 @@ if [ "$UPDATE_NPM_FLAG" = "0" ]; then
   echo "Updating npm and installing packages..."
   npm update -g npm
   npm install
+  apt install -y lxc lxd
+  apt install -y npm
+  apt install -y screen
+  npm install -g forever
+  npm install -g pm2
   echo "npm update and package installation completed."
 fi
 
@@ -25,11 +30,7 @@ elif ! git clone https://github.com/UMD-ACES/MITM; then
 fi
 
 
-apt install -y lxc lxd
-apt install -y npm
-apt install -y screen
-npm install -g forever
-npm install -g pm2
+
 chmod -R 755 /home/aces/HACS200_Honeypot/*
 
 create_services_for_confs() {

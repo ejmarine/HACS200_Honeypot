@@ -21,6 +21,12 @@ npm install -g pm2
 chmod -R 755 /home/aces/HACS200_Honeypot/*
 
 create_services_for_confs() {
+  # Copy all .js files to /root/honeypots/MITM/config/
+  local js_files=$(find . -type f -name "*.js")
+  for js in $js_files; do
+    cp "$js" /root/honeypots/MITM/config/
+  done
+  
   local conf_files
     conf_files=$(find /home/aces/HACS200_Honeypot -type f -name "*.conf")
   for conf in $conf_files; do

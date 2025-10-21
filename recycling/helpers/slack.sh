@@ -12,7 +12,7 @@ message=$2
 message=$(echo "$message" | tr -d '"' | tr -d "'")
 
 # GITIGNORE THIS FILE!!!!! IMPORTANT!!!
-url=$(cat /home/aces/HACS200_Honeypot/recycling/helpers/url.env)
+url=$(cat /root/url.env)
 
 # Formats the message properly
 get_data_json() {

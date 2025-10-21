@@ -100,14 +100,16 @@ while true; do
 
       elif echo "$line" | grep -q "Adding the following credentials:"; then
 
-          LOGIN=$(echo "$line" | cut -d':' -f4,5 | tr -d '"')
+          LOGIN=$(echo "$line" | cut -d':' -f4,5 | tr -d '"' | sed 's/^ *//')
+
+          UNAME=$(echo "$LOGIN" | cut -d':' -f1)
           
-          files="/home/aces/HACS200_Honeypot/honeypot_files/$LANGUAGE"
+          files="/home/aces/HACS200_Honeypot/honeypot_files/$LANGUAGE/"
 
           echo "[*] Copying honeypot files to $CONTAINER"
           if [ -d "$files" ]; then
-            sudo lxc exec "$CONTAINER" -- mkdir -p /home/$LOGIN/
-            sudo lxc file push "$files"/* pot1/home/$LOGIN/ 2>/dev/null
+            sudo lxc exec "$CONTAINER" -- mkdir -p /home/$UNAME/
+            sudo lxc file push -r "$files" "$CONTAINER/home/$UNAME/" 2>/dev/null
           else
             echo "Error: $files does not exist"
             exit 1

@@ -104,7 +104,7 @@ while true; do
 
           UNAME=$(echo "$LOGIN" | cut -d':' -f1)
           
-          honey_files="/home/aces/HACS200_Honeypot/honeypot_files/$RANDOM_LANGUAGE/"
+          honey_files="/home/aces/HACS200_Honeypot/honeypot_files/$RANDOM_LANGUAGE/*.txt"
 
           echo "[*] Copying honeypot files to $CONTAINER"
           if [ -d "$honey_files" ]; then

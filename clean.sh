@@ -1,20 +1,20 @@
 #!/bin/bash
 
-input -m "Are you sure you want to clean the logs? This will delete all logs and data_zips"
+read -p "Are you sure you want to clean the logs? This will delete all logs and data_zips" input
 
 if [ "$input" != "y" ]; then
     echo "Exiting..."
     exit 1
 fi
 
-input -m "Are you sure you ABSOLUTELY SURE YOU WANT TO DELETE ALL LOGS AND DATA_ZIPS? This will delete all logs and data_zips"
+read -p "Are you sure you ABSOLUTELY SURE YOU WANT TO DELETE ALL LOGS AND DATA_ZIPS? This will delete all logs and data_zips" input
 
 if [ "$input" != "y" ]; then
     echo "Exiting..."
     exit 1
 fi
 
-input -m "FINAL WARNING"
+read -p "FINAL WARNING" input
 
 if [ "$input" != "y" ]; then
     echo "Exiting..."

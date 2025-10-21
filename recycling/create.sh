@@ -53,10 +53,10 @@ sudo lxc exec "$CONTAINER" -- apt install -y openssh-server >/dev/null 2>&1
 
 # Enable root login in sshd_config
 # Remove any existing lines and add the required settings
-sudo lxc exec "$CONTAINER" -- sed -i '/^#\?PermitRootLogin/d' /etc/ssh/sshd_config
-sudo lxc exec "$CONTAINER" -- sed -i '/^#\?PasswordAuthentication/d' /etc/ssh/sshd_config
-sudo lxc exec "$CONTAINER" -- bash -c 'echo "PermitRootLogin yes" >> /etc/ssh/sshd_config'
-sudo lxc exec "$CONTAINER" -- bash -c 'echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config'
+sudo lxc exec "$CONTAINER" -- sed -i '/^#\?PermitRootLogin/d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
+sudo lxc exec "$CONTAINER" -- sed -i '/^#\?PasswordAuthentication/d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
+sudo lxc exec "$CONTAINER" -- bash -c 'echo "PermitRootLogin yes" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
+sudo lxc exec "$CONTAINER" -- bash -c 'echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
 sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 
 files="/home/aces/HACS200_Honeypot/honeypot_files/$LANGUAGE"

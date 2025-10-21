@@ -57,6 +57,10 @@ sudo lxc exec "$CONTAINER" -- sed -i '/^#\?PermitRootLogin/d' /etc/ssh/sshd_conf
 sudo lxc exec "$CONTAINER" -- sed -i '/^#\?PasswordAuthentication/d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
 sudo lxc exec "$CONTAINER" -- bash -c 'echo "PermitRootLogin yes" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
 sudo lxc exec "$CONTAINER" -- bash -c 'echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
+# Add MaxStartups 1 to the sshd_config so only one unauthenticated connection is allowed at a time
+sudo lxc exec "$CONTAINER" -- sed -i '/^#\?MaxStartups/d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
+sudo lxc exec "$CONTAINER" -- bash -c 'echo "MaxStartups 1" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
+
 sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 
 # TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT

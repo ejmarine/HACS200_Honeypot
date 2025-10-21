@@ -71,8 +71,7 @@ while true; do
 
   echo "[*] MITM server started"
 
-  # Watch MITM log from the end only
-
+  # Initialize variables
   COMMANDS="["
   NUM_COMMANDS=0
   ATTACKER_IP=""
@@ -81,13 +80,35 @@ while true; do
   DURATION=""
   LOGIN=""
   
-  # Initialize timeout tracking
-  LOOP_START_TIME=$(date +%s)
-  LAST_ACTIVITY_TIME=$(date +%s)
-  
   # Start tail in background and capture PID for cleanup
   tail -F "$OUTFILE" 2>/dev/null &
   TAIL_PID=$!
+  
+  echo "[*] Waiting for attacker to connect..."
+  
+  # First loop: Wait for attacker to connect and authenticate
+  unset line;
+  while true; do
+    # Read with 1-second timeout
+    if read -r -t 1 line <&3; then
+      if echo "$line" | grep -q "Attacker connected:"; then
+          ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
+          echo "[*] Attacker IP: $ATTACKER_IP"
+
+      elif echo "$line" | grep -q "\[LXC-Auth\] Attacker authenticated and is inside container"; then
+          CONNECT_TIME=$(date)
+          DURATION=$(date +%s)
+          echo "[*] Attacker has authenticated and is inside the container"
+          echo "[*] Starting monitoring with 10-minute timer..."
+          break
+      fi
+    fi
+  done 3< <(tail -F "$OUTFILE" 2>/dev/null)
+  
+  # Second loop: Monitor attacker activity with timers
+  # Initialize timeout tracking after connection
+  LOOP_START_TIME=$(date +%s)
+  LAST_ACTIVITY_TIME=$(date +%s)
   
   unset line;
   while true; do
@@ -96,34 +117,18 @@ while true; do
       # Update last activity time when we get a line
       LAST_ACTIVITY_TIME=$(date +%s)
       
-      if echo "$line" | grep -q "Attacker connected:"; then
-      
-          ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
-          echo "[*] Attacker IP: $ATTACKER_IP"
-
-      elif echo "$line" | grep -q "\[LXC-Auth\] Attacker authenticated and is inside container"; then
-
-          CONNECT_TIME=$(date)
-          DURATION=$(date +%s)
-          echo "[*] Attacker has authenticated and is inside the container"
-
-          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
-
-      elif echo "$line" | grep -q "line from reader:"; then
-
+      if echo "$line" | grep -q "line from reader:"; then
           COMMAND=$(echo "$line" | cut -d':' -f4)
           echo "[*] Command: $COMMAND"
           COMMANDS+="$COMMAND,"
           NUM_COMMANDS=$((NUM_COMMANDS+1))
 
       elif echo "$line" | grep -q "Adding the following credentials:"; then
-
           LOGIN=$(echo "$line" | cut -d':' -f4,5 | tr -d '"')
           echo "[*] Login: $LOGIN"
-
+          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
 
       elif echo "$line" | grep -q "Attacker ended the shell"; then
-
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
           COMMANDS+="]"

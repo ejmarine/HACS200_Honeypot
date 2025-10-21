@@ -104,12 +104,12 @@ while true; do
 
           UNAME=$(echo "$LOGIN" | cut -d':' -f1)
           
-          honey_files="/home/aces/HACS200_Honeypot/honeypot_files/$RANDOM_LANGUAGE/*.txt"
+          honey_files="/home/aces/HACS200_Honeypot/honeypot_files/$RANDOM_LANGUAGE/*"
 
           echo "[*] Copying honeypot files to $CONTAINER"
           if [ -d "$honey_files" ]; then
             sudo lxc exec "$CONTAINER" -- mkdir -p /home/$UNAME/
-            sudo lxc file push -r "$honey_files" "$CONTAINER/home/$UNAME/" 2>/dev/null
+            sudo lxc file push -r $honey_files "$CONTAINER/home/$UNAME/" 2>/dev/null
           else
             echo "Error: $honey_files does not exist"
             exit 1

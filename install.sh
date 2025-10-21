@@ -69,6 +69,8 @@ WorkingDirectory=/home/aces/HACS200_Honeypot/recycling
 ExecStart=/home/aces/HACS200_Honeypot/recycling/main.sh /home/aces/HACS200_Honeypot/recycling/config/$honeypot_name.conf
 ExecStopPost=/home/aces/HACS200_Honeypot/recycling/helpers/slack.sh
 Restart=on-failure
+User=root
+Group=root
 
 [Install]
 WantedBy=multi-user.target

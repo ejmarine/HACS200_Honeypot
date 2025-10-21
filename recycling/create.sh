@@ -61,6 +61,10 @@ sudo lxc exec "$CONTAINER" -- bash -c 'echo "PasswordAuthentication yes" >> /etc
 sudo lxc exec "$CONTAINER" -- sed -i '/^#\?MaxSessions/d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
 sudo lxc exec "$CONTAINER" -- bash -c 'echo "MaxSessions 1" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
 
+# Set maximum number of logins for all users to 1
+sudo lxc exec "$CONTAINER" -- bash -c "echo '* hard maxlogins 1' >> /etc/security/limits.conf"
+
+
 sudo lxc exec "$CONTAINER" -- systemctl restart ssh
 
 # TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT

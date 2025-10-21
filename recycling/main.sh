@@ -129,12 +129,14 @@ while true; do
           NUM_COMMANDS=$((NUM_COMMANDS+1))
 
       elif echo "$line" | grep -q "Attacker ended the shell"; then
+      
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
           COMMANDS+="]"
 
+          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
           /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
-          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker ran: $COMMANDS" &
+          
 
           echo "[*] Number of commands: $NUM_COMMANDS"
           echo "[*] Commands: ${COMMANDS}"
@@ -158,14 +160,49 @@ while true; do
     # Check inactivity timeout (3 minutes = 180 seconds)
     if [ $TIME_SINCE_ACTIVITY -ge 180 ]; then
       echo "[*] Inactivity timeout reached (3 minutes) - breaking loop"
-      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Inactivity timeout reached (3 minutes) - breaking loop" &
+      
+      DISCONNECT_TIME=$(date)
+      DURATION=$(( $(date +%s) - DURATION ))
+      COMMANDS+="]"
+
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected due to inactivity (3min)" &
+
+
+      echo "[*] Number of commands: $NUM_COMMANDS"
+      echo "[*] Commands: ${COMMANDS}"
+      echo "[*] Attacker IP: $ATTACKER_IP"
+      echo "[*] Connect time: $CONNECT_TIME"
+      echo "[*] Disconnect time: $DISCONNECT_TIME"
+      echo "[*] Duration: $DURATION"
+      echo "[*] Login: $LOGIN"
+      echo "#########################################" >> "$OUTFILE"
+      
+      /home/aces/HACS200_Honeypot/recycling/helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN"
       break
     fi
     
     # Check total timeout (10 minutes = 600 seconds)
     if [ $TOTAL_TIME -ge 600 ]; then
       echo "[*] Total timeout reached (10 minutes) - breaking loop"
-      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Total timeout reached (10 minutes) - breaking loop" &
+      DISCONNECT_TIME=$(date)
+      DURATION=$(( $(date +%s) - DURATION ))
+      COMMANDS+="]"
+
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected due to timeout (10min)" &
+      
+
+      echo "[*] Number of commands: $NUM_COMMANDS"
+      echo "[*] Commands: ${COMMANDS}"
+      echo "[*] Attacker IP: $ATTACKER_IP"
+      echo "[*] Connect time: $CONNECT_TIME"
+      echo "[*] Disconnect time: $DISCONNECT_TIME"
+      echo "[*] Duration: $DURATION"
+      echo "[*] Login: $LOGIN"
+      echo "#########################################" >> "$OUTFILE"
+      
+      /home/aces/HACS200_Honeypot/recycling/helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "[${COMMANDS}]" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN"
       break
     fi
   done 3< <(tail -F "$OUTFILE" 2>/dev/null)

@@ -9,7 +9,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # Check if update flag is set to "1"
-if [ "$UPDATE_NPM_FLAG" = "1" ]; then
+if [ "$UPDATE_NPM_FLAG" = "0" ]; then
   echo "Updating npm and installing packages..."
   npm update -g npm
   npm install

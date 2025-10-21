@@ -1,0 +1,4 @@
+2025-10-20 20:21:36.002 - [Info] MITM Version: 1.4
+2025-10-20 20:21:36.004 - [Info] Auto Access Enabled: true
+2025-10-20 20:21:36.004 - [Debug] [Init] Auto Access Barrier: true
+2025-10-20 20:21:36.015 - [Info] SSH man-in-the-middle server for 172.20.0.4 listening on 0.0.0.0:6011

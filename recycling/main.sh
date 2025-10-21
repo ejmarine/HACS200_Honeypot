@@ -95,11 +95,16 @@ while true; do
           ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
           echo "[*] Attacker IP: $ATTACKER_IP"
 
+      elif echo "$line" | grep -q "Adding the following credentials:"; then
+          LOGIN=$(echo "$line" | cut -d':' -f4,5 | tr -d '"')
+          echo "[*] Login: $LOGIN"
+
       elif echo "$line" | grep -q "\[LXC-Auth\] Attacker authenticated and is inside container"; then
           CONNECT_TIME=$(date)
           DURATION=$(date +%s)
           echo "[*] Attacker has authenticated and is inside the container"
           echo "[*] Starting monitoring with 10-minute timer..."
+          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
           break
       fi
     fi
@@ -123,18 +128,13 @@ while true; do
           COMMANDS+="$COMMAND,"
           NUM_COMMANDS=$((NUM_COMMANDS+1))
 
-      elif echo "$line" | grep -q "Adding the following credentials:"; then
-          LOGIN=$(echo "$line" | cut -d':' -f4,5 | tr -d '"')
-          echo "[*] Login: $LOGIN"
-          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
-
       elif echo "$line" | grep -q "Attacker ended the shell"; then
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
           COMMANDS+="]"
 
-          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
-          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER - Attacker ran: $COMMANDS" &
+          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
+          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker ran: $COMMANDS" &
 
           echo "[*] Number of commands: $NUM_COMMANDS"
           echo "[*] Commands: ${COMMANDS}"
@@ -171,7 +171,7 @@ while true; do
   # Clean up background tail process
   kill $TAIL_PID 2>/dev/null
 
-  home/aces/HACS200_Honeypot/recycling/helpers/recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
+  /home/aces/HACS200_Honeypot/recycling/helpers/recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 
   id=$((id+1))
 done

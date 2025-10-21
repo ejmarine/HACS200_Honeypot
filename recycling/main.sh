@@ -156,6 +156,7 @@ while true; do
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
           COMMANDS+="]"
+          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
           break
       fi
     fi
@@ -171,6 +172,7 @@ while true; do
       DISCONNECT_TIME=$(date)
       DURATION=$(( $(date +%s) - DURATION ))
       COMMANDS+="]"
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected for inactivity (3min)" &
       break
     fi
     
@@ -180,6 +182,7 @@ while true; do
       DISCONNECT_TIME=$(date)
       DURATION=$(( $(date +%s) - DURATION ))
       COMMANDS+="]"
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected for total timeout (10min)" &
       break
     fi
   done 3< <(tail -F "$OUTFILE" 2>/dev/null)
@@ -202,7 +205,7 @@ while true; do
 
   # Send Slack notifications
   /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
-  /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
+  
   
   if [ "$IS_BOT" = "true" ]; then
       /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - ⚠️ BOT DETECTED: Avg time between commands: ${AVG_TIME}s" &

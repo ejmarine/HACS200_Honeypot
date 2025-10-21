@@ -142,8 +142,11 @@ while true; do
     if read -r -t 1 line <&3; then
       # Update last activity time when we get a line
       LAST_ACTIVITY_TIME=$(date +%s)
+
+      if echo "$line" | grep -q "Attacker Keystroke: [TAB]"; then
+          COMMANDS+="Autocompleted:"
       
-      if echo "$line" | grep -q "line from reader:"; then
+      elif echo "$line" | grep -q "line from reader:"; then
           COMMAND=$(echo "$line" | cut -d':' -f4)
           echo "[*] Command: $COMMAND"
           COMMANDS+="$COMMAND,"

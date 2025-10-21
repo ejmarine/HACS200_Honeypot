@@ -26,7 +26,7 @@ create_services_for_confs() {
   for js in $js_files; do
     cp "$js" /root/honeypots/MITM/config/
   done
-  
+
   local conf_files
     conf_files=$(find /home/aces/HACS200_Honeypot -type f -name "*.conf")
   for conf in $conf_files; do
@@ -44,7 +44,7 @@ create_services_for_confs() {
       systemctl disable "$service_name"
       rm -f "$service_path"
       echo "Service $service_name removed."
-      continue
+
     fi
 
     # Example: edit ExecStart as needed for your application

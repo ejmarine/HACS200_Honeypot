@@ -171,7 +171,7 @@ while true; do
   # Clean up background tail process
   kill $TAIL_PID 2>/dev/null
 
-  /home/aces/HACS200_Honeypot/recycling/helpers/recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
+  /home/aces/HACS200_Honeypot/recycling/recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 
   id=$((id+1))
 done

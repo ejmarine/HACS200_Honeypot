@@ -2,6 +2,13 @@
 
 /root/honeypots/network/startup
 
+js_files=$(find /home/aces/HACS200_Honeypot/recycling/config -type f -name "*.js")
+for js in $js_files; do
+  cp "$js" /root/honeypots/MITM/config/
+  chmod 755 "$js"
+done
+
+
 if [ "$#" -ne 1 ]; then
   echo "Usage: $0 <config_file>"
   exit 1
@@ -126,6 +133,7 @@ while true; do
           echo "[*] Attacker has authenticated and is inside the container"
           echo "[*] Starting monitoring with 10-minute timer..."
           /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
+          sudo lxc exec "$CONTAINER" -- bash -c "echo '$UNAME:@C3s_m1TM_12akqiAKMDM#!' | chpasswd"
           break
       fi
     fi

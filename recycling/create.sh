@@ -155,7 +155,7 @@ esac
 
 echo "DEBUG: Setting hostname to $HOSTNAME in $CONTAINER"
 sudo lxc exec "$CONTAINER" -- hostnamectl set-hostname "$HOSTNAME"
-sudo lxc exec "$CONTAINER" -- bash -c "echo '$HOSTNAME' > /etc/hostname"
+sudo lxc exec "$CONTAINER" -- bash -c "printf '%s\n' \"$HOSTNAME\" > /etc/hostname"
 
 echo "DEBUG: Suppressing Ubuntu MOTD in $CONTAINER"
 # Remove default Ubuntu MOTD files

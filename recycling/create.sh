@@ -131,22 +131,22 @@ case "$LANGUAGE" in
     HOSTNAME="web-server-01"
     ;;
   "Russian")
-    HOSTNAME="веб-сервер-01"
+    HOSTNAME="web-server-01"
     ;;
   "Chinese")
-    HOSTNAME="网络服务器-01"
+    HOSTNAME="web-server-01"
     ;;
   "Hebrew")
-    HOSTNAME="שרת-אינטרנט-01"
+    HOSTNAME="web-server-01"
     ;;
   "Ukrainian")
-    HOSTNAME="веб-сервер-01"
+    HOSTNAME="web-server-01"
     ;;
   "French")
-    HOSTNAME="serveur-web-01"
+    HOSTNAME="web-server-01"
     ;;
   "Spanish")
-    HOSTNAME="servidor-web-01"
+    HOSTNAME="web-server-01"
     ;;
   *)
     HOSTNAME="web-server-01"

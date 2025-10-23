@@ -60,12 +60,17 @@ sudo lxc exec "$CONTAINER" -- bash -c 'echo "PasswordAuthentication yes" >> /etc
 # Add MaxStartups 1 to the sshd_config so only one unauthenticated connection is allowed at a time
 sudo lxc exec "$CONTAINER" -- sed -i '/^#\?MaxSessions/d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
 sudo lxc exec "$CONTAINER" -- bash -c 'echo "MaxSessions 1" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
+# Remove the Banner setting from the container's sshd_config if present
+sudo lxc exec "$CONTAINER" -- sed -i '/^Banner /d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
+
 
 # Set maximum number of logins for all users to 1
 sudo lxc exec "$CONTAINER" -- bash -c "echo '* hard maxlogins 1' >> /etc/security/limits.conf"
 
 
 sudo lxc exec "$CONTAINER" -- systemctl restart ssh
+
+echo "DEBUG: Copying in banner of language $LANGUAGE"
 
 # TODO FOR SAMUEL: CHANGE THE SSH BANNER TO THE LANGUAGE OF THE HONEYPOT
 banner="/home/aces/HACS200_Honeypot/honeypot_files/banners/$LANGUAGE.txt"
@@ -111,7 +116,7 @@ case "$LANGUAGE" in
     ;;
 esac
   
-echo "[*] Setting locale in $CONTAINER"
+echo "DEBUG: Setting locale of $LANGUAGE in $CONTAINER"
 # Generate and set the locale in the container
 sudo lxc exec "$CONTAINER" -- locale-gen "$LOCALE"
 sudo lxc exec "$CONTAINER" -- update-locale LANG="$LOCALE"

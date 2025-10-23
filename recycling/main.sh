@@ -115,7 +115,7 @@ while true; do
           
           honey_files="/home/aces/HACS200_Honeypot/honeypot_files/$RANDOM_LANGUAGE/"
 
-          echo "[*] Copying honeypot files to $CONTAINER"
+          echo "DEBUG: Copying honeypot files of $RANDOM_LANGUAGE to $CONTAINER"
           if [ -d "$honey_files" ]; then
             sudo lxc exec "$CONTAINER" -- mkdir -p /home/$UNAME/
             sudo lxc file push -r "$honey_files"* "$CONTAINER/home/$UNAME/" 2>/dev/null

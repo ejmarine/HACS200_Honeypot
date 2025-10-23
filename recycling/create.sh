@@ -125,6 +125,46 @@ sudo lxc exec "$CONTAINER" -- bash -lc "echo 'LANG=$LOCALE' > /etc/default/local
 sudo lxc exec "$CONTAINER" -- bash -lc "echo 'TZ=$TZ' > /etc/timezone"
 sudo lxc exec "$CONTAINER" -- bash -lc "ln -sf /usr/share/zoneinfo/$TZ /etc/localtime"
 
+# Map language to appropriate hostname
+case "$LANGUAGE" in
+  "English")
+    HOSTNAME="web-server-01"
+    ;;
+  "Russian")
+    HOSTNAME="веб-сервер-01"
+    ;;
+  "Chinese")
+    HOSTNAME="网络服务器-01"
+    ;;
+  "Hebrew")
+    HOSTNAME="שרת-אינטרנט-01"
+    ;;
+  "Ukrainian")
+    HOSTNAME="веб-сервер-01"
+    ;;
+  "French")
+    HOSTNAME="serveur-web-01"
+    ;;
+  "Spanish")
+    HOSTNAME="servidor-web-01"
+    ;;
+  *)
+    HOSTNAME="web-server-01"
+    ;;
+esac
+
+echo "DEBUG: Setting hostname to $HOSTNAME in $CONTAINER"
+sudo lxc exec "$CONTAINER" -- hostnamectl set-hostname "$HOSTNAME"
+sudo lxc exec "$CONTAINER" -- bash -c "echo '$HOSTNAME' > /etc/hostname"
+
+echo "DEBUG: Suppressing Ubuntu MOTD in $CONTAINER"
+# Remove default Ubuntu MOTD files
+sudo lxc exec "$CONTAINER" -- rm -f /etc/legal
+sudo lxc exec "$CONTAINER" -- rm -f /etc/update-motd.d/10-help-text
+sudo lxc exec "$CONTAINER" -- rm -f /etc/update-motd.d/50-motd-news
+# Disable all MOTD scripts
+sudo lxc exec "$CONTAINER" -- chmod -x /etc/update-motd.d/* 2>/dev/null || true
+
 # Calculate and display creation time
 CREATE_END_TIME=$(date +%s)
 CREATE_DURATION=$((CREATE_END_TIME - CREATE_START_TIME))

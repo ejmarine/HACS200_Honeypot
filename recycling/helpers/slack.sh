@@ -1,23 +1,34 @@
 #!/bin/bash
 
 if [ "$#" -ne 2 ]; then
-  echo "Usage: $0 <channel> <message>"
+  echo "Usage: $0 <container_name> <message>"
   exit 1
 fi
 
-channel=$1
+container_name=$1
 message=$2
 
 # Sanitize message to remove quotes
 message=$(echo "$message" | tr -d '"' | tr -d "'")
 
-# GITIGNORE THIS FILE!!!!! IMPORTANT!!!
-url=$(cat /root/url.env)
+# Determine which environment file to use based on container name
+if [ "$container_name" = "all" ] || [ -z "$container_name" ]; then
+  # Use default URL for 'all' or when no container specified
+  url=$(cat /root/url.env)
+else
+  # Use container-specific environment file if it exists
+  if [ -f "/root/${container_name}.env" ]; then
+    url=$(cat /root/${container_name}.env)
+  else
+    # Fallback to default URL if container-specific file doesn't exist
+    url=$(cat /root/url.env)
+  fi
+fi
 
 # Formats the message properly
 get_data_json() {
   cat <<EOF
-{ "channel": "$channel", "icon_emoji": ":bot:", "text": "$message" }
+{"icon_emoji": ":bot:", "text": "$message" }
 EOF
 }
 

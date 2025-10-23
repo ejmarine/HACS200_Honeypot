@@ -134,7 +134,7 @@ while true; do
           DURATION=$(date +%s)
           echo "[*] Attacker has authenticated and is inside the container"
           echo "[*] Starting monitoring with 10-minute timer..."
-          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$SLACK_CHANNEL" "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
+          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
           sudo lxc exec "$CONTAINER" -- bash -c "echo '$UNAME:@C3s_m1TM_12akqiAKMDM#!' | chpasswd"
           break
       fi
@@ -172,7 +172,7 @@ while true; do
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
           COMMANDS+="]"
-          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$SLACK_CHANNEL" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
+          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
           break
       fi
     fi
@@ -188,7 +188,7 @@ while true; do
       DISCONNECT_TIME=$(date)
       DURATION=$(( $(date +%s) - DURATION ))
       COMMANDS+="]"
-      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$SLACK_CHANNEL" "$CONTAINER - Attacker $ATTACKER_IP disconnected for inactivity (3min)" &
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for inactivity (3min)" &
       break
     fi
     
@@ -198,7 +198,7 @@ while true; do
       DISCONNECT_TIME=$(date)
       DURATION=$(( $(date +%s) - DURATION ))
       COMMANDS+="]"
-      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$SLACK_CHANNEL" "$CONTAINER - Attacker $ATTACKER_IP disconnected for total timeout (10min)" &
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for total timeout (10min)" &
       break
     fi
   done 3< <(tail -F "$OUTFILE" 2>/dev/null)
@@ -220,11 +220,11 @@ while true; do
   fi
 
   # Send Slack notifications
-  /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$SLACK_CHANNEL" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
+  /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
   
   
   if [ "$IS_BOT" = "true" ]; then
-      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$SLACK_CHANNEL" "$CONTAINER - ⚠️ BOT DETECTED: Avg time between commands: ${AVG_TIME}s" &
+      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - ⚠️ BOT DETECTED: Avg time between commands: ${AVG_TIME}s" &
   fi
 
   # Output session summary

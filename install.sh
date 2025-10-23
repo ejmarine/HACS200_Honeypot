@@ -67,9 +67,9 @@ Description=Honeypot $honeypot_name Service
 [Service]
 Type=simple
 WorkingDirectory=/home/aces/HACS200_Honeypot/recycling
-ExecStartPre=/home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$honeypot_name - Starting Service"
+ExecStartPre=/home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "all" "$honeypot_name - Starting Service"
 ExecStart=/home/aces/HACS200_Honeypot/recycling/main.sh /home/aces/HACS200_Honeypot/recycling/config/$honeypot_name.conf
-ExecStopPost=/home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "C09LR132PA7" "$honeypot_name - ERROR: Service Stopped"
+ExecStopPost=/home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "all" "$honeypot_name - ERROR: Service Stopped"
 Restart=on-failure
 User=root
 Group=root

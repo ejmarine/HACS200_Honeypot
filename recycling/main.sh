@@ -135,7 +135,8 @@ while true; do
           echo "[*] Attacker has authenticated and is inside the container"
           echo "[*] Starting monitoring with 10-minute timer..."
           /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
-          sudo lxc exec "$CONTAINER" -- bash -c "echo '$UNAME:@C3s_m1TM_12akqiAKMDM#!' | chpasswd"
+          # Allow only the attacker's IP to connect via SSH (port 22)
+          sudo lxc exec "$CONTAINER" -- iptables -I INPUT ! -s "$ATTACKER_IP" -p tcp --dport 22 -j DROP
           break
       fi
     fi

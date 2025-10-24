@@ -108,7 +108,11 @@ while true; do
       if echo "$line" | grep -q "Attacker connected:"; then
           ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
           echo "[*] Attacker IP: $ATTACKER_IP"
-
+          sudo lxc exec "$CONTAINER" -- iptables -I INPUT ! -s "$ATTACKER_IP" -p tcp --dport 22 -j DROP
+      
+      elif echo "$line" | grep -q "Attacker closed connection"; then
+        sudo lxc exec "$CONTAINER" -- iptables -D INPUT ! -s "$ATTACKER_IP" -p tcp --dport 22 -j DROP
+        
       elif echo "$line" | grep -q "Adding the following credentials:"; then
 
           LOGIN=$(echo "$line" | cut -d':' -f4,5 | tr -d '"' | sed 's/^ *//')
@@ -136,7 +140,6 @@ while true; do
           echo "[*] Starting monitoring with 10-minute timer..."
           /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
           # Allow only the attacker's IP to connect via SSH (port 22)
-          sudo lxc exec "$CONTAINER" -- iptables -I INPUT ! -s "$ATTACKER_IP" -p tcp --dport 22 -j DROP
           break
       fi
     fi
@@ -169,7 +172,7 @@ while true; do
           fi
           LAST_COMMAND_TIME=$(date +%s)
 
-      elif echo "$line" | grep -q "Attacker ended the shell"; then
+      elif echo "$line" | grep -q "Attacker closed connection"; then
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
           COMMANDS+="]"

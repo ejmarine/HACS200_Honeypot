@@ -57,15 +57,8 @@ sudo lxc exec "$CONTAINER" -- sed -i '/^#\?PermitRootLogin/d' /etc/ssh/sshd_conf
 sudo lxc exec "$CONTAINER" -- sed -i '/^#\?PasswordAuthentication/d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
 sudo lxc exec "$CONTAINER" -- bash -c 'echo "PermitRootLogin yes" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
 sudo lxc exec "$CONTAINER" -- bash -c 'echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
-# Add MaxStartups 1 to the sshd_config so only one unauthenticated connection is allowed at a time
-sudo lxc exec "$CONTAINER" -- sed -i '/^#\?MaxSessions/d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
-sudo lxc exec "$CONTAINER" -- bash -c 'echo "MaxSessions 1" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
 # Remove the Banner setting from the container's sshd_config if present
 sudo lxc exec "$CONTAINER" -- sed -i '/^Banner /d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
-
-
-# Set maximum number of logins for all users to 1
-sudo lxc exec "$CONTAINER" -- bash -c "echo '* hard maxlogins 1' >> /etc/security/limits.conf"
 
 
 sudo lxc exec "$CONTAINER" -- systemctl restart ssh

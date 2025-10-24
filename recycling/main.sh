@@ -145,7 +145,11 @@ while true; do
           echo "[*] Attacker has authenticated and is inside the container"
           echo "[*] Starting monitoring with 10-minute timer..."
           /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
-          # Allow only the attacker's IP to connect via SSH (port 22)
+          # Add logged in user ($UNAME) to the sudo group inside the container
+          echo "[*] Granting sudo privileges to user $UNAME in $CONTAINER"
+          sudo lxc exec "$CONTAINER" -- usermod -aG sudo "$UNAME"
+          sudo lxc exec "$CONTAINER" -- bash -c "echo '$UNAME ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/$UNAME"
+          sudo lxc exec "$CONTAINER" -- chmod 440 /etc/sudoers.d/$UNAME
           break
       fi
     fi

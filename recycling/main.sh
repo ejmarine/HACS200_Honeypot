@@ -114,10 +114,10 @@ while true; do
           sudo /sbin/iptables -A FORWARD -i lxcbr0 -d "$INTERNAL_IP" -p tcp --dport 22 -j DROP
       
       elif echo "$line" | grep -q "Attacker closed connection"; then
-        # Clear any existing rules for this attacker/container combo if disconnected
-      # Undo exactly the previous iptables command
-      sudo /sbin/iptables -D FORWARD -i lxcbr0 -s "$ATTACKER_IP" -d "$INTERNAL_IP" -p tcp --dport 22 -j ACCEPT
-      sudo /sbin/iptables -D FORWARD -i lxcbr0 -d "$INTERNAL_IP" -p tcp --dport 22 -j DROP
+            # Clear any existing rules for this attacker/container combo if disconnected
+          # Undo exactly the previous iptables command
+          sudo /sbin/iptables -D FORWARD -i lxcbr0 -s "$ATTACKER_IP" -d "$INTERNAL_IP" -p tcp --dport 22 -j ACCEPT
+          sudo /sbin/iptables -D FORWARD -i lxcbr0 -d "$INTERNAL_IP" -p tcp --dport 22 -j DROP
 
       elif echo "$line" | grep -q "Adding the following credentials:"; then
 

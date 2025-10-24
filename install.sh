@@ -42,6 +42,45 @@ create_services_for_confs() {
 
   local conf_files
     conf_files=$(find /home/aces/HACS200_Honeypot -type f -name "*.conf")
+  
+  # First pass: stop and disable all existing services
+  for conf in $conf_files; do
+    conf_filename=$(basename "$conf")
+    honeypot_name="${conf_filename%.conf}"
+    service_name="honeypot-${honeypot_name}.service"
+    service_path="/etc/systemd/system/${service_name}"
+
+    if [ -f "$service_path" ]; then
+      echo "Service $service_name already exists, stopping and disabling..."
+      systemctl stop "$service_name"
+      systemctl disable "$service_name"
+      rm -f "$service_path"
+      echo "Service $service_name removed."
+    fi
+  done
+  
+  # Stop all containers
+  echo "[*] Stopping all existing containers..."
+  for container in $(lxc list -c n --format csv | grep -v "NAME" | grep -v "^$"); do
+    if [ -n "$container" ]; then
+      echo "[*] Stopping container: $container"
+      lxc stop "$container" --force 2>/dev/null || true
+    fi
+  done
+
+  # Delete all containers
+  echo "[*] Deleting all existing containers..."
+  for container in $(lxc list -c n --format csv | grep -v "NAME" | grep -v "^$"); do
+    if [ -n "$container" ]; then
+      echo "[*] Deleting container: $container"
+      lxc delete "$container" --force 2>/dev/null || true
+    fi
+  done
+  
+  echo "[*] All services stopped and containers deleted."
+  echo "[*] Recreating services and containers..."
+  
+  # Second pass: recreate all services
   for conf in $conf_files; do
     # Extract honeypot name: assume filename is like "potNAME.conf"
     conf_filename=$(basename "$conf")
@@ -49,15 +88,6 @@ create_services_for_confs() {
 
     service_name="honeypot-${honeypot_name}.service"
     service_path="/etc/systemd/system/${service_name}"
-
-    if [ -f "$service_path" ]; then
-      # Remove (stop and disable) existing service before (re)creating
-      echo "Service $service_name already exists, removing..."
-      systemctl stop "$service_name"
-      systemctl disable "$service_name"
-      rm -f "$service_path"
-      echo "Service $service_name removed."
-    fi
 
     # Example: edit ExecStart as needed for your application
     cat <<EOF > "$service_path"

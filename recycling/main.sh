@@ -55,6 +55,7 @@ mkdir -p "$LOGS_FOLDER"
 
 #Start honeypot loop
 while true; do
+  /root/honeypots/network/startup
   unset RANDOM_INDEX
   unset RANDOM_LANGUAGE
   RANDOM_INDEX=$((RANDOM % ${#LANGUAGES[@]}))
@@ -108,11 +109,16 @@ while true; do
       if echo "$line" | grep -q "Attacker connected:"; then
           ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
           echo "[*] Attacker IP: $ATTACKER_IP"
-          sudo lxc exec "$CONTAINER" -- iptables -I INPUT ! -s "$ATTACKER_IP" -p tcp --dport 22 -j DROP
+          # Only allow SSH connections from the attacker's IP to the container's IP
+          sudo /sbin/iptables -A FORWARD -i lxcbr0 -s "$ATTACKER_IP" -d "$INTERNAL_IP" -p tcp --dport 22 -j ACCEPT
+          sudo /sbin/iptables -A FORWARD -i lxcbr0 -d "$INTERNAL_IP" -p tcp --dport 22 -j DROP
       
       elif echo "$line" | grep -q "Attacker closed connection"; then
-        sudo lxc exec "$CONTAINER" -- iptables -D INPUT ! -s "$ATTACKER_IP" -p tcp --dport 22 -j DROP
-        
+        # Clear any existing rules for this attacker/container combo if disconnected
+      # Undo exactly the previous iptables command
+      sudo /sbin/iptables -D FORWARD -i lxcbr0 -s "$ATTACKER_IP" -d "$INTERNAL_IP" -p tcp --dport 22 -j ACCEPT
+      sudo /sbin/iptables -D FORWARD -i lxcbr0 -d "$INTERNAL_IP" -p tcp --dport 22 -j DROP
+
       elif echo "$line" | grep -q "Adding the following credentials:"; then
 
           LOGIN=$(echo "$line" | cut -d':' -f4,5 | tr -d '"' | sed 's/^ *//')
@@ -222,7 +228,9 @@ while true; do
   else
       AVG_TIME="N/A"
   fi
-
+  
+  sudo /sbin/iptables -D FORWARD -i lxcbr0 -s "$ATTACKER_IP" -d "$INTERNAL_IP" -p tcp --dport 22 -j ACCEPT
+  sudo /sbin/iptables -D FORWARD -i lxcbr0 -d "$INTERNAL_IP" -p tcp --dport 22 -j DROP
   # Send Slack notifications
   /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
   

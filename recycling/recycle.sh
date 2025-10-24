@@ -5,9 +5,7 @@ if [ "$#" -ne 3 ]; then
   exit 1
 fi
 
-CONTAINER=$1
-EXTERNAL_IP=$2
-MITM_PORT=$3
+source "/home/aces/HACS200_Honeypot/recycling/config/$CONTAINER.conf"
 
 # Start timing the recycling process
 RECYCLE_START_TIME=$(date +%s)

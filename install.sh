@@ -3,6 +3,8 @@
 # Optional flag: "1" means update npm and install packages
 UPDATE_NPM_FLAG="$1"
 
+SLEEP_TIME=15
+
 if [ "$EUID" -ne 0 ]; then
   echo "Please run as root (use sudo)"
   exit 1
@@ -97,6 +99,7 @@ Description=Honeypot $honeypot_name Service
 [Service]
 Type=simple
 WorkingDirectory=/home/aces/HACS200_Honeypot/recycling
+ExecStartPre=/bin/sleep $SLEEP_TIME
 ExecStartPre=/home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "all" "$honeypot_name - Starting Service"
 ExecStart=/home/aces/HACS200_Honeypot/recycling/main.sh /home/aces/HACS200_Honeypot/recycling/config/$honeypot_name.conf
 ExecStopPost=/home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "all" "$honeypot_name - ERROR: Service Stopped"
@@ -114,6 +117,7 @@ EOF
     systemctl start "$service_name"
     echo "Started and enabled $service_name"
     sleep 15
+    SLEEP_TIME=$((SLEEP_TIME + 15))
   done
 }
 

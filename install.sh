@@ -113,6 +113,7 @@ EOF
     systemctl enable "$service_name"
     systemctl start "$service_name"
     echo "Started and enabled $service_name"
+    sleep 15
   done
 }
 

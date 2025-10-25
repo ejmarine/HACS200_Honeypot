@@ -110,14 +110,14 @@ while true; do
           ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
           echo "[*] Attacker IP: $ATTACKER_IP"
           # Only allow SSH connections from the attacker's IP to the container's IP
-          sudo /sbin/iptables -I FORWARD -d "$INTERNAL_IP" -p tcp --dport $MITM_PORT -j DROP
-          sudo /sbin/iptables -I FORWARD -s "$ATTACKER_IP" -d "$INTERNAL_IP" -p tcp --dport $MITM_PORT -j ACCEPT
+          sudo /sbin/iptables -I INPUT -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j DROP
+          sudo /sbin/iptables -I INPUT -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j ACCEPT
           
       elif echo "$line" | grep -q "Attacker closed connection"; then
             # Clear any existing rules for this attacker/container combo if disconnected
           # Undo exactly the previous iptables command
-          sudo /sbin/iptables -D FORWARD -s "$ATTACKER_IP" -d "$INTERNAL_IP" -p tcp --dport $MITM_PORT -j ACCEPT
-          sudo /sbin/iptables -D FORWARD -d "$INTERNAL_IP" -p tcp --dport $MITM_PORT -j DROP
+          sudo /sbin/iptables -D INPUT -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j ACCEPT
+          sudo /sbin/iptables -D INPUT -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j DROP
 
       elif echo "$line" | grep -q "Adding the following credentials:"; then
 
@@ -233,8 +233,8 @@ while true; do
       AVG_TIME="N/A"
   fi
   
-  sudo /sbin/iptables -D FORWARD -s "$ATTACKER_IP" -d "$INTERNAL_IP" -p tcp --dport $MITM_PORT -j ACCEPT
-  sudo /sbin/iptables -D FORWARD -d "$INTERNAL_IP" -p tcp --dport $MITM_PORT -j DROP
+  #sudo /sbin/iptables -D FORWARD -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport $MITM_PORT -j ACCEPT
+  #sudo /sbin/iptables -D FORWARD -d 172.20.0.1 -p tcp --dport $MITM_PORT -j DROP
   # Send Slack notifications
   /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP ran: $COMMANDS" &
   

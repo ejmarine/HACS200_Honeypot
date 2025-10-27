@@ -56,6 +56,8 @@ mkdir -p "$LOGS_FOLDER"
 #Start honeypot loop
 while true; do
   /root/honeypots/network/startup
+  sudo /sbin/iptables -D INPUT -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j ACCEPT
+  sudo /sbin/iptables -D INPUT -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j DROP
   unset RANDOM_INDEX
   unset RANDOM_LANGUAGE
   RANDOM_INDEX=$((RANDOM % ${#LANGUAGES[@]}))
@@ -127,12 +129,20 @@ while true; do
           # Only allow SSH connections from the attacker's IP to the container's IP
           sudo /sbin/iptables -I INPUT -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j DROP
           sudo /sbin/iptables -I INPUT -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j ACCEPT
+
+      elif echo "$line" | grep -q "Noninteractive mode attacker command:"; then
+          COMMAND=$(echo "$line" | cut -d':' -f4)
+          echo "[*] Command: $COMMAND"
+          COMMANDS+="$COMMAND,"
+          NUM_COMMANDS=$((NUM_COMMANDS+1))
+          DISCONNECT_TIME=$(date)
+          DURATION=$(( $(date +%s) - DURATION ))
+          COMMANDS+="]"
+          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for noninteractive mode command" &
+          break
           
+
       elif echo "$line" | grep -q -e "Attacker closed the connection" -e "Attacker closed connection"; then
-          # Clear any existing rules for this attacker/container combo if disconnected
-          # Undo exactly the previous iptables command
-          sudo /sbin/iptables -D INPUT -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j ACCEPT
-          sudo /sbin/iptables -D INPUT -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j DROP
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
           COMMANDS+="]"
@@ -229,7 +239,10 @@ while true; do
   else
       AVG_TIME="N/A"
   fi
-  
+
+  # Remove iptables rules
+  sudo /sbin/iptables -D INPUT -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j ACCEPT
+  sudo /sbin/iptables -D INPUT -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j DROP
   #sudo /sbin/iptables -D FORWARD -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport $MITM_PORT -j ACCEPT
   #sudo /sbin/iptables -D FORWARD -d 172.20.0.1 -p tcp --dport $MITM_PORT -j DROP
   # Send Slack notifications

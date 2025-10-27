@@ -128,7 +128,7 @@ while true; do
           sudo /sbin/iptables -I INPUT -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j DROP
           sudo /sbin/iptables -I INPUT -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j ACCEPT
           
-      elif echo "$line" | grep -q "Attacker closed connection"; then
+      elif echo "$line" | grep -q -e "Attacker closed the connection" -e "Attacker closed connection"; then
           # Clear any existing rules for this attacker/container combo if disconnected
           # Undo exactly the previous iptables command
           sudo /sbin/iptables -D INPUT -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j ACCEPT

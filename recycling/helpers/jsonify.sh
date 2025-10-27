@@ -4,9 +4,9 @@
 # Usage: ./jsonify.sh <json_file_path> <language> <num_commands> <commands_array> <attacker_ip> <connect_time> <disconnect_time> <duration> <honeypot_name> <public_ip>
 
 # Check if minimum required arguments are provided
-if [ $# -lt 13 ]; then
-    echo "Usage: $0 <json_file_path> <language> <num_commands> <commands_array> <attacker_ip> <connect_time> <disconnect_time> <duration> <honeypot_name> <public_ip> <login> <avg_time_between_commands> <is_bot>"
-    echo "Example: $0 data.json 'English' 3 '[\"ls\",\"pwd\",\"whoami\"]' '192.168.1.100' '2024-01-01T10:00:00Z' '2024-01-01T10:05:00Z' '5m' 'honeypot-01' '203.0.113.42' 'user' '2.5' 'false'"
+if [ $# -lt 14 ]; then
+    echo "Usage: $0 <json_file_path> <language> <num_commands> <commands_array> <attacker_ip> <connect_time> <disconnect_time> <duration> <honeypot_name> <public_ip> <login> <avg_time_between_commands> <is_bot> <is_noninteractive>"
+    echo "Example: $0 data.json 'English' 3 '[\"ls\",\"pwd\",\"whoami\"]' '192.168.1.100' '2024-01-01T10:00:00Z' '2024-01-01T10:05:00Z' '5m' 'honeypot-01' '203.0.113.42' 'user' '2.5' 'false' 'false'"
     exit 1
 fi
 
@@ -23,6 +23,7 @@ PUBLIC_IP="${10}"
 LOGIN="${11}"
 AVG_TIME="${12}"
 IS_BOT="${13}"
+IS_NONINTERACTIVE="${14}"
 # Create JSON file if it doesn't exist
 if [ ! -f "$JSON_FILE" ]; then
     touch "$JSON_FILE"
@@ -43,6 +44,7 @@ JSON_ENTRY=$(cat <<EOF
   "login": "$LOGIN",
   "avg_time_between_commands": "$AVG_TIME",
   "is_bot": $IS_BOT,
+  "is_noninteractive": $IS_NONINTERACTIVE,
   "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 }
 EOF

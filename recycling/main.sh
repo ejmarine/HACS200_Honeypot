@@ -96,6 +96,7 @@ while true; do
   FIRST_COMMAND_TIME=""
   LAST_COMMAND_TIME=""
   IS_BOT="false"
+  IS_NONINTERACTIVE="false"
   
   # Start tail in background and capture PID for cleanup
   tail -F "$OUTFILE" 2>/dev/null &
@@ -131,6 +132,7 @@ while true; do
           sudo /sbin/iptables -I INPUT -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j ACCEPT
 
       elif echo "$line" | grep -q "Noninteractive mode attacker command:"; then
+          IS_NONINTERACTIVE="true"
           COMMAND=$(echo "$line" | cut -d':' -f4)
           echo "[*] Command: $COMMAND"
           COMMANDS+="$COMMAND,"
@@ -263,10 +265,11 @@ while true; do
   echo "[*] Login: $LOGIN"
   echo "[*] Average time between commands: $AVG_TIME seconds"
   echo "[*] Bot detected: $IS_BOT"
+  echo "[*] Noninteractive mode: $IS_NONINTERACTIVE"
   echo "#########################################" >> "$OUTFILE"
   
   # Log to JSON
-  /home/aces/HACS200_Honeypot/recycling/helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "$COMMANDS" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN" "$AVG_TIME" "$IS_BOT"
+  /home/aces/HACS200_Honeypot/recycling/helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "$COMMANDS" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN" "$AVG_TIME" "$IS_BOT" "$IS_NONINTERACTIVE"
 
   /home/aces/HACS200_Honeypot/recycling/recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 

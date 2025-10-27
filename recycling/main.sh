@@ -101,23 +101,43 @@ while true; do
   
   echo "[*] Waiting for attacker to connect..."
   
-  # First loop: Wait for attacker to connect and authenticate
+  # Merged loop: Monitor all connections from start to finish
   unset line;
+  CONNECTION_STARTED=false
+  LOOP_START_TIME=0
+  LAST_ACTIVITY_TIME=0
+  
   while true; do
     # Read with 1-second timeout
     if read -r -t 1 line <&3; then
+      # Update last activity time when we get a line (only if connection started)
+      if [ "$CONNECTION_STARTED" = true ]; then
+        LAST_ACTIVITY_TIME=$(date +%s)
+      fi
+
       if echo "$line" | grep -q "Attacker connected:"; then
           ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
           echo "[*] Attacker IP: $ATTACKER_IP"
+          # Initialize connection tracking
+          CONNECTION_STARTED=true
+          CONNECT_TIME=$(date)
+          DURATION=$(date +%s)
+          LOOP_START_TIME=$(date +%s)
+          LAST_ACTIVITY_TIME=$(date +%s)
           # Only allow SSH connections from the attacker's IP to the container's IP
           sudo /sbin/iptables -I INPUT -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j DROP
           sudo /sbin/iptables -I INPUT -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j ACCEPT
           
       elif echo "$line" | grep -q "Attacker closed connection"; then
-            # Clear any existing rules for this attacker/container combo if disconnected
+          # Clear any existing rules for this attacker/container combo if disconnected
           # Undo exactly the previous iptables command
           sudo /sbin/iptables -D INPUT -s "$ATTACKER_IP" -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j ACCEPT
           sudo /sbin/iptables -D INPUT -d 172.20.0.1 -p tcp --dport "$MITM_PORT" -j DROP
+          DISCONNECT_TIME=$(date)
+          DURATION=$(( $(date +%s) - DURATION ))
+          COMMANDS+="]"
+          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
+          break
 
       elif echo "$line" | grep -q "Adding the following credentials:"; then
 
@@ -140,8 +160,6 @@ while true; do
           echo "[*] Login: $LOGIN"
 
       elif echo "$line" | grep -q "\[LXC-Auth\] Attacker authenticated and is inside container"; then
-          CONNECT_TIME=$(date)
-          DURATION=$(date +%s)
           echo "[*] Attacker has authenticated and is inside the container"
           echo "[*] Starting monitoring with 10-minute timer..."
           /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP connected with $LOGIN" &
@@ -150,24 +168,8 @@ while true; do
           sudo lxc exec "$CONTAINER" -- usermod -aG sudo "$UNAME"
           sudo lxc exec "$CONTAINER" -- bash -c "echo '$UNAME ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/$UNAME"
           sudo lxc exec "$CONTAINER" -- chmod 440 /etc/sudoers.d/$UNAME
-          break
-      fi
-    fi
-  done 3< <(tail -F "$OUTFILE" 2>/dev/null)
-  
-  # Second loop: Monitor attacker activity with timers
-  # Initialize timeout tracking after connection
-  LOOP_START_TIME=$(date +%s)
-  LAST_ACTIVITY_TIME=$(date +%s)
-  
-  unset line;
-  while true; do
-    # Read with 1-second timeout
-    if read -r -t 1 line <&3; then
-      # Update last activity time when we get a line
-      LAST_ACTIVITY_TIME=$(date +%s)
-
-      if echo "$line" | grep -q "Attacker Keystroke: [TAB]"; then
+          
+      elif echo "$line" | grep -q "Attacker Keystroke: [TAB]"; then
           COMMANDS+="Autocompleted:"
       
       elif echo "$line" | grep -q "line from reader:"; then
@@ -181,39 +183,34 @@ while true; do
               FIRST_COMMAND_TIME=$(date +%s)
           fi
           LAST_COMMAND_TIME=$(date +%s)
-
-      elif echo "$line" | grep -q "Attacker closed connection"; then
-          DISCONNECT_TIME=$(date)
-          DURATION=$(( $(date +%s) - DURATION ))
-          COMMANDS+="]"
-          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
-          break
       fi
     fi
     
-    # Check timeout conditions on every iteration
-    CURRENT_TIME=$(date +%s)
-    TIME_SINCE_ACTIVITY=$((CURRENT_TIME - LAST_ACTIVITY_TIME))
-    TOTAL_TIME=$((CURRENT_TIME - LOOP_START_TIME))
-    
-    # Check inactivity timeout (3 minutes = 180 seconds)
-    if [ $TIME_SINCE_ACTIVITY -ge 180 ]; then
-      echo "[*] Inactivity timeout reached (3 minutes) - breaking loop"
-      DISCONNECT_TIME=$(date)
-      DURATION=$(( $(date +%s) - DURATION ))
-      COMMANDS+="]"
-      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for inactivity (3min)" &
-      break
-    fi
-    
-    # Check total timeout (10 minutes = 600 seconds)
-    if [ $TOTAL_TIME -ge 600 ]; then
-      echo "[*] Total timeout reached (10 minutes) - breaking loop"
-      DISCONNECT_TIME=$(date)
-      DURATION=$(( $(date +%s) - DURATION ))
-      COMMANDS+="]"
-      /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for total timeout (10min)" &
-      break
+    # Check timeout conditions on every iteration (only if connection started)
+    if [ "$CONNECTION_STARTED" = true ]; then
+      CURRENT_TIME=$(date +%s)
+      TIME_SINCE_ACTIVITY=$((CURRENT_TIME - LAST_ACTIVITY_TIME))
+      TOTAL_TIME=$((CURRENT_TIME - LOOP_START_TIME))
+      
+      # Check inactivity timeout (2.5 minutes = 150 seconds)
+      if [ $TIME_SINCE_ACTIVITY -ge 150 ]; then
+        echo "[*] Inactivity timeout reached (2.5 minutes) - breaking loop"
+        DISCONNECT_TIME=$(date)
+        DURATION=$(( $(date +%s) - DURATION ))
+        COMMANDS+="]"
+        /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for inactivity (2.5min)" &
+        break
+      fi
+      
+      # Check total timeout (10 minutes = 600 seconds)
+      if [ $TOTAL_TIME -ge 600 ]; then
+        echo "[*] Total timeout reached (10 minutes) - breaking loop"
+        DISCONNECT_TIME=$(date)
+        DURATION=$(( $(date +%s) - DURATION ))
+        COMMANDS+="]"
+        /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for total timeout (10min)" &
+        break
+      fi
     fi
   done 3< <(tail -F "$OUTFILE" 2>/dev/null)
   

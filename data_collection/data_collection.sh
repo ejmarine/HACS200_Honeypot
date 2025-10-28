@@ -54,56 +54,48 @@ while IFS= read -r log_file; do
     filename=$(basename "$log_file")
     echo "[*] [$PROCESSED_FILES/$TOTAL_FILES] Processing: $filename"
     
-    # Read file line by line
-    line_num=0
-    while IFS= read -r line; do
-        line_num=$((line_num + 1))
+    # Use jq to parse multi-line JSON objects from the file
+    # The -s (slurp) flag reads entire file, then we iterate over objects
+    entries_converted=0
+    
+    # Parse JSON objects (handles both single-line and multi-line pretty-printed JSON)
+    csv_lines=$(jq -r '
+        # Handle both array input and single object
+        if type == "array" then . else [.] end |
+        .[] |
+        # Escape quotes in commands array and convert to string
+        .commands_str = (.commands | tostring | gsub("\""; "\"\"")) |
         
-        # Skip empty lines
-        [ -z "$line" ] && continue
-        
-        # Try to parse JSON and convert to CSV
-        if echo "$line" | jq -e . >/dev/null 2>&1; then
-            # Extract fields using jq
-            csv_line=$(echo "$line" | jq -r '
-                # Escape quotes in commands array and convert to string
-                .commands_str = (.commands | tostring | gsub("\""; "\"\"")) |
-                
-                # Build CSV line with proper escaping
-                [
-                    .timestamp // "",
-                    .honeypot_name // "",
-                    .attacker_ip // "",
-                    .public_ip // "",
-                    .language // "",
-                    .login // "",
-                    .connect_time // "",
-                    .disconnect_time // "",
-                    (.duration | tostring) // "",
-                    (.num_commands | tostring) // "",
-                    .commands_str // "",
-                    .avg_time_between_commands // "",
-                    (.is_bot | tostring) // "",
-                    (.is_noninteractive | tostring) // "",
-                    .disconnect_reason // ""
-                ] | @csv
-            ' 2>/dev/null)
-            
-            if [ $? -eq 0 ] && [ -n "$csv_line" ]; then
-                echo "$csv_line" >> "$OUTPUT_FILE"
-                TOTAL_ENTRIES=$((TOTAL_ENTRIES + 1))
-            else
-                echo "[WARNING] Failed to convert JSON at $filename:$line_num"
-                FAILED_ENTRIES=$((FAILED_ENTRIES + 1))
-            fi
-        else
-            # Only warn if line has content (not just whitespace)
-            if echo "$line" | grep -q '[^[:space:]]'; then
-                echo "[WARNING] Invalid JSON at $filename:$line_num"
-                FAILED_ENTRIES=$((FAILED_ENTRIES + 1))
-            fi
-        fi
-    done < "$log_file"
+        # Build CSV line with proper escaping, using empty string for missing fields
+        [
+            .timestamp // "",
+            .honeypot_name // "",
+            .attacker_ip // "",
+            .public_ip // "",
+            .language // "",
+            .login // "",
+            .connect_time // "",
+            .disconnect_time // "",
+            (.duration | tostring) // "",
+            (.num_commands | tostring) // "",
+            .commands_str // "[]",
+            .avg_time_between_commands // "",
+            (.is_bot | tostring) // "",
+            (.is_noninteractive | tostring) // "",
+            .disconnect_reason // ""
+        ] | @csv
+    ' "$log_file" 2>/dev/null)
+    
+    if [ $? -eq 0 ] && [ -n "$csv_lines" ]; then
+        # Count entries and append to output
+        entries_converted=$(echo "$csv_lines" | wc -l)
+        echo "$csv_lines" >> "$OUTPUT_FILE"
+        TOTAL_ENTRIES=$((TOTAL_ENTRIES + entries_converted))
+        echo "    → Converted $entries_converted entries"
+    else
+        echo "[WARNING] Failed to parse JSON from $filename"
+        FAILED_ENTRIES=$((FAILED_ENTRIES + 1))
+    fi
     
 done <<< "$LOG_FILES"
 

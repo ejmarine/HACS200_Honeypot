@@ -69,29 +69,39 @@ while IFS= read -r log_file; do
 import sys
 import re
 
-content = open("'"$log_file"'", "r").read()
+with open("'"$log_file"'", "r") as f:
+    content = f.read()
 
 # Fix 1: Remove trailing commas before closing brackets/braces
 content = re.sub(r",(\s*[\]}])", r"\1", content)
 
 # Fix 2: Quote unquoted strings in commands array (handles multiple commands)
-def fix_commands(match):
+# Process line by line to avoid corrupting other fields
+def fix_commands_line(line):
+    # Only process lines that contain "commands":
+    if "\"commands\":" not in line:
+        return line
+    
+    # Match the commands array on this line only (not multiline)
+    match = re.search(r"(\"commands\":\s*\[)\s*([^\]]*)\]", line)
+    if not match:
+        return line
+    
     prefix = match.group(1)
     array_content = match.group(2).strip()
     
     if not array_content:
-        return match.group(0)  # Empty array, no change needed
+        return line  # Empty array, no change needed
     
     # If content already starts with quote, assume its properly formatted
     if array_content.startswith("\""):
-        return match.group(0)
+        return line
     
     # Remove trailing comma if present
     if array_content.endswith(","):
         array_content = array_content[:-1].strip()
     
     # Split by comma and quote each element
-    # Handle cases like: echo '"'"'test'"'"', ls, pwd
     commands = []
     current = ""
     in_quotes = False
@@ -104,13 +114,12 @@ def fix_commands(match):
             current += char
         elif char == "," and not in_quotes:
             if current.strip():
-                # Escape backslashes first, then quotes
                 cmd = current.strip()
                 cmd = cmd.replace("\\", "\\\\")
                 cmd = cmd.replace("\"", "\\\"")
-                # Remove any remaining trailing commas
                 cmd = cmd.rstrip(",").strip()
-                commands.append("\"" + cmd + "\"")
+                if cmd:
+                    commands.append("\"" + cmd + "\"")
             current = ""
         else:
             current += char
@@ -121,14 +130,21 @@ def fix_commands(match):
         cmd = cmd.replace("\\", "\\\\")
         cmd = cmd.replace("\"", "\\\"")
         cmd = cmd.rstrip(",").strip()
-        if cmd:  # Only add if not empty after cleanup
+        if cmd:
             commands.append("\"" + cmd + "\"")
     
     if commands:
-        return prefix + "[" + ", ".join(commands) + "]"
-    return prefix + "[]"  # Return empty array if no valid commands
+        fixed_array = prefix + "[" + ", ".join(commands) + "],"
+    else:
+        fixed_array = prefix + "[],"
+    
+    # Replace the commands array in the line
+    return re.sub(r"\"commands\":\s*\[[^\]]*\],?", fixed_array, line)
 
-content = re.sub(r"(\"commands\":\s*\[)\s*([^\]]+?)\s*\]", fix_commands, content, flags=re.DOTALL)
+# Process line by line
+lines = content.split("\n")
+fixed_lines = [fix_commands_line(line) for line in lines]
+content = "\n".join(fixed_lines)
 
 print(content, end="")
 ' > "$FIXED_FILE" 2>/dev/null

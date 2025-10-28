@@ -87,6 +87,18 @@ while true; do
 
   echo "[*] MITM server started"
 
+  # Function to escape strings for JSON
+  json_escape() {
+    local string="$1"
+    # Escape backslashes, quotes, and other special characters
+    string="${string//\\/\\\\}"  # Escape backslashes first
+    string="${string//\"/\\\"}"  # Escape double quotes
+    string="${string//$'\n'/\\n}"  # Escape newlines
+    string="${string//$'\r'/\\r}"  # Escape carriage returns
+    string="${string//$'\t'/\\t}"  # Escape tabs
+    echo "$string"
+  }
+
   # Initialize variables
   COMMANDS="["
   NUM_COMMANDS=0
@@ -138,11 +150,12 @@ while true; do
           IS_NONINTERACTIVE="true"
           COMMAND=$(echo "$line" | cut -d':' -f4)
           echo "[*] Command: $COMMAND"
-          COMMANDS+="$COMMAND,"
+          ESCAPED_CMD=$(json_escape "$COMMAND")
+          COMMANDS+="\"$ESCAPED_CMD\","
           NUM_COMMANDS=$((NUM_COMMANDS+1))
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
-          COMMANDS+="]"
+          COMMANDS="${COMMANDS%,}]"  # Remove trailing comma before adding ]
           DISCONNECT_REASON="noninteractive"
           /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for noninteractive mode command" &
           break
@@ -151,7 +164,7 @@ while true; do
       elif echo "$line" | grep -q -e "Attacker closed the connection" -e "Attacker closed connection"; then
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
-          COMMANDS+="]"
+          COMMANDS="${COMMANDS%,}]"  # Remove trailing comma before adding ]
           DISCONNECT_REASON="self_disconnect"
           /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
           break
@@ -187,12 +200,13 @@ while true; do
           sudo lxc exec "$CONTAINER" -- chmod 440 /etc/sudoers.d/$UNAME
           
       elif echo "$line" | grep -q "Attacker Keystroke: [TAB]"; then
-          COMMANDS+="Autocompleted:"
+          COMMANDS+="\"Autocompleted:\","
       
       elif echo "$line" | grep -q "line from reader:"; then
           COMMAND=$(echo "$line" | cut -d':' -f4)
           echo "[*] Command: $COMMAND"
-          COMMANDS+="$COMMAND,"
+          ESCAPED_CMD=$(json_escape "$COMMAND")
+          COMMANDS+="\"$ESCAPED_CMD\","
           NUM_COMMANDS=$((NUM_COMMANDS+1))
           
           # Track timing for first and last commands
@@ -214,7 +228,7 @@ while true; do
         echo "[*] Inactivity timeout reached (2.5 minutes) - breaking loop"
         DISCONNECT_TIME=$(date)
         DURATION=$(( $(date +%s) - DURATION ))
-        COMMANDS+="]"
+        COMMANDS="${COMMANDS%,}]"  # Remove trailing comma before adding ]
         DISCONNECT_REASON="inactivity_timeout"
         /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for inactivity (2.5min)" &
         break
@@ -225,7 +239,7 @@ while true; do
         echo "[*] Total timeout reached (10 minutes) - breaking loop"
         DISCONNECT_TIME=$(date)
         DURATION=$(( $(date +%s) - DURATION ))
-        COMMANDS+="]"
+        COMMANDS="${COMMANDS%,}]"  # Remove trailing comma before adding ]
         DISCONNECT_REASON="session_timeout"
         /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for total timeout (10min)" &
         break

@@ -1,0 +1,16 @@
+{
+  "language": "Chinese",
+  "num_commands": 1,
+  "commands": [ echo 'SSH check',],
+  "attacker_ip": "78.128.112.74",
+  "connect_time": "Tue 28 Oct 2025 01:01:42 AM EDT",
+  "disconnect_time": "Tue 28 Oct 2025 01:01:47 AM EDT",
+  "duration": "5",
+  "honeypot_name": "pot4",
+  "public_ip": "128.8.238.200",
+  "login": "user:admin000000",
+  "avg_time_between_commands": "N/A",
+  "is_bot": false,
+  "is_noninteractive": true,
+  "timestamp": "2025-10-28T05:01:47Z"
+}

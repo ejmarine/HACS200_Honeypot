@@ -58,6 +58,73 @@ while IFS= read -r log_file; do
     # The -s (slurp) flag reads entire file, then we iterate over objects
     entries_converted=0
     
+    # Create temporary files
+    ERROR_FILE=$(mktemp)
+    FIXED_FILE=$(mktemp)
+    
+    # Try to fix common JSON malformations in the file
+    # This handles legacy logs with unquoted commands and trailing commas
+    if command -v python3 &> /dev/null; then
+        python3 -c '
+import sys
+import re
+
+content = open("'"$log_file"'", "r").read()
+
+# Fix 1: Remove trailing commas before closing brackets/braces
+content = re.sub(r",(\s*[\]}])", r"\1", content)
+
+# Fix 2: Quote unquoted strings in commands array (handles multiple commands)
+def fix_commands(match):
+    prefix = match.group(1)
+    array_content = match.group(2).strip()
+    
+    if not array_content:
+        return match.group(0)  # Empty array, no change needed
+    
+    # If content already starts with quote, assume its properly formatted
+    if array_content.startswith("\""):
+        return match.group(0)
+    
+    # Split by comma and quote each element
+    # Handle cases like: echo '"'"'test'"'"', ls, pwd
+    commands = []
+    current = ""
+    in_quotes = False
+    quote_char = None
+    
+    for char in array_content:
+        if char in ("'"'"'", "\"") and (not in_quotes or char == quote_char):
+            in_quotes = not in_quotes
+            quote_char = char if in_quotes else None
+            current += char
+        elif char == "," and not in_quotes:
+            if current.strip():
+                # Escape any double quotes in the command
+                cmd = current.strip().replace("\\", "\\\\").replace("\"", "\\\"")
+                commands.append("\"" + cmd + "\"")
+            current = ""
+        else:
+            current += char
+    
+    # Add the last command
+    if current.strip():
+        cmd = current.strip().replace("\\", "\\\\").replace("\"", "\\\"")
+        commands.append("\"" + cmd + "\"")
+    
+    if commands:
+        return prefix + "[" + ", ".join(commands) + "]"
+    return match.group(0)
+
+content = re.sub(r"(\"commands\":\s*\[)\s*([^\]]+?)\s*\]", fix_commands, content, flags=re.DOTALL)
+
+print(content, end="")
+' > "$FIXED_FILE" 2>/dev/null
+    else
+        # Fallback: just remove trailing commas with sed
+        sed 's/,\s*\]/]/g' "$log_file" > "$FIXED_FILE"
+    fi
+    
     # Parse JSON objects (handles both single-line and multi-line pretty-printed JSON)
     csv_lines=$(jq -r '
         # Handle both array input and single object
@@ -84,18 +151,40 @@ while IFS= read -r log_file; do
             (.is_noninteractive | tostring) // "",
             .disconnect_reason // ""
         ] | @csv
-    ' "$log_file" 2>/dev/null)
+    ' "$FIXED_FILE" 2>"$ERROR_FILE")
     
-    if [ $? -eq 0 ] && [ -n "$csv_lines" ]; then
+    jq_exit_code=$?
+    
+    if [ $jq_exit_code -eq 0 ] && [ -n "$csv_lines" ]; then
         # Count entries and append to output
         entries_converted=$(echo "$csv_lines" | wc -l)
         echo "$csv_lines" >> "$OUTPUT_FILE"
         TOTAL_ENTRIES=$((TOTAL_ENTRIES + entries_converted))
         echo "    → Converted $entries_converted entries"
     else
-        echo "[WARNING] Failed to parse JSON from $filename"
+        # Check if file is empty
+        if [ ! -s "$log_file" ]; then
+            echo "[WARNING] Skipped $filename (empty file)"
+        else
+            echo "[WARNING] Failed to parse JSON from $filename"
+            
+            # Show the specific error from jq
+            if [ -s "$ERROR_FILE" ]; then
+                error_msg=$(head -n 1 "$ERROR_FILE")
+                echo "    ├─ Error: $error_msg"
+            fi
+            
+            # Show file size and first few lines to help debug
+            file_size=$(wc -c < "$log_file")
+            first_line=$(head -n 1 "$log_file" | cut -c1-80)
+            echo "    ├─ File size: $file_size bytes"
+            echo "    └─ First line: $first_line"
+        fi
         FAILED_ENTRIES=$((FAILED_ENTRIES + 1))
     fi
+    
+    # Clean up temp files
+    rm -f "$ERROR_FILE" "$FIXED_FILE"
     
 done <<< "$LOG_FILES"
 

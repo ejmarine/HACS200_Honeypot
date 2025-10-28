@@ -83,25 +83,27 @@ def fix_commands_line(line):
         return line
     
     # Match the commands array on this line only (not multiline)
-    match = re.search(r"(\"commands\":\s*\[)\s*([^\]]*)\]", line)
+    match = re.search(r"\"commands\":\s*\[([^\]]*)\]", line)
     if not match:
         return line
     
-    prefix = match.group(1)
-    array_content = match.group(2).strip()
+    array_content = match.group(1).strip()
     
+    # If array is empty, just ensure no trailing comma in array
     if not array_content:
-        return line  # Empty array, no change needed
+        return re.sub(r"\"commands\":\s*\[\s*\],?", "\"commands\": [],", line)
     
-    # If content already starts with quote, assume its properly formatted
-    if array_content.startswith("\""):
-        return line
+    # Check if already properly formatted (starts with quote and contains proper structure)
+    # Properly formatted looks like: "cmd1", "cmd2" or ["cmd1"] (already quoted elements)
+    if array_content.startswith("\"") and "\", \"" in array_content or (array_content.startswith("\"") and array_content.endswith("\"")):
+        # Already properly formatted, just remove trailing comma from array if present
+        return re.sub(r"\"commands\":\s*\[([^\]]+)\],", "\"commands\": [\\1],", line)
     
-    # Remove trailing comma if present
+    # Remove trailing comma from array content if present
     if array_content.endswith(","):
         array_content = array_content[:-1].strip()
     
-    # Split by comma and quote each element
+    # Split by comma and quote each unquoted element
     commands = []
     current = ""
     in_quotes = False
@@ -114,32 +116,32 @@ def fix_commands_line(line):
             current += char
         elif char == "," and not in_quotes:
             if current.strip():
-                cmd = current.strip()
-                cmd = cmd.replace("\\", "\\\\")
-                cmd = cmd.replace("\"", "\\\"")
-                cmd = cmd.rstrip(",").strip()
-                if cmd:
-                    commands.append("\"" + cmd + "\"")
+                cmd = current.strip().rstrip(",")
+                # Only add quotes if not already quoted
+                if not (cmd.startswith("\"") and cmd.endswith("\"")):
+                    cmd = cmd.replace("\\", "\\\\").replace("\"", "\\\"")
+                    cmd = "\"" + cmd + "\""
+                commands.append(cmd)
             current = ""
         else:
             current += char
     
     # Add the last command
     if current.strip():
-        cmd = current.strip()
-        cmd = cmd.replace("\\", "\\\\")
-        cmd = cmd.replace("\"", "\\\"")
-        cmd = cmd.rstrip(",").strip()
-        if cmd:
-            commands.append("\"" + cmd + "\"")
+        cmd = current.strip().rstrip(",")
+        if not (cmd.startswith("\"") and cmd.endswith("\"")):
+            cmd = cmd.replace("\\", "\\\\").replace("\"", "\\\"")
+            cmd = "\"" + cmd + "\""
+        commands.append(cmd)
     
+    # Build the fixed line
     if commands:
-        fixed_array = prefix + "[" + ", ".join(commands) + "],"
+        fixed_line = re.sub(r"\"commands\":\s*\[[^\]]*\]", 
+                           "\"commands\": [" + ", ".join(commands) + "]", line)
     else:
-        fixed_array = prefix + "[],"
+        fixed_line = re.sub(r"\"commands\":\s*\[[^\]]*\]", "\"commands\": []", line)
     
-    # Replace the commands array in the line
-    return re.sub(r"\"commands\":\s*\[[^\]]*\],?", fixed_array, line)
+    return fixed_line
 
 # Process line by line
 lines = content.split("\n")

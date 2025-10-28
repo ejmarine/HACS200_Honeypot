@@ -5,6 +5,16 @@ UPDATE_NPM_FLAG="$1"
 
 SLEEP_TIME=15
 
+# Clear the create.lock file
+LOCK_FILE="/home/aces/HACS200_Honeypot/recycling/helpers/create.lock"
+if [ -f "$LOCK_FILE" ]; then
+  echo "Clearing create.lock file..."
+  rm -f "$LOCK_FILE"
+  touch "$LOCK_FILE"
+fi
+
+
+
 if [ "$EUID" -ne 0 ]; then
   echo "Please run as root (use sudo)"
   exit 1

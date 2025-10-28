@@ -19,6 +19,7 @@ fi
 chmod 766 *
 
 CONFIG_FILE=$1
+LOCK_FILE="/home/aces/HACS200_Honeypot/recycling/helpers/create.lock"
 
 source "$CONFIG_FILE"
 
@@ -57,8 +58,18 @@ while true; do
   LOGFILEPATH="${LOGS_FOLDER}/${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.log"
   OUTFILE="${LOGS_FOLDER}${CONTAINER}_$(date +%m-%d-%Y_%H-%M-%S)_${RANDOM_LANGUAGE}.out"
 
+  echo $CONTAINER >> "$LOCK_FILE"
+  while true; do
+    if head -n 1 "$LOCK_FILE" | grep -q $CONTAINER; then
+      break
+    fi
+    sleep 1
+  done
+
   /home/aces/HACS200_Honeypot/recycling/create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT" "$RANDOM_LANGUAGE"
 
+  sed -i "s/$CONTAINER//g" "$LOCK_FILE"
+  
   echo "[*] Monitoring MITM log for attacker interaction..."
 
   echo "[*] Starting MITM server on port $MITM_PORT..."

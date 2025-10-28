@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # jsonify.sh - Script to append honeypot data to a JSON file
-# Usage: ./jsonify.sh <json_file_path> <language> <num_commands> <commands_array> <attacker_ip> <connect_time> <disconnect_time> <duration> <honeypot_name> <public_ip>
+# Usage: ./jsonify.sh <json_file_path> <language> <num_commands> <commands_array> <attacker_ip> <connect_time> <disconnect_time> <duration_ms> <honeypot_name> <public_ip>
 
 # Check if minimum required arguments are provided
 if [ $# -lt 15 ]; then
-    echo "Usage: $0 <json_file_path> <language> <num_commands> <commands_array> <attacker_ip> <connect_time> <disconnect_time> <duration> <honeypot_name> <public_ip> <login> <avg_time_between_commands> <is_bot> <is_noninteractive> <disconnect_reason>"
-    echo "Example: $0 data.json 'English' 3 '[\"ls\",\"pwd\",\"whoami\"]' '192.168.1.100' '2024-01-01T10:00:00Z' '2024-01-01T10:05:00Z' '5m' 'honeypot-01' '203.0.113.42' 'user' '2.5' 'false' 'false' 'self_disconnect'"
+    echo "Usage: $0 <json_file_path> <language> <num_commands> <commands_array> <attacker_ip> <connect_time> <disconnect_time> <duration_ms> <honeypot_name> <public_ip> <login> <avg_time_between_commands> <is_bot> <is_noninteractive> <disconnect_reason>"
+    echo "Example: $0 data.json 'English' 3 '[\"ls\",\"pwd\",\"whoami\"]' '192.168.1.100' '2024-01-01 10:00:00.123 UTC' '2024-01-01 10:05:00.456 UTC' '300333' 'honeypot-01' '203.0.113.42' 'user' '2.5' 'false' 'false' 'self_disconnect'"
     exit 1
 fi
 
@@ -39,7 +39,7 @@ JSON_ENTRY=$(cat <<EOF
   "attacker_ip": "$ATTACKER_IP",
   "connect_time": "$CONNECT_TIME",
   "disconnect_time": "$DISCONNECT_TIME",
-  "duration": "$DURATION",
+  "duration_ms": $DURATION,
   "honeypot_name": "$HONEYPOT_NAME",
   "public_ip": "$PUBLIC_IP",
   "login": "$LOGIN",
@@ -47,7 +47,7 @@ JSON_ENTRY=$(cat <<EOF
   "is_bot": $IS_BOT,
   "is_noninteractive": $IS_NONINTERACTIVE,
   "disconnect_reason": "$DISCONNECT_REASON",
-  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  "timestamp": "$(date -u +%Y-%m-%d" "%H:%M:%S.%3NZ)"
 }
 EOF
 )

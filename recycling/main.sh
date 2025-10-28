@@ -136,10 +136,11 @@ while true; do
       if echo "$line" | grep -q "Attacker connected:"; then
           ATTACKER_IP=$(echo "$line" | cut -d':' -f4 | cut -d' ' -f2)
           echo "[*] Attacker IP: $ATTACKER_IP"
-          # Initialize connection tracking
+          # Initialize connection tracking with millisecond precision
           CONNECTION_STARTED=true
-          CONNECT_TIME=$(date)
-          DURATION=$(date +%s)
+          CONNECT_TIME=$(date '+%Y-%m-%d %H:%M:%S.%3N %Z')
+          CONNECT_TIME_MS=$(date +%s%3N)  # Unix timestamp in milliseconds
+          DURATION_START_MS=$(date +%s%3N)
           LOOP_START_TIME=$(date +%s)
           LAST_ACTIVITY_TIME=$(date +%s)
           # Only allow SSH connections from the attacker's IP to the container's IP
@@ -153,8 +154,9 @@ while true; do
           ESCAPED_CMD=$(json_escape "$COMMAND")
           COMMANDS+="\"$ESCAPED_CMD\","
           NUM_COMMANDS=$((NUM_COMMANDS+1))
-          DISCONNECT_TIME=$(date)
-          DURATION=$(( $(date +%s) - DURATION ))
+          DISCONNECT_TIME=$(date '+%Y-%m-%d %H:%M:%S.%3N %Z')
+          DISCONNECT_TIME_MS=$(date +%s%3N)
+          DURATION=$(( DISCONNECT_TIME_MS - DURATION_START_MS ))
           COMMANDS="${COMMANDS%,}]"  # Remove trailing comma before adding ]
           DISCONNECT_REASON="noninteractive"
           /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for noninteractive mode command" &
@@ -162,11 +164,13 @@ while true; do
           
 
       elif echo "$line" | grep -q -e "Attacker closed the connection" -e "Attacker closed connection"; then
-          DISCONNECT_TIME=$(date)
-          DURATION=$(( $(date +%s) - DURATION ))
+          DISCONNECT_TIME=$(date '+%Y-%m-%d %H:%M:%S.%3N %Z')
+          DISCONNECT_TIME_MS=$(date +%s%3N)
+          DURATION=$(( DISCONNECT_TIME_MS - DURATION_START_MS ))
           COMMANDS="${COMMANDS%,}]"  # Remove trailing comma before adding ]
           DISCONNECT_REASON="self_disconnect"
-          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
+          DURATION_SEC=$(echo "scale=3; $DURATION / 1000" | bc)
+          /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected after ${DURATION_SEC}s" &
           break
 
       elif echo "$line" | grep -q "Adding the following credentials:"; then
@@ -226,8 +230,9 @@ while true; do
       # Check inactivity timeout (2.5 minutes = 150 seconds)
       if [ $TIME_SINCE_ACTIVITY -ge 150 ]; then
         echo "[*] Inactivity timeout reached (2.5 minutes) - breaking loop"
-        DISCONNECT_TIME=$(date)
-        DURATION=$(( $(date +%s) - DURATION ))
+        DISCONNECT_TIME=$(date '+%Y-%m-%d %H:%M:%S.%3N %Z')
+        DISCONNECT_TIME_MS=$(date +%s%3N)
+        DURATION=$(( DISCONNECT_TIME_MS - DURATION_START_MS ))
         COMMANDS="${COMMANDS%,}]"  # Remove trailing comma before adding ]
         DISCONNECT_REASON="inactivity_timeout"
         /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for inactivity (2.5min)" &
@@ -237,8 +242,9 @@ while true; do
       # Check total timeout (10 minutes = 600 seconds)
       if [ $TOTAL_TIME -ge 600 ]; then
         echo "[*] Total timeout reached (10 minutes) - breaking loop"
-        DISCONNECT_TIME=$(date)
-        DURATION=$(( $(date +%s) - DURATION ))
+        DISCONNECT_TIME=$(date '+%Y-%m-%d %H:%M:%S.%3N %Z')
+        DISCONNECT_TIME_MS=$(date +%s%3N)
+        DURATION=$(( DISCONNECT_TIME_MS - DURATION_START_MS ))
         COMMANDS="${COMMANDS%,}]"  # Remove trailing comma before adding ]
         DISCONNECT_REASON="session_timeout"
         /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for total timeout (10min)" &
@@ -277,12 +283,13 @@ while true; do
   fi
 
   # Output session summary
+  DURATION_SEC=$(echo "scale=3; $DURATION / 1000" | bc)
   echo "[*] Number of commands: $NUM_COMMANDS"
   echo "[*] Commands: ${COMMANDS}"
   echo "[*] Attacker IP: $ATTACKER_IP"
   echo "[*] Connect time: $CONNECT_TIME"
   echo "[*] Disconnect time: $DISCONNECT_TIME"
-  echo "[*] Duration: $DURATION"
+  echo "[*] Duration: ${DURATION}ms (${DURATION_SEC}s)"
   echo "[*] Login: $LOGIN"
   echo "[*] Average time between commands: $AVG_TIME seconds"
   echo "[*] Bot detected: $IS_BOT"

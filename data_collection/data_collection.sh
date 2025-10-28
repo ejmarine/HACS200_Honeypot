@@ -42,7 +42,7 @@ echo "[*] Output file: $OUTPUT_FILE"
 echo ""
 
 # Create/overwrite output file with CSV header
-echo "timestamp,honeypot_name,attacker_ip,public_ip,language,login,connect_time,disconnect_time,duration,num_commands,commands,avg_time_between_commands,is_bot,is_noninteractive,disconnect_reason" > "$OUTPUT_FILE"
+echo "timestamp,honeypot_name,attacker_ip,public_ip,language,login,connect_time,disconnect_time,duration_ms,num_commands,commands,avg_time_between_commands,is_bot,is_noninteractive,disconnect_reason" > "$OUTPUT_FILE"
 
 echo "[*] Processing log files..."
 
@@ -86,6 +86,10 @@ def fix_commands(match):
     if array_content.startswith("\""):
         return match.group(0)
     
+    # Remove trailing comma if present
+    if array_content.endswith(","):
+        array_content = array_content[:-1].strip()
+    
     # Split by comma and quote each element
     # Handle cases like: echo '"'"'test'"'"', ls, pwd
     commands = []
@@ -100,8 +104,12 @@ def fix_commands(match):
             current += char
         elif char == "," and not in_quotes:
             if current.strip():
-                # Escape any double quotes in the command
-                cmd = current.strip().replace("\\", "\\\\").replace("\"", "\\\"")
+                # Escape backslashes first, then quotes
+                cmd = current.strip()
+                cmd = cmd.replace("\\", "\\\\")
+                cmd = cmd.replace("\"", "\\\"")
+                # Remove any remaining trailing commas
+                cmd = cmd.rstrip(",").strip()
                 commands.append("\"" + cmd + "\"")
             current = ""
         else:
@@ -109,12 +117,16 @@ def fix_commands(match):
     
     # Add the last command
     if current.strip():
-        cmd = current.strip().replace("\\", "\\\\").replace("\"", "\\\"")
-        commands.append("\"" + cmd + "\"")
+        cmd = current.strip()
+        cmd = cmd.replace("\\", "\\\\")
+        cmd = cmd.replace("\"", "\\\"")
+        cmd = cmd.rstrip(",").strip()
+        if cmd:  # Only add if not empty after cleanup
+            commands.append("\"" + cmd + "\"")
     
     if commands:
         return prefix + "[" + ", ".join(commands) + "]"
-    return match.group(0)
+    return prefix + "[]"  # Return empty array if no valid commands
 
 content = re.sub(r"(\"commands\":\s*\[)\s*([^\]]+?)\s*\]", fix_commands, content, flags=re.DOTALL)
 
@@ -132,6 +144,8 @@ print(content, end="")
         .[] |
         # Escape quotes in commands array and convert to string
         .commands_str = (.commands | tostring | gsub("\""; "\"\"")) |
+        # Handle both old "duration" and new "duration_ms" fields
+        .duration_value = (if .duration_ms then .duration_ms else .duration end) |
         
         # Build CSV line with proper escaping, using empty string for missing fields
         [
@@ -143,7 +157,7 @@ print(content, end="")
             .login // "",
             .connect_time // "",
             .disconnect_time // "",
-            (.duration | tostring) // "",
+            (.duration_value | tostring) // "",
             (.num_commands | tostring) // "",
             .commands_str // "[]",
             .avg_time_between_commands // "",

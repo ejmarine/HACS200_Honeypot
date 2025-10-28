@@ -27,19 +27,10 @@ id=0
 LANGUAGES=(English Russian Chinese Hebrew Ukrainian French Spanish)
 
 
-# Not currently working, but trying to copy a base container to increase speed
-if lxc list -c n --format csv | grep -q "base-container"; then
-  sudo lxc stop "base-container"
-  sudo lxc delete "base-container"
-fi
-
-# Check if the 'base' image exists; if not, create and publish it
-if ! lxc image list | grep -q "base"; then
-  echo "[*] Creating base container"
-  sudo lxc launch ubuntu:20.04 base-container
-  sudo lxc publish base-container --alias base --force
-  sudo lxc stop base-container
-  sudo lxc delete base-container
+# Check if the honeypot snapshot exists; if not, create it
+if ! lxc list -c n --format csv | grep -q "^honeypot-base$"; then
+  echo "[*] Base container snapshot not found, creating it..."
+  /home/aces/HACS200_Honeypot/recycling/prepare_snapshot.sh
 fi
 
 if ! lxc profile list | grep -q "$CONTAINER"; then
@@ -97,6 +88,7 @@ while true; do
   LAST_COMMAND_TIME=""
   IS_BOT="false"
   IS_NONINTERACTIVE="false"
+  DISCONNECT_REASON=""
   
   # Start tail in background and capture PID for cleanup
   tail -F "$OUTFILE" 2>/dev/null &
@@ -140,6 +132,7 @@ while true; do
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
           COMMANDS+="]"
+          DISCONNECT_REASON="noninteractive"
           /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for noninteractive mode command" &
           break
           
@@ -148,6 +141,7 @@ while true; do
           DISCONNECT_TIME=$(date)
           DURATION=$(( $(date +%s) - DURATION ))
           COMMANDS+="]"
+          DISCONNECT_REASON="self_disconnect"
           /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected after $DURATION s" &
           break
 
@@ -210,6 +204,7 @@ while true; do
         DISCONNECT_TIME=$(date)
         DURATION=$(( $(date +%s) - DURATION ))
         COMMANDS+="]"
+        DISCONNECT_REASON="inactivity_timeout"
         /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for inactivity (2.5min)" &
         break
       fi
@@ -220,6 +215,7 @@ while true; do
         DISCONNECT_TIME=$(date)
         DURATION=$(( $(date +%s) - DURATION ))
         COMMANDS+="]"
+        DISCONNECT_REASON="session_timeout"
         /home/aces/HACS200_Honeypot/recycling/helpers/slack.sh "$CONTAINER" "$CONTAINER - Attacker $ATTACKER_IP disconnected for total timeout (10min)" &
         break
       fi
@@ -266,10 +262,11 @@ while true; do
   echo "[*] Average time between commands: $AVG_TIME seconds"
   echo "[*] Bot detected: $IS_BOT"
   echo "[*] Noninteractive mode: $IS_NONINTERACTIVE"
+  echo "[*] Disconnect reason: $DISCONNECT_REASON"
   echo "#########################################" >> "$OUTFILE"
   
   # Log to JSON
-  /home/aces/HACS200_Honeypot/recycling/helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "$COMMANDS" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN" "$AVG_TIME" "$IS_BOT" "$IS_NONINTERACTIVE"
+  /home/aces/HACS200_Honeypot/recycling/helpers/jsonify.sh "$LOGFILEPATH" "$RANDOM_LANGUAGE" "$NUM_COMMANDS" "$COMMANDS" "$ATTACKER_IP" "$CONNECT_TIME" "$DISCONNECT_TIME" "$DURATION" "$CONTAINER" "$EXTERNAL_IP" "$LOGIN" "$AVG_TIME" "$IS_BOT" "$IS_NONINTERACTIVE" "$DISCONNECT_REASON"
 
   /home/aces/HACS200_Honeypot/recycling/recycle.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT"
 

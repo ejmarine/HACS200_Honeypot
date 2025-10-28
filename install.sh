@@ -80,6 +80,11 @@ create_services_for_confs() {
   done
   
   echo "[*] All services stopped and containers deleted."
+  
+  # Prepare base container snapshot
+  echo "[*] Preparing base container snapshot..."
+  /home/aces/HACS200_Honeypot/recycling/prepare_snapshot.sh
+  
   echo "[*] Recreating services and containers..."
   
   # Second pass: recreate all services

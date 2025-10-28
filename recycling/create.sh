@@ -32,13 +32,13 @@ if sudo lxc list -c n --format csv | grep -q "$CONTAINER"; then
   sudo lxc stop "$CONTAINER" --force 2>/dev/null
   sudo lxc delete "$CONTAINER" 2>/dev/null
 fi
-# Create container if needed (LXD)
-echo "[*] Creating container $CONTAINER"
-sudo lxc launch base -p $CONTAINER $CONTAINER
+# Create container from snapshot (LXD)
+echo "[*] Creating container $CONTAINER from snapshot"
+sudo lxc copy honeypot-base/honeypot-snapshot $CONTAINER -p $CONTAINER
 
-
-# Start container (safe if already running)
-sudo lxc start "$CONTAINER" 2>/dev/null
+# Start container
+echo "[*] Starting container $CONTAINER"
+sudo lxc start "$CONTAINER"
 
 # Wait until container gets an IP
 until CONTAINER_IP=$(sudo lxc list "$CONTAINER" -c 4 -f csv | awk '{print $1}') && [ -n "$CONTAINER_IP" ]; do
@@ -47,21 +47,10 @@ done
 
 sudo sysctl -w net.ipv4.conf.all.route_localnet=1
 
-# Install SSH if need
-echo "[*] Configuring SSH in $CONTAINER"
-sudo lxc exec "$CONTAINER" -- apt install -y openssh-server >/dev/null 2>&1
-
-# Enable root login in sshd_config
-# Remove any existing lines and add the required settings
-sudo lxc exec "$CONTAINER" -- sed -i '/^#\?PermitRootLogin/d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
-sudo lxc exec "$CONTAINER" -- sed -i '/^#\?PasswordAuthentication/d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
-sudo lxc exec "$CONTAINER" -- bash -c 'echo "PermitRootLogin yes" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
-sudo lxc exec "$CONTAINER" -- bash -c 'echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config.d/60-cloudimg-settings.conf'
-# Remove the Banner setting from the container's sshd_config if present
-sudo lxc exec "$CONTAINER" -- sed -i '/^Banner /d' /etc/ssh/sshd_config.d/60-cloudimg-settings.conf
-
-
-sudo lxc exec "$CONTAINER" -- systemctl restart ssh
+# SSH is already installed and configured from snapshot
+# Just ensure SSH service is running
+echo "[*] Ensuring SSH is running in $CONTAINER"
+sudo lxc exec "$CONTAINER" -- systemctl start ssh
 
 echo "DEBUG: Copying in banner of language $LANGUAGE"
 

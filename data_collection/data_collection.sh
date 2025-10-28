@@ -93,12 +93,6 @@ def fix_commands_line(line):
     if not array_content:
         return re.sub(r"\"commands\":\s*\[\s*\],?", "\"commands\": [],", line)
     
-    # Check if already properly formatted (starts with quote and contains proper structure)
-    # Properly formatted looks like: "cmd1", "cmd2" or ["cmd1"] (already quoted elements)
-    if array_content.startswith("\"") and "\", \"" in array_content or (array_content.startswith("\"") and array_content.endswith("\"")):
-        # Already properly formatted, just remove trailing comma from array if present
-        return re.sub(r"\"commands\":\s*\[([^\]]+)\],", "\"commands\": [\\1],", line)
-    
     # Remove trailing comma from array content if present
     if array_content.endswith(","):
         array_content = array_content[:-1].strip()
@@ -117,8 +111,14 @@ def fix_commands_line(line):
         elif char == "," and not in_quotes:
             if current.strip():
                 cmd = current.strip().rstrip(",")
-                # Only add quotes if not already quoted
-                if not (cmd.startswith("\"") and cmd.endswith("\"")):
+                # If already quoted, remove quotes and re-escape properly
+                if cmd.startswith("\"") and cmd.endswith("\"") and len(cmd) > 2:
+                    cmd = cmd[1:-1]
+                    cmd = cmd.replace("\\\"", "QUOTE_PLACEHOLDER")
+                    cmd = cmd.replace("\\", "\\\\")
+                    cmd = cmd.replace("QUOTE_PLACEHOLDER", "\\\"")
+                    cmd = "\"" + cmd + "\""
+                elif not (cmd.startswith("\"") and cmd.endswith("\"")):
                     cmd = cmd.replace("\\", "\\\\").replace("\"", "\\\"")
                     cmd = "\"" + cmd + "\""
                 commands.append(cmd)
@@ -129,7 +129,20 @@ def fix_commands_line(line):
     # Add the last command
     if current.strip():
         cmd = current.strip().rstrip(",")
-        if not (cmd.startswith("\"") and cmd.endswith("\"")):
+        # If already quoted, remove quotes and re-escape properly
+        if cmd.startswith("\"") and cmd.endswith("\"") and len(cmd) > 2:
+            # Remove outer quotes
+            cmd = cmd[1:-1]
+            # Un-escape quotes first (\" becomes ")
+            cmd = cmd.replace("\\\"", "QUOTE_PLACEHOLDER")
+            # Now escape all backslashes properly
+            cmd = cmd.replace("\\", "\\\\")
+            # Restore and properly escape quotes
+            cmd = cmd.replace("QUOTE_PLACEHOLDER", "\\\"")
+            # Re-wrap
+            cmd = "\"" + cmd + "\""
+        elif not (cmd.startswith("\"") and cmd.endswith("\"")):
+            # Not quoted at all, escape and quote
             cmd = cmd.replace("\\", "\\\\").replace("\"", "\\\"")
             cmd = "\"" + cmd + "\""
         commands.append(cmd)
@@ -208,10 +221,10 @@ print(content, end="")
             
             # Show original vs fixed content for debugging
             echo "    ├─ Original commands line:"
-            grep "commands" "$log_file" 2>/dev/null | head -n 1 | sed 's/^/    │  /' || echo "    │  (not found)"
+            grep "\"commands\":" "$log_file" 2>/dev/null | head -n 1 | sed 's/^/    │  /' || echo "    │  (not found)"
             echo "    ├─ After Python fix:"
             if [ -f "$FIXED_FILE" ]; then
-                grep "commands" "$FIXED_FILE" 2>/dev/null | head -n 1 | sed 's/^/    │  /' || echo "    │  (not found)"
+                grep "\"commands\":" "$FIXED_FILE" 2>/dev/null | head -n 1 | sed 's/^/    │  /' || echo "    │  (not found)"
                 echo "    ├─ Fixed file first 10 lines:"
                 head -n 10 "$FIXED_FILE" | cat -A | sed 's/^/    │  /'
             else

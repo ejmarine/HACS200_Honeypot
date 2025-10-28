@@ -62,6 +62,8 @@ while true; do
   while true; do
     if head -n 1 "$LOCK_FILE" | grep -q $CONTAINER; then
       break
+    elif !(head -n 1 "$LOCK_FILE" | grep -q "^pot[0-9]\+$"); then
+      sed -i '/^$/d' "$LOCK_FILE"
     fi
     sleep 1
   done

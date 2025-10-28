@@ -204,17 +204,38 @@ print(content, end="")
                 echo "    ├─ Error: $error_msg"
             fi
             
-            # Show file size and first few lines to help debug
+            # Show original vs fixed content for debugging
+            echo "    ├─ Original commands line:"
+            grep "commands" "$log_file" 2>/dev/null | head -n 1 | sed 's/^/    │  /' || echo "    │  (not found)"
+            echo "    ├─ After Python fix:"
+            if [ -f "$FIXED_FILE" ]; then
+                grep "commands" "$FIXED_FILE" 2>/dev/null | head -n 1 | sed 's/^/    │  /' || echo "    │  (not found)"
+                echo "    ├─ Fixed file first 10 lines:"
+                head -n 10 "$FIXED_FILE" | cat -A | sed 's/^/    │  /'
+            else
+                echo "    │  (FIXED_FILE not created)"
+            fi
+            
+            # Show file size
             file_size=$(wc -c < "$log_file")
-            first_line=$(head -n 1 "$log_file" | cut -c1-80)
-            echo "    ├─ File size: $file_size bytes"
-            echo "    └─ First line: $first_line"
+            echo "    └─ Original file size: $file_size bytes"
+            
+            # Keep failed files for debugging
+            if [ -f "$FIXED_FILE" ]; then
+                DEBUG_FILE="/tmp/honeypot_debug_$(basename "$log_file").fixed"
+                cp "$FIXED_FILE" "$DEBUG_FILE" 2>/dev/null
+                echo "    └─ Debug: Saved fixed file to $DEBUG_FILE"
+            fi
         fi
         FAILED_ENTRIES=$((FAILED_ENTRIES + 1))
     fi
     
-    # Clean up temp files
-    rm -f "$ERROR_FILE" "$FIXED_FILE"
+    # Clean up temp files (keep ERROR_FILE and FIXED_FILE for debugging if failed)
+    if [ $jq_exit_code -eq 0 ]; then
+        rm -f "$ERROR_FILE" "$FIXED_FILE"
+    else
+        rm -f "$ERROR_FILE"  # Keep FIXED_FILE for debugging
+    fi
     
 done <<< "$LOG_FILES"
 

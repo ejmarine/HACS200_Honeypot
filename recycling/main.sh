@@ -70,6 +70,8 @@ while true; do
 
   /home/aces/HACS200_Honeypot/recycling/create.sh "$CONTAINER" "$EXTERNAL_IP" "$MITM_PORT" "$RANDOM_LANGUAGE"
 
+  sleep 5
+  
   sed -i "s/$CONTAINER//g" "$LOCK_FILE"
   
   echo "[*] Monitoring MITM log for attacker interaction..."

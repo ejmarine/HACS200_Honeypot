@@ -21,7 +21,7 @@ module.exports = {
         listenIP : '0.0.0.0',
         listenPort: 6013,
         identifier : 'SSH-2.0-OpenSSH_6.6.1p1 Ubuntu-2ubuntu2',
-        bannerFile : '/home/aces/HACS200_Honeypot/recycling/config/pot4.txt'
+        bannerFile : ''
     },
     autoAccess : {
         enabled: true,

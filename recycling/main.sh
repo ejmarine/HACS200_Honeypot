@@ -258,7 +258,8 @@ while true; do
   done 3< <(tail -F "$OUTFILE" 2>/dev/null)
   
   # Clean up background tail process
-  kill $TAIL_PID 2>/dev/null
+  kill -9 $TAIL_PID
+  pkill -f "tail -F $OUTFILE"
 
   # Calculate average time between commands if there are 2+ commands
   if [ $NUM_COMMANDS -ge 2 ]; then

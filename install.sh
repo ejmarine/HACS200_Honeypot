@@ -14,6 +14,10 @@ if [ -f "$LOCK_FILE" ]; then
 fi
 
 
+pkill -f "main.sh"
+pkill -f "tail"
+pkill -f "screen"
+
 
 if [ "$EUID" -ne 0 ]; then
   echo "Please run as root (use sudo)"

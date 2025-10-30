@@ -1,3 +1,3 @@
-*  גישה מורשית בלבד. כל הפעילות במערכת זו מנוטרת  *
-*  ומוקלטת למטרות אבטחה ומחקר.                             *
-*  התנתק מיד אם אינך משתמש מורשה.                       *
+* Authorized access only. All activity on this system is monitored  *
+* and recorded for security and research purposes.                         *
+* Disconnect immediately if you are not an authorized user.           *

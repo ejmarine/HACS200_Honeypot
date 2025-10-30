@@ -1,7 +1,0 @@
-2025-10-20 20:09:28.636 - [Info] MITM Version: 1.4
-2025-10-20 20:09:28.637 - [Info] Auto Access Enabled: true
-2025-10-20 20:09:28.637 - [Debug] [Init] Auto Access Barrier: true
-2025-10-20 20:09:28.747 - [Info] SSH man-in-the-middle server for 172.20.0.3 listening on 0.0.0.0:6010
-2025-10-20 20:11:27.219 - [Info] Exiting...
-2025-10-20 20:11:27.219 - [Debug] Cleaning up...
-2025-10-20 20:11:27.219 - [Debug] Cleaning up LXC Streams: 0

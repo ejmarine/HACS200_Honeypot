@@ -147,6 +147,10 @@ sudo lxc exec "$CONTAINER" -- rm -f /etc/update-motd.d/50-motd-news
 # Disable all MOTD scripts
 sudo lxc exec "$CONTAINER" -- chmod -x /etc/update-motd.d/* 2>/dev/null || true
 
+echo "[*] Setting up post-authentication banner"
+sudo lxc file push "/home/aces/HACS200_Honeypot/honeypot_files/banners/$LANGUAGE.txt" "$CONTAINER/etc/motd"
+          
+
 # Calculate and display creation time
 CREATE_END_TIME=$(date +%s)
 CREATE_DURATION=$((CREATE_END_TIME - CREATE_START_TIME))

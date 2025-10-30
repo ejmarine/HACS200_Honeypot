@@ -209,10 +209,6 @@ while true; do
           sudo lxc exec "$CONTAINER" -- chmod 440 /etc/sudoers.d/$UNAME
           
           # Display only custom banner after authentication (no system info)
-          echo "[*] Setting up post-authentication banner"
-          sudo lxc exec "$CONTAINER" -- chmod -x /etc/update-motd.d/* 2>/dev/null || true
-          sudo lxc file push "/home/aces/HACS200_Honeypot/recycling/config/$CONTAINER.txt" "$CONTAINER/etc/motd"
-          
           break  # Exit Loop 1, proceed to Loop 2
       
       elif echo "$line" | grep -q -e "Attacker closed the connection" -e "Attacker closed connection"; then

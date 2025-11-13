@@ -17,6 +17,66 @@ PROCESSED_FILES=0
 TOTAL_ENTRIES=0
 FAILED_ENTRIES=0
 
+# Function to extract timestamp from log line (returns: "YYYY-MM-DD HH:MM:SS.MS")
+extract_timestamp() {
+    echo "$1" | awk '{print $1, $2}'
+}
+
+# Function to convert timestamp to milliseconds since epoch
+timestamp_to_ms() {
+    local timestamp="$1"
+    # Split into date, time, and milliseconds
+    local date_part=$(echo "$timestamp" | cut -d' ' -f1)
+    local time_part=$(echo "$timestamp" | cut -d' ' -f2 | cut -d'.' -f1)
+    local ms_part=$(echo "$timestamp" | cut -d' ' -f2 | cut -d'.' -f2)
+    
+    local seconds=$(date -d "$date_part $time_part" +%s)
+    local total_ms=$((seconds * 1000 + 10#$ms_part))
+    echo "$total_ms"
+}
+
+# Calculate time from attacker connection to last command in .out file
+# Returns milliseconds, or 0 if no commands found
+calculate_mitm_time_to_last_command() {
+    local out_file="$1"
+    
+    # Check if file exists
+    if [ ! -f "$out_file" ]; then
+        echo "0"
+        return
+    fi
+    
+    # Find the attacker connection timestamp
+    local connection_line=$(grep "Attacker connected:" "$out_file" | head -n 1)
+    if [ -z "$connection_line" ]; then
+        echo "0"
+        return
+    fi
+    local connect_timestamp=$(extract_timestamp "$connection_line")
+    local connect_ms=$(timestamp_to_ms "$connect_timestamp" 2>/dev/null)
+    if [ -z "$connect_ms" ]; then
+        echo "0"
+        return
+    fi
+    
+    # Find the last command timestamp (either pattern)
+    local last_command_line=$(grep -E "line from reader:|Noninteractive mode attacker command:" "$out_file" | tail -n 1)
+    if [ -z "$last_command_line" ]; then
+        echo "0"
+        return
+    fi
+    local last_cmd_timestamp=$(extract_timestamp "$last_command_line")
+    local last_cmd_ms=$(timestamp_to_ms "$last_cmd_timestamp" 2>/dev/null)
+    if [ -z "$last_cmd_ms" ]; then
+        echo "0"
+        return
+    fi
+    
+    # Calculate difference
+    local time_diff=$((last_cmd_ms - connect_ms))
+    echo "$time_diff"
+}
+
 echo "[*] Honeypot JSON to CSV Converter"
 echo "[*] ================================"
 echo "[*] Scanning for .log files in $LOGS_DIR"
@@ -42,7 +102,7 @@ echo "[*] Output file: $OUTPUT_FILE"
 echo ""
 
 # Create/overwrite output file with CSV header
-echo "timestamp,honeypot_name,attacker_ip,public_ip,language,login,connect_time,disconnect_time,duration_ms,num_commands,commands,avg_time_between_commands,is_bot,is_noninteractive,disconnect_reason" > "$OUTPUT_FILE"
+echo "timestamp,honeypot_name,attacker_ip,public_ip,language,login,connect_time,disconnect_time,duration_ms,num_commands,commands,avg_time_between_commands,is_bot,is_noninteractive,disconnect_reason,time_to_last_command_ms" > "$OUTPUT_FILE"
 
 echo "[*] Processing log files..."
 
@@ -53,6 +113,11 @@ while IFS= read -r log_file; do
     PROCESSED_FILES=$((PROCESSED_FILES + 1))
     filename=$(basename "$log_file")
     echo "[*] [$PROCESSED_FILES/$TOTAL_FILES] Processing: $filename"
+    
+    # Calculate MITM time to last command from corresponding .out file
+    out_file="${log_file%.log}.out"
+    mitm_time_to_last_cmd=$(calculate_mitm_time_to_last_command "$out_file")
+    echo "    → MITM time to last command: ${mitm_time_to_last_cmd}ms"
     
     # Use jq to parse multi-line JSON objects from the file
     # The -s (slurp) flag reads entire file, then we iterate over objects
@@ -169,7 +234,7 @@ print(content, end="")
     fi
     
     # Parse JSON objects (handles both single-line and multi-line pretty-printed JSON)
-    csv_lines=$(jq -r '
+    csv_lines=$(jq --arg mitm_time "$mitm_time_to_last_cmd" -r '
         # Handle both array input and single object
         if type == "array" then . else [.] end |
         .[] |
@@ -177,6 +242,8 @@ print(content, end="")
         .commands_str = (.commands | tostring | gsub("\""; "\"\"")) |
         # Handle both old "duration" and new "duration_ms" fields
         .duration_value = (if .duration_ms then .duration_ms else .duration end) |
+        # Add the MITM time from bash variable
+        .time_to_last_command_ms = $mitm_time |
         
         # Build CSV line with proper escaping, using empty string for missing fields
         [
@@ -194,7 +261,8 @@ print(content, end="")
             .avg_time_between_commands // "",
             (.is_bot | tostring) // "",
             (.is_noninteractive | tostring) // "",
-            .disconnect_reason // ""
+            .disconnect_reason // "",
+            .time_to_last_command_ms // "0"
         ] | @csv
     ' "$FIXED_FILE" 2>"$ERROR_FILE")
     

@@ -324,6 +324,136 @@ done <<< "$LOG_FILES"
 
 echo ""
 echo "[*] ================================"
+echo "[*] Running Data Validation..."
+echo "[*] ================================"
+
+# Run Python validation and cleanup on the generated CSV
+if command -v python3 &> /dev/null; then
+    VALIDATION_LOG="data_collection/data_validation_errors.log"
+    VALIDATION_STATS=$(python3 -c '
+import csv
+import json
+import ast
+import sys
+from datetime import datetime
+
+csv_file = "'"$OUTPUT_FILE"'"
+validation_log = "'"$VALIDATION_LOG"'"
+
+# Statistics counters
+commands_split_count = 0
+duration_errors = 0
+num_commands_mismatches = 0
+total_rows_processed = 0
+
+# Read CSV
+rows = []
+try:
+    with open(csv_file, "r", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames
+        
+        for row in reader:
+            total_rows_processed += 1
+            modified = False
+            
+            # === 1. VALIDATE DURATION ===
+            try:
+                duration_ms = int(row["duration_ms"]) if row["duration_ms"] else 0
+                if duration_ms < 0 or duration_ms > 600000:
+                    # Log the error
+                    with open(validation_log, "a", encoding="utf-8") as log_f:
+                        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        log_entry = f"[{timestamp}] INVALID DURATION: {duration_ms}ms | Row: {row[\"timestamp\"]} | Honeypot: {row[\"honeypot_name\"]} | IP: {row[\"attacker_ip\"]}\n"
+                        log_f.write(log_entry)
+                    duration_errors += 1
+            except (ValueError, KeyError):
+                pass  # Keep original value if parsing fails
+            
+            # === 2. SPLIT COMMANDS BY SEMICOLONS ===
+            try:
+                # Parse the commands field (stored as string representation of array)
+                commands_str = row.get("commands", "[]")
+                
+                # Handle CSV escaping: double quotes are escaped as ""
+                commands_str = commands_str.replace("\"\"", "\"")
+                
+                # Parse the JSON array
+                try:
+                    commands = json.loads(commands_str)
+                except json.JSONDecodeError:
+                    # Fallback: try using ast.literal_eval
+                    try:
+                        commands = ast.literal_eval(commands_str)
+                    except:
+                        commands = []
+                
+                # Split each command by semicolons and flatten
+                new_commands = []
+                for cmd in commands:
+                    if isinstance(cmd, str) and ";" in cmd:
+                        # Split by semicolon and strip whitespace
+                        parts = [part.strip() for part in cmd.split(";")]
+                        # Filter out empty strings
+                        parts = [p for p in parts if p]
+                        new_commands.extend(parts)
+                        commands_split_count += 1
+                    else:
+                        new_commands.append(cmd)
+                
+                # === 3. ENSURE NUM_COMMANDS MATCHES ARRAY LENGTH ===
+                actual_num_commands = len(new_commands)
+                original_num_commands = int(row["num_commands"]) if row["num_commands"] else 0
+                
+                if actual_num_commands != original_num_commands:
+                    num_commands_mismatches += 1
+                
+                # Update the row
+                row["num_commands"] = str(actual_num_commands)
+                row["commands"] = json.dumps(new_commands).replace("\"", "\"\"")  # Re-escape for CSV
+                
+            except Exception as e:
+                # If parsing fails, leave the row as-is
+                pass
+            
+            rows.append(row)
+    
+    # Write back the updated CSV
+    with open(csv_file, "w", encoding="utf-8", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    
+    # Output statistics as a parseable format
+    print(f"{total_rows_processed},{commands_split_count},{duration_errors},{num_commands_mismatches}")
+    
+except Exception as e:
+    print(f"0,0,0,0")
+    sys.exit(1)
+' 2>/dev/null)
+
+    # Parse validation statistics
+    if [ -n "$VALIDATION_STATS" ]; then
+        IFS=',' read -r VALIDATED_ROWS COMMANDS_SPLIT DURATION_ERRORS NUM_COMMAND_FIXES <<< "$VALIDATION_STATS"
+        
+        echo "[*] Validation complete!"
+        echo "    → Rows validated: $VALIDATED_ROWS"
+        echo "    → Commands split by semicolons: $COMMANDS_SPLIT"
+        echo "    → Duration errors found: $DURATION_ERRORS"
+        echo "    → num_commands mismatches fixed: $NUM_COMMAND_FIXES"
+        
+        if [ "$DURATION_ERRORS" -gt 0 ]; then
+            echo "    → Duration errors logged to: $VALIDATION_LOG"
+        fi
+    else
+        echo "[WARNING] Validation encountered an error"
+    fi
+else
+    echo "[WARNING] Python3 not found, skipping validation"
+fi
+
+echo ""
+echo "[*] ================================"
 echo "[*] Conversion Complete!"
 echo "[*] ================================"
 echo "[*] Files processed: $PROCESSED_FILES"
